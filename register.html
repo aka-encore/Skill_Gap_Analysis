@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account – SkillBridge</title>
+  <meta name="description" content="Join SkillBridge as a student or faculty member and start your skill gap analysis journey." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="auth-layout">
+
+  <!-- ── Left Panel ── -->
+  <div class="auth-left">
+    <div class="auth-dots auth-dots-tl">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="auth-left-content">
+      <div class="auth-illustration" style="width:280px;height:280px;">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- Floating cards illustration -->
+          <rect x="40" y="80" width="200" height="120" rx="16" fill="rgba(30,41,59,0.9)" stroke="rgba(99,102,241,0.4)" stroke-width="1.5"/>
+          <rect x="55" y="100" width="60" height="60" rx="10" fill="rgba(99,102,241,0.3)"/>
+          <text x="85" y="136" text-anchor="middle" fill="#6366F1" font-size="20" font-family="Poppins">🎓</text>
+          <rect x="130" y="105" width="95" height="10" rx="5" fill="rgba(255,255,255,0.15)"/>
+          <rect x="130" y="122" width="70" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+          <rect x="130" y="138" width="80" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+          <rect x="55" y="172" width="170" height="8" rx="4" fill="rgba(16,185,129,0.4)"/>
+
+          <rect x="160" y="180" width="200" height="120" rx="16" fill="rgba(30,41,59,0.9)" stroke="rgba(139,92,246,0.4)" stroke-width="1.5"/>
+          <rect x="175" y="200" width="60" height="60" rx="10" fill="rgba(139,92,246,0.3)"/>
+          <text x="205" y="236" text-anchor="middle" fill="#8B5CF6" font-size="20" font-family="Poppins">📊</text>
+          <rect x="250" y="205" width="90" height="10" rx="5" fill="rgba(255,255,255,0.15)"/>
+          <rect x="250" y="222" width="65" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+          <rect x="250" y="238" width="75" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+          <rect x="175" y="272" width="170" height="8" rx="4" fill="rgba(99,102,241,0.4)"/>
+
+          <!-- Floating badge -->
+          <rect x="200" y="60" width="140" height="50" rx="25" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.4)" stroke-width="1.5"/>
+          <text x="270" y="90" text-anchor="middle" fill="#10B981" font-size="13" font-weight="600" font-family="Poppins">✓ Skill Gap Found!</text>
+
+          <!-- Connecting line -->
+          <line x1="200" y1="200" x2="240" y2="200" stroke="rgba(99,102,241,0.3)" stroke-width="1" stroke-dasharray="4"/>
+        </svg>
+      </div>
+
+      <h2>Join <span class="gradient-text">SkillBridge</span> Today</h2>
+      <p>Create your account in under 2 minutes and start identifying skill gaps that are holding you back.</p>
+
+      <div class="auth-feature-pills mt-6">
+        <div class="auth-pill"><i class="fa-solid fa-shield-check"></i> Free Forever</div>
+        <div class="auth-pill"><i class="fa-solid fa-bolt"></i> Instant Analysis</div>
+        <div class="auth-pill"><i class="fa-solid fa-certificate"></i> Certificates</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Right Panel ── -->
+  <div class="auth-right" style="align-items:flex-start;padding:40px;overflow-y:auto;">
+    <div class="auth-form-box" style="width:100%;padding:20px 0;">
+      <div class="auth-logo">
+        <div class="auth-logo-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="auth-logo-text">SkillBridge</span>
+      </div>
+
+      <h1 class="auth-heading">Create Account</h1>
+      <p class="auth-subheading">Choose your role and fill in your details</p>
+
+      <div class="auth-card">
+        <!-- Role Tabs -->
+        <div class="auth-tabs" id="roleTabs">
+          <button class="auth-tab active" id="tabStudent" onclick="switchTab('student')">
+            <i class="fa-solid fa-user-graduate"></i> Student
+          </button>
+          <button class="auth-tab" id="tabFaculty" onclick="switchTab('faculty')">
+            <i class="fa-solid fa-chalkboard-teacher"></i> Faculty
+          </button>
+        </div>
+
+        <!-- Student Form -->
+        <form class="auth-form" id="studentForm" action="student-dashboard.html">
+          <div class="grid grid-2" style="gap:var(--space-4)">
+            <div class="form-group">
+              <label for="sFirstName">First Name</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" id="sFirstName" class="form-control" placeholder="John" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sLastName">Last Name</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" id="sLastName" class="form-control" placeholder="Doe" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sEmail">Email Address</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-envelope icon"></i>
+              <input type="email" id="sEmail" class="form-control" placeholder="student@university.edu" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sCollege">College / University</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-university icon"></i>
+              <input type="text" id="sCollege" class="form-control" placeholder="Your institution" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sDept">Department / Field</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-book icon"></i>
+              <input type="text" id="sDept" class="form-control" placeholder="e.g. Computer Science" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sGoal">Career Goal</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-target icon"></i>
+              <input type="text" id="sGoal" class="form-control" placeholder="e.g. Data Scientist, Full Stack Developer" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sPw">Password</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-lock icon"></i>
+              <input type="password" id="sPw" class="form-control" placeholder="Create a strong password" oninput="checkStrength(this.value)" style="padding-right:44px" />
+              <button type="button" onclick="togglePw('sPw', this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer"><i class="fa-solid fa-eye"></i></button>
+            </div>
+            <div class="pw-strength" id="pwStrength">
+              <div class="pw-strength-bar" id="pb1"></div>
+              <div class="pw-strength-bar" id="pb2"></div>
+              <div class="pw-strength-bar" id="pb3"></div>
+              <div class="pw-strength-bar" id="pb4"></div>
+            </div>
+            <div class="pw-strength-label" id="pwLabel">Enter a password</div>
+          </div>
+
+          <div class="form-group">
+            <label for="sConfPw">Confirm Password</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-lock-open icon"></i>
+              <input type="password" id="sConfPw" class="form-control" placeholder="Repeat your password" />
+            </div>
+          </div>
+
+          <label class="checkbox-wrapper mb-5" style="font-size:0.8rem;color:var(--text-secondary)">
+            <input type="checkbox" required />
+            I agree to the <a href="#" style="color:var(--primary-light)">Terms of Service</a> and <a href="#" style="color:var(--primary-light)">Privacy Policy</a>
+          </label>
+
+          <button type="submit" class="btn-auth">
+            <i class="fa-solid fa-user-plus"></i> Create Student Account
+          </button>
+
+          <div class="auth-divider">or continue with</div>
+          <button type="button" class="btn-social">
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.2l-6.3-5.3C29.5 35.5 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.6l6.3 5.3C40.7 36.3 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+            Sign up with Google
+          </button>
+        </form>
+
+        <!-- Faculty Form -->
+        <form class="auth-form" id="facultyForm" style="display:none" action="faculty-dashboard.html">
+          <div class="grid grid-2" style="gap:var(--space-4)">
+            <div class="form-group">
+              <label for="fFirstName">First Name</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" id="fFirstName" class="form-control" placeholder="Dr. Jane" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="fLastName">Last Name</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-user icon"></i>
+                <input type="text" id="fLastName" class="form-control" placeholder="Smith" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fEmail">Institutional Email</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-envelope icon"></i>
+              <input type="email" id="fEmail" class="form-control" placeholder="faculty@institution.edu" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fInstitution">Institution</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-university icon"></i>
+              <input type="text" id="fInstitution" class="form-control" placeholder="Your institution name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fDept">Department</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-sitemap icon"></i>
+              <input type="text" id="fDept" class="form-control" placeholder="e.g. Computer Science & Engineering" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fDesignation">Designation</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-id-badge icon"></i>
+              <input type="text" id="fDesignation" class="form-control" placeholder="e.g. Associate Professor" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fEmployeeId">Employee ID</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-hashtag icon"></i>
+              <input type="text" id="fEmployeeId" class="form-control" placeholder="Your employee/faculty ID" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fPw">Password</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-lock icon"></i>
+              <input type="password" id="fPw" class="form-control" placeholder="Create a strong password" />
+            </div>
+          </div>
+
+          <label class="checkbox-wrapper mb-5" style="font-size:0.8rem;color:var(--text-secondary)">
+            <input type="checkbox" required />
+            I agree to the <a href="#" style="color:var(--primary-light)">Terms of Service</a> and <a href="#" style="color:var(--primary-light)">Privacy Policy</a>
+          </label>
+
+          <button type="submit" class="btn-auth">
+            <i class="fa-solid fa-chalkboard-teacher"></i> Create Faculty Account
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          Already have an account? <a href="login.html">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(role) {
+    const isStudent = role === 'student';
+    document.getElementById('tabStudent').classList.toggle('active', isStudent);
+    document.getElementById('tabFaculty').classList.toggle('active', !isStudent);
+    document.getElementById('studentForm').style.display = isStudent ? 'block' : 'none';
+    document.getElementById('facultyForm').style.display = isStudent ? 'none' : 'block';
+  }
+
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+    else { inp.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+  }
+
+  function checkStrength(pw) {
+    const bars = [document.getElementById('pb1'), document.getElementById('pb2'), document.getElementById('pb3'), document.getElementById('pb4')];
+    const label = document.getElementById('pwLabel');
+    bars.forEach(b => { b.className = 'pw-strength-bar'; });
+    let strength = 0;
+    if (pw.length >= 8) strength++;
+    if (/[A-Z]/.test(pw)) strength++;
+    if (/[0-9]/.test(pw)) strength++;
+    if (/[^A-Za-z0-9]/.test(pw)) strength++;
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    const colors = ['', 'text-danger', 'text-warning', 'text-accent', 'text-success'];
+    for (let i = 0; i < strength; i++) bars[i].classList.add('active-' + (i + 1 <= strength ? strength : i + 1));
+    label.textContent = strength ? labels[strength] : 'Enter a password';
+    label.className = 'pw-strength-label ' + (colors[strength] || '');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Roadmap – SkillBridge</title>
+  <meta name="description" content="Your personalized learning roadmap from beginner to industry ready for a Data Scientist career." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="dashboard-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span class="sidebar-brand-text">SkillBridge</span></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
+      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span></a>
+      <div class="sidebar-section-label">Learning</div>
+      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
+      <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
+      <a href="roadmap.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
+      <a href="progress.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
+      <div class="sidebar-section-label">Other</div>
+      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="topnav">
+      <div class="topnav-left">
+        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
+        <div><div class="topnav-title">Learning Roadmap</div><div class="topnav-breadcrumb">Dashboard / <span>Roadmap</span></div></div>
+      </div>
+      <div class="topnav-right">
+        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
+        <div class="topnav-profile">
+          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+      <div class="dash-header flex-between">
+        <div>
+          <h1>Learning Roadmap <span class="badge badge-success" style="vertical-align:middle;font-size:0.75rem">Personalized</span></h1>
+          <p>Your step-by-step journey to becoming a <strong style="color:var(--primary-light)">Data Scientist</strong> · Estimated time: <strong style="color:var(--warning)">6 Months</strong></p>
+        </div>
+        <div class="flex gap-3">
+          <div class="card" style="padding:var(--space-3) var(--space-5);flex-direction:row;align-items:center;gap:var(--space-4)">
+            <div style="text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--success)">38%</div><div style="font-size:0.7rem;color:var(--text-muted)">Complete</div></div>
+            <div style="width:1px;height:36px;background:var(--border)"></div>
+            <div style="text-align:center"><div style="font-size:1.4rem;font-weight:800;color:var(--primary)">11/28</div><div style="font-size:0.7rem;color:var(--text-muted)">Milestones</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall Progress -->
+      <div class="card mb-6 animate-slideUp">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4)">
+          <div>
+            <h3 style="font-size:1rem;margin-bottom:4px">Overall Roadmap Progress</h3>
+            <p style="font-size:0.8rem">You're making great progress! Keep it up 🚀</p>
+          </div>
+          <span style="font-size:2rem;font-weight:800;color:var(--primary)">38%</span>
+        </div>
+        <div class="progress-track" style="height:16px">
+          <div class="progress-fill" style="width:38%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:var(--space-3)">
+          <span style="font-size:0.75rem;color:var(--success)"><i class="fa-solid fa-check-circle"></i> Foundation Complete</span>
+          <span style="font-size:0.75rem;color:var(--primary)"><i class="fa-solid fa-cog fa-spin"></i> Currently: ML Basics</span>
+          <span style="font-size:0.75rem;color:var(--text-muted)"><i class="fa-solid fa-lock"></i> Deep Learning</span>
+          <span style="font-size:0.75rem;color:var(--text-muted)"><i class="fa-solid fa-lock"></i> MLOps & Cloud</span>
+          <span style="font-size:0.75rem;color:var(--warning)"><i class="fa-solid fa-trophy"></i> Industry Ready</span>
+        </div>
+      </div>
+
+      <div class="grid-2 gap-8" style="display:grid;grid-template-columns:2fr 1fr;gap:var(--space-6)">
+        <!-- Timeline -->
+        <div>
+          <div class="roadmap-timeline">
+
+            <!-- Phase 1: Foundation -->
+            <div class="roadmap-phase">
+              <div class="roadmap-phase-header">
+                <div class="roadmap-dot completed">✓</div>
+                <div>
+                  <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <h3 class="roadmap-phase-title" style="color:var(--success)">Phase 1 — Foundation</h3>
+                    <span class="badge badge-success">Completed</span>
+                  </div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">8 Weeks · Completed in 7 weeks 🎉</div>
+                </div>
+              </div>
+              <div class="roadmap-milestones">
+                <div class="roadmap-milestone completed">
+                  <div class="milestone-check done"><i class="fa-solid fa-check"></i></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Python for Data Science</div>
+                    <div class="milestone-desc">NumPy, Pandas, Matplotlib basics</div>
+                    <div class="milestone-meta"><span class="badge badge-success">Done</span><span style="font-size:0.7rem;color:var(--text-muted)"><i class="fa-solid fa-clock"></i> 20h · Completed 2 months ago</span></div>
+                  </div>
+                </div>
+                <div class="roadmap-milestone completed">
+                  <div class="milestone-check done"><i class="fa-solid fa-check"></i></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Mathematics for ML</div>
+                    <div class="milestone-desc">Linear Algebra, Calculus, Probability</div>
+                    <div class="milestone-meta"><span class="badge badge-success">Done</span><span style="font-size:0.7rem;color:var(--text-muted)"><i class="fa-solid fa-clock"></i> 30h · Completed last month</span></div>
+                  </div>
+                </div>
+                <div class="roadmap-milestone completed">
+                  <div class="milestone-check done"><i class="fa-solid fa-check"></i></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">SQL & Database Fundamentals</div>
+                    <div class="milestone-desc">Queries, Joins, Aggregations, Indexing</div>
+                    <div class="milestone-meta"><span class="badge badge-success">Done</span><span style="font-size:0.7rem;color:var(--text-muted)"><i class="fa-solid fa-clock"></i> 15h · Completed 3 weeks ago</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 2: ML Basics (Current) -->
+            <div class="roadmap-phase">
+              <div class="roadmap-phase-header">
+                <div class="roadmap-dot current"><i class="fa-solid fa-cog" style="animation:spin 2s linear infinite"></i></div>
+                <div>
+                  <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <h3 class="roadmap-phase-title" style="color:var(--primary-light)">Phase 2 — Machine Learning</h3>
+                    <span class="badge badge-primary">In Progress</span>
+                  </div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">10 Weeks · Week 6 of 10</div>
+                </div>
+              </div>
+              <div class="roadmap-milestones">
+                <div class="roadmap-milestone completed">
+                  <div class="milestone-check done"><i class="fa-solid fa-check"></i></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Supervised Learning</div>
+                    <div class="milestone-desc">Linear Regression, Classification, Decision Trees</div>
+                    <div class="milestone-meta"><span class="badge badge-success">Done</span></div>
+                  </div>
+                </div>
+                <div class="roadmap-milestone" style="border:2px solid rgba(99,102,241,0.4);background:rgba(99,102,241,0.06)">
+                  <div class="milestone-check active"><i class="fa-solid fa-play"></i></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Unsupervised Learning</div>
+                    <div class="milestone-desc">K-Means, PCA, Hierarchical Clustering</div>
+                    <div class="milestone-meta"><span class="badge badge-primary">Active</span><span style="font-size:0.7rem;color:var(--text-muted)"><i class="fa-solid fa-clock"></i> 20h · 35% complete</span></div>
+                    <div class="progress-track mt-2"><div class="progress-fill" style="width:35%"></div></div>
+                  </div>
+                </div>
+                <div class="roadmap-milestone">
+                  <div class="milestone-check todo"></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Ensemble Methods</div>
+                    <div class="milestone-desc">Random Forest, XGBoost, Gradient Boosting</div>
+                    <div class="milestone-meta"><span class="badge badge-accent">Next Up</span><span style="font-size:0.7rem;color:var(--text-muted)"><i class="fa-solid fa-clock"></i> Est. 2 weeks</span></div>
+                  </div>
+                </div>
+                <div class="roadmap-milestone">
+                  <div class="milestone-check todo"></div>
+                  <div class="milestone-info">
+                    <div class="milestone-title">Model Evaluation & Feature Engineering</div>
+                    <div class="milestone-desc">Cross-validation, Hyperparameter tuning, Feature selection</div>
+                    <div class="milestone-meta"><span class="tag">Upcoming</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3: Deep Learning -->
+            <div class="roadmap-phase">
+              <div class="roadmap-phase-header">
+                <div class="roadmap-dot locked"><i class="fa-solid fa-lock"></i></div>
+                <div>
+                  <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <h3 class="roadmap-phase-title" style="color:var(--accent-light)">Phase 3 — Deep Learning</h3>
+                    <span class="badge badge-accent">Locked</span>
+                  </div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">12 Weeks · Unlocks in ~4 weeks</div>
+                </div>
+              </div>
+              <div class="roadmap-milestones" style="opacity:0.55">
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">Neural Networks & Backpropagation</div><div class="milestone-desc">Architecture, activation functions, training loops</div></div></div>
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">CNNs for Computer Vision</div><div class="milestone-desc">Image classification, object detection</div></div></div>
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">RNNs & Transformers</div><div class="milestone-desc">Sequence modeling, BERT, attention mechanism</div></div></div>
+              </div>
+            </div>
+
+            <!-- Phase 4: Industry Ready -->
+            <div class="roadmap-phase">
+              <div class="roadmap-phase-header">
+                <div class="roadmap-dot expert"><i class="fa-solid fa-trophy"></i></div>
+                <div>
+                  <div style="display:flex;align-items:center;gap:var(--space-3)">
+                    <h3 class="roadmap-phase-title" style="color:var(--warning)">Phase 4 — Industry Ready 🏆</h3>
+                    <span class="badge badge-warning">Goal</span>
+                  </div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">8 Weeks · MLOps, Cloud, Portfolio</div>
+                </div>
+              </div>
+              <div class="roadmap-milestones" style="opacity:0.4">
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">MLOps & Model Deployment</div><div class="milestone-desc">Docker, Kubernetes, FastAPI, monitoring</div></div></div>
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">Cloud Platforms (AWS / GCP)</div><div class="milestone-desc">S3, SageMaker, Lambda functions</div></div></div>
+                <div class="roadmap-milestone locked"><div class="milestone-check todo"></div><div class="milestone-info"><div class="milestone-title">Capstone Project & Portfolio</div><div class="milestone-desc">End-to-end ML project + GitHub showcase</div></div></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div style="display:flex;flex-direction:column;gap:var(--space-6)">
+          <!-- Career Match -->
+          <div class="card animate-slideUp" style="text-align:center">
+            <h3 style="font-size:1rem;margin-bottom:var(--space-4)">Career Match</h3>
+            <div style="position:relative;width:150px;height:150px;margin:0 auto 16px;border-radius:50%;background:conic-gradient(var(--success) 245deg, rgba(255,255,255,0.06) 0);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(16,185,129,0.25)">
+              <div style="position:absolute;inset:14px;background:var(--bg-card);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <span style="font-size:1.9rem;font-weight:800;color:var(--success)">68%</span>
+                <span style="font-size:0.65rem;color:var(--text-muted)">Data Scientist</span>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-secondary)">Complete Phase 2 to reach <strong style="color:var(--warning)">80%</strong> match</p>
+          </div>
+
+          <!-- Key Stats -->
+          <div class="card animate-slideUp">
+            <h3 style="font-size:1rem;margin-bottom:var(--space-4)">Roadmap Stats</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:0.85rem;font-weight:500"><i class="fa-solid fa-check" style="color:var(--success);margin-right:8px"></i>Completed</span>
+                <strong style="color:var(--success)">11 tasks</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:0.85rem;font-weight:500"><i class="fa-solid fa-cog" style="color:var(--primary);margin-right:8px"></i>In Progress</span>
+                <strong style="color:var(--primary)">1 task</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-md)">
+                <span style="font-size:0.85rem;font-weight:500"><i class="fa-solid fa-lock" style="color:var(--text-muted);margin-right:8px"></i>Remaining</span>
+                <strong style="color:var(--text-muted)">16 tasks</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:0.85rem;font-weight:500"><i class="fa-solid fa-clock" style="color:var(--warning);margin-right:8px"></i>Hours Spent</span>
+                <strong style="color:var(--warning)">147 hrs</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:0.85rem;font-weight:500"><i class="fa-solid fa-calendar" style="color:var(--accent);margin-right:8px"></i>Est. Finish</span>
+                <strong style="color:var(--accent)">Oct 2025</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certificates Earned -->
+          <div class="card animate-slideUp">
+            <h3 style="font-size:1rem;margin-bottom:var(--space-4)"><i class="fa-solid fa-certificate" style="color:var(--warning);margin-right:8px"></i>Certificates</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:1.5rem">🏆</span>
+                <div><div style="font-weight:600;font-size:0.8rem">Python for Data Science</div><div style="font-size:0.7rem;color:var(--text-muted)">Issued · Jan 2025</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
+                <span style="font-size:1.5rem">🥇</span>
+                <div><div style="font-weight:600;font-size:0.8rem">SQL Fundamentals</div><div style="font-size:0.7rem;color:var(--text-muted)">Issued · Feb 2025</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-md);opacity:0.6">
+                <span style="font-size:1.5rem">🔒</span>
+                <div><div style="font-weight:600;font-size:0.8rem">ML Foundations</div><div style="font-size:0.7rem;color:var(--text-muted)">Complete Phase 2</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+</script>
+</body>
+</html>

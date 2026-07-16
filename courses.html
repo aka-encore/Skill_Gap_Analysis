@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recommended Courses – SkillBridge</title>
+  <meta name="description" content="Explore curated courses recommended based on your skill gaps and career goals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="dashboard-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span class="sidebar-brand-text">SkillBridge</span></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
+      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span></a>
+      <div class="sidebar-section-label">Learning</div>
+      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
+      <a href="courses.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
+      <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
+      <a href="progress.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
+      <div class="sidebar-section-label">Other</div>
+      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="topnav">
+      <div class="topnav-left">
+        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
+        <div><div class="topnav-title">Courses</div><div class="topnav-breadcrumb">Dashboard / <span>Recommended Courses</span></div></div>
+      </div>
+      <div class="search-bar" style="display:flex">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Search courses..." />
+      </div>
+      <div class="topnav-right">
+        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
+        <div class="topnav-profile">
+          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+      <div class="dash-header flex-between">
+        <div>
+          <h1>Recommended Courses</h1>
+          <p>AI-curated courses tailored to close your specific skill gaps for <strong style="color:var(--primary-light)">Data Scientist</strong> career path.</p>
+        </div>
+        <div class="flex gap-3">
+          <span class="badge badge-primary" style="padding:10px 18px;font-size:0.8rem"><i class="fa-solid fa-robot"></i> AI Recommended</span>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="card mb-6" style="padding:var(--space-4)">
+        <div style="display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap">
+          <div style="display:flex;gap:var(--space-2)">
+            <button class="btn btn-primary btn-sm" onclick="filterCourses('all')" id="f-all">All Courses</button>
+            <button class="btn btn-ghost btn-sm" onclick="filterCourses('enrolled')" id="f-enrolled">Enrolled</button>
+            <button class="btn btn-ghost btn-sm" onclick="filterCourses('recommended')" id="f-recommended">AI Pick</button>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:var(--space-3)">
+            <select class="report-select"><option>All Levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+            <select class="report-select"><option>All Platforms</option><option>Coursera</option><option>Udemy</option><option>edX</option></select>
+            <select class="report-select"><option>Sort: Recommended</option><option>Sort: Rating</option><option>Sort: Duration</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      <div class="course-cards-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)">
+
+        <!-- Course 1 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.2))">
+            <div class="course-thumb-bg">🤖</div>
+            <span class="course-diff badge badge-danger" style="position:absolute;top:12px;right:12px">Critical Gap</span>
+            <span class="course-category badge badge-primary" style="position:absolute;bottom:12px;left:12px">Machine Learning</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">Machine Learning A–Z: AI, Python & R in Data Science</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> Kirill Eremenko, SuperDataScience</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.8</span>
+              <span class="rating-count">(87,342 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 42.5 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Intermediate</span>
+              <span><i class="fa-brands fa-udemy"></i> Udemy</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>35%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:35%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price"><span class="free">Enrolled</span></div>
+              <a href="#" class="btn btn-primary btn-sm"><i class="fa-solid fa-play"></i> Continue</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 2 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(16,185,129,0.3),rgba(59,130,246,0.2))">
+            <div class="course-thumb-bg">🧠</div>
+            <span class="course-diff badge badge-danger" style="position:absolute;top:12px;right:12px">Critical Gap</span>
+            <span class="course-category badge badge-success" style="position:absolute;bottom:12px;left:12px">Deep Learning</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">Deep Learning Specialization by Andrew Ng</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> Andrew Ng · deeplearning.ai</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.9</span>
+              <span class="rating-count">(124,500 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 80 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Advanced</span>
+              <span><i class="fa-solid fa-graduation-cap"></i> Coursera</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>10%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:10%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price"><span class="free">Enrolled</span></div>
+              <a href="#" class="btn btn-primary btn-sm"><i class="fa-solid fa-play"></i> Continue</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(245,158,11,0.3),rgba(239,68,68,0.2))">
+            <div class="course-thumb-bg">☁️</div>
+            <span class="course-diff badge badge-warning" style="position:absolute;top:12px;right:12px">New</span>
+            <span class="course-category badge badge-warning" style="position:absolute;bottom:12px;left:12px">Cloud</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">AWS Certified Cloud Practitioner – Full Course</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> Stephane Maarek</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.7</span>
+              <span class="rating-count">(53,210 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 19 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Beginner</span>
+              <span><i class="fa-brands fa-udemy"></i> Udemy</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>Not Started</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price" style="color:var(--warning)">₹499</div>
+              <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Enroll</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 4 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(59,130,246,0.2))">
+            <div class="course-thumb-bg">📊</div>
+            <span class="course-diff badge badge-accent" style="position:absolute;top:12px;right:12px">AI Pick</span>
+            <span class="course-category badge badge-accent" style="position:absolute;bottom:12px;left:12px">Data Science</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">Statistics for Data Science and Business Analysis</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> 365 Careers</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.6</span>
+              <span class="rating-count">(41,800 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 8.5 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Beginner</span>
+              <span><i class="fa-brands fa-udemy"></i> Udemy</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>Not Started</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price" style="color:var(--warning)">₹349</div>
+              <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Enroll</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 5 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(239,68,68,0.3),rgba(245,158,11,0.2))">
+            <div class="course-thumb-bg">🐳</div>
+            <span class="course-diff badge badge-primary" style="position:absolute;top:12px;right:12px">Trending</span>
+            <span class="course-category badge badge-danger" style="position:absolute;bottom:12px;left:12px">MLOps</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">MLOps Specialization: ML in Production with Kubernetes</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> DeepLearning.AI</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.8</span>
+              <span class="rating-count">(22,100 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 60 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Advanced</span>
+              <span><i class="fa-solid fa-graduation-cap"></i> Coursera</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>Not Started</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price"><span style="color:var(--success)">Free Audit</span></div>
+              <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Enroll</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 6 -->
+        <div class="course-card">
+          <div class="course-thumb" style="background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(16,185,129,0.2))">
+            <div class="course-thumb-bg">⚡</div>
+            <span class="course-diff badge badge-success" style="position:absolute;top:12px;right:12px">Popular</span>
+            <span class="course-category badge badge-info" style="position:absolute;bottom:12px;left:12px">Big Data</span>
+          </div>
+          <div class="course-body">
+            <div class="course-title">Apache Spark with Python – Big Data with PySpark</div>
+            <div class="course-instructor"><i class="fa-solid fa-user-tie"></i> Jose Portilla</div>
+            <div class="course-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <span class="rating-val">4.5</span>
+              <span class="rating-count">(18,900 reviews)</span>
+            </div>
+            <div class="course-meta">
+              <span><i class="fa-solid fa-clock"></i> 22 hrs</span>
+              <span><i class="fa-solid fa-layer-group"></i> Intermediate</span>
+              <span><i class="fa-brands fa-udemy"></i> Udemy</span>
+            </div>
+            <div class="course-progress-wrap">
+              <div class="course-progress-label"><span>Progress</span><span>Not Started</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="course-footer">
+              <div class="course-price" style="color:var(--warning)">₹699</div>
+              <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-plus"></i> Enroll</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /course grid -->
+    </div>
+  </main>
+</div>
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+  function filterCourses(type) {
+    document.querySelectorAll('[id^="f-"]').forEach(b => b.className = 'btn btn-ghost btn-sm');
+    document.getElementById('f-' + type).className = 'btn btn-primary btn-sm';
+  }
+</script>
+</body>
+</html>

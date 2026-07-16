@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Assessment – SkillBridge</title>
+  <meta name="description" content="Take your skill assessment quiz with a timer, progress tracking, and instant results." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<div class="dashboard-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+      <span class="sidebar-brand-text">SkillBridge</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
+      <a href="assessment.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span class="nav-badge">3</span></a>
+      <div class="sidebar-section-label">Learning</div>
+      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
+      <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
+      <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
+      <a href="progress.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
+      <div class="sidebar-section-label">Other</div>
+      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
+      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+    <header class="topnav">
+      <div class="topnav-left">
+        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
+        <div><div class="topnav-title">Skill Assessment</div><div class="topnav-breadcrumb">Dashboard / <span>Assessment</span></div></div>
+      </div>
+      <div class="topnav-right">
+        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
+        <div class="topnav-profile">
+          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+      <!-- Quiz Header Bar -->
+      <div class="quiz-header-bar">
+        <div>
+          <div class="section-tag" style="margin-bottom:8px">Machine Learning – Module 3</div>
+          <h1 style="font-size:1.75rem">Deep Learning Fundamentals</h1>
+          <p style="font-size:0.875rem">Test your knowledge of neural networks, activation functions, and optimization.</p>
+        </div>
+        <div class="flex gap-4 align-items-center">
+          <div class="quiz-timer">
+            <i class="fa-solid fa-clock"></i>
+            <span id="timerDisplay">24:35</span>
+          </div>
+          <button onclick="submitQuiz()" class="btn btn-danger"><i class="fa-solid fa-flag-checkered"></i> Submit</button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="card mb-6" style="padding:var(--space-4)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3)">
+          <span style="font-size:0.875rem;font-weight:600">Progress</span>
+          <span style="font-size:0.875rem;color:var(--text-secondary)" id="progressText">Question 4 of 10</span>
+        </div>
+        <div class="progress-track" style="height:12px">
+          <div class="progress-fill" id="quizProgress" style="width:40%"></div>
+        </div>
+        <div class="question-dots mt-4" id="questionDots"></div>
+      </div>
+
+      <!-- Quiz Container -->
+      <div class="quiz-container">
+        <!-- Question Card -->
+        <div class="question-card" id="questionCard">
+          <div class="question-number">
+            <i class="fa-solid fa-circle-question"></i>
+            Question <span id="qNum">4</span> of 10
+          </div>
+          <div class="question-text" id="questionText">
+            Which activation function is commonly used in the output layer for binary classification problems?
+          </div>
+          <div class="options-grid" id="optionsGrid">
+            <!-- Options injected by JS -->
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="quiz-nav">
+          <button class="btn btn-secondary" id="prevBtn" onclick="navigate(-1)">
+            <i class="fa-solid fa-arrow-left"></i> Previous
+          </button>
+          <div style="text-align:center">
+            <div style="font-size:0.75rem;color:var(--text-muted)">4 Answered · 6 Remaining</div>
+          </div>
+          <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">
+            Next <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Modal (hidden by default) -->
+      <div id="resultModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:9999;display:none;align-items:center;justify-content:center">
+        <div class="card" style="max-width:480px;width:90%;text-align:center;padding:var(--space-10);animation:scaleIn 0.5s ease">
+          <div style="font-size:4rem;margin-bottom:var(--space-4)">🎉</div>
+          <h2 style="margin-bottom:var(--space-2)">Assessment Complete!</h2>
+          <p style="margin-bottom:var(--space-6)">You've completed the Deep Learning Fundamentals quiz</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-6)">
+            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
+              <div style="font-size:2rem;font-weight:800;color:var(--success)">7/10</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">Score</div>
+            </div>
+            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
+              <div style="font-size:2rem;font-weight:800;color:var(--primary)">70%</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">Accuracy</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
+              <div style="font-size:2rem;font-weight:800;color:var(--warning)">15:25</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">Time Taken</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-3);justify-content:center">
+            <a href="skill-gap.html" class="btn btn-primary"><i class="fa-solid fa-chart-radar"></i> View Gap Analysis</a>
+            <a href="student-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  const questions = [
+    { q: "What is a neural network?", options: ["A biological brain", "A computational model inspired by the human brain", "A type of database", "A programming language"], correct: 1 },
+    { q: "Which activation function suffers from the 'vanishing gradient' problem?", options: ["ReLU", "Leaky ReLU", "Sigmoid", "ELU"], correct: 2 },
+    { q: "What does 'backpropagation' refer to in neural networks?", options: ["Forward pass of data", "Algorithm to compute gradients", "A regularization technique", "A loss function"], correct: 1 },
+    { q: "Which activation function is commonly used in the output layer for binary classification problems?", options: ["ReLU", "Tanh", "Sigmoid", "Softmax"], correct: 2 },
+    { q: "What is dropout in deep learning?", options: ["Removing neurons from input", "A regularization technique that randomly deactivates neurons during training", "A learning rate scheduler", "A type of activation function"], correct: 1 },
+    { q: "Which optimizer adapts the learning rate for each parameter?", options: ["SGD", "Momentum", "Adam", "Perceptron"], correct: 2 },
+    { q: "What is a Convolutional Neural Network (CNN) primarily used for?", options: ["Time series", "Natural Language Processing", "Image recognition", "Reinforcement learning"], correct: 2 },
+    { q: "What does 'epoch' mean in machine learning training?", options: ["A single forward pass", "One complete pass through the training dataset", "A mini-batch update", "A learning rate step"], correct: 1 },
+    { q: "Which loss function is used for multi-class classification?", options: ["MSE", "Binary Cross-Entropy", "Categorical Cross-Entropy", "Hinge Loss"], correct: 2 },
+    { q: "What is batch normalization used for?", options: ["To reduce the number of parameters", "To normalize inputs across a batch to speed up training", "To augment training data", "To prevent overfitting by dropout"], correct: 1 }
+  ];
+
+  let current = 3;
+  let answers = new Array(questions.length).fill(-1);
+  let timerSeconds = 24 * 60 + 35;
+  let timerInterval;
+
+  // Build dots
+  function buildDots() {
+    const container = document.getElementById('questionDots');
+    container.innerHTML = '';
+    questions.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'q-dot' + (answers[i] !== -1 ? ' answered' : '') + (i === current ? ' current' : '');
+      dot.title = 'Q' + (i + 1);
+      dot.onclick = () => { current = i; renderQuestion(); };
+      container.appendChild(dot);
+    });
+  }
+
+  function renderQuestion() {
+    const q = questions[current];
+    document.getElementById('qNum').textContent = current + 1;
+    document.getElementById('questionText').textContent = q.q;
+    document.getElementById('progressText').textContent = `Question ${current + 1} of ${questions.length}`;
+    document.getElementById('quizProgress').style.width = ((current + 1) / questions.length * 100) + '%';
+
+    const grid = document.getElementById('optionsGrid');
+    grid.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.className = 'option-item' + (answers[current] === i ? ' selected' : '');
+      div.innerHTML = `<div class="option-letter">${letters[i]}</div><div class="option-text">${opt}</div>`;
+      div.onclick = () => selectOption(i);
+      grid.appendChild(div);
+    });
+    buildDots();
+  }
+
+  function selectOption(i) {
+    answers[current] = i;
+    renderQuestion();
+  }
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < questions.length) { current = next; renderQuestion(); }
+    else if (dir === 1 && current === questions.length - 1) submitQuiz();
+  }
+
+  function submitQuiz() {
+    clearInterval(timerInterval);
+    document.getElementById('resultModal').style.display = 'flex';
+  }
+
+  // Timer
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      if (timerSeconds <= 0) { clearInterval(timerInterval); submitQuiz(); return; }
+      const m = Math.floor(timerSeconds / 60);
+      const s = timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (timerSeconds < 300) document.querySelector('.quiz-timer').style.borderColor = 'rgba(239,68,68,0.6)';
+    }, 1000);
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+
+  renderQuestion();
+  startTimer();
+</script>
+</body>
+</html>
