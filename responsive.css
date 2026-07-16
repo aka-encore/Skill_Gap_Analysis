@@ -1,0 +1,220 @@
+/* ============================================================
+   SKILL GAP ANALYSIS SYSTEM — RESPONSIVE STYLES
+   Breakpoints: 1280px, 1024px, 768px, 480px
+   ============================================================ */
+
+/* ── 1280px — Large Desktop to Regular Desktop ── */
+@media (max-width: 1280px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps-grid::before { display: none; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── 1024px — Tablet/Laptop ── */
+@media (max-width: 1024px) {
+  /* Sidebar */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .sidebar-collapse-btn { display: none; }
+
+  .dashboard-main { margin-left: 0 !important; }
+
+  /* Mobile menu toggle */
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  /* Sidebar overlay */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+  .sidebar-overlay.active { display: block; }
+
+  /* Auth layout */
+  .auth-layout { grid-template-columns: 1fr; }
+  .auth-left { display: none; }
+  .auth-right { padding: var(--space-6); }
+
+  /* Hero */
+  .hero-grid { grid-template-columns: 1fr; gap: var(--space-10); }
+  .hero-visual { display: none; }
+  .hero-title { font-size: clamp(2rem, 5vw, 3.5rem); }
+  .hero-content { max-width: 100%; text-align: center; }
+  .hero-subtitle { max-width: 100%; }
+  .hero-cta { justify-content: center; }
+  .hero-social-proof { justify-content: center; }
+
+  /* Nav */
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  /* Options grid */
+  .options-grid { grid-template-columns: 1fr; }
+
+  /* Skill comparison */
+  .skill-comparison { grid-template-columns: 1fr; }
+}
+
+/* ── 768px — Tablet ── */
+@media (max-width: 768px) {
+  :root {
+    --font-size-5xl: 2.25rem;
+    --font-size-4xl: 1.875rem;
+    --font-size-3xl: 1.5rem;
+  }
+
+  .container { padding: 0 var(--space-4); }
+  .section { padding: var(--space-12) 0; }
+
+  .dash-content { padding: var(--space-4); }
+
+  .topnav { padding: 0 var(--space-4); }
+  .search-bar { display: none; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  .dashboard-grid-3 { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+
+  .footer-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  .footer-bottom { flex-direction: column; gap: var(--space-4); text-align: center; }
+
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+
+  .section-title { font-size: var(--font-size-3xl); }
+
+  /* Report filters */
+  .report-filter-bar { flex-direction: column; align-items: flex-start; }
+  .report-export-bar { flex-wrap: wrap; }
+
+  .quiz-header-bar { flex-direction: column; gap: var(--space-4); text-align: center; }
+
+  .topnav-right .topnav-icon-btn { display: none; }
+  .topnav-right .topnav-icon-btn:last-child { display: flex; }
+
+  .hero-eyebrow { font-size: 10px; }
+}
+
+/* ── 480px — Mobile ── */
+@media (max-width: 480px) {
+  :root {
+    --font-size-5xl: 2rem;
+    --font-size-4xl: 1.5rem;
+    --font-size-3xl: 1.25rem;
+  }
+
+  .stats-grid { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: 1fr; text-align: left; }
+
+  .hero-title { font-size: 1.9rem; }
+
+  .btn-lg { padding: 14px 24px; font-size: var(--font-size-sm); }
+
+  .dash-content { padding: var(--space-3); }
+
+  .card { padding: var(--space-4); }
+  .card-header { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+
+  .topnav { padding: 0 var(--space-3); }
+  .topnav-profile-info { display: none; }
+  .topnav-title { font-size: var(--font-size-base); }
+
+  .options-grid { grid-template-columns: 1fr; }
+  .question-text { font-size: var(--font-size-base); }
+  .question-card { padding: var(--space-5); }
+
+  .auth-card { padding: var(--space-5); }
+  .auth-right { padding: var(--space-4); }
+
+  .course-cards-grid { grid-template-columns: 1fr !important; }
+
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn { width: 100%; justify-content: center; }
+
+  .report-export-bar .btn { width: 100%; justify-content: center; }
+
+  .auth-tabs { flex-direction: column; }
+}
+
+/* ── Print ── */
+@media print {
+  .sidebar, .topnav, .btn, .no-print { display: none !important; }
+  .dashboard-main { margin-left: 0 !important; }
+  .card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  body { background: white; color: black; }
+}
+
+/* ── Mobile Menu Nav ── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15,23,42,0.98);
+  backdrop-filter: blur(20px);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav .nav-link {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.mobile-nav .nav-link:hover { color: var(--primary-light); }
+.mobile-nav .close-btn {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none; color: var(--text-secondary);
+  font-size: 1.5rem; cursor: pointer;
+}
+
+/* ── Landscape Mobile ── */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section { min-height: auto; padding: 100px 0 60px; }
+}
+
+/* ── Reduce motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
