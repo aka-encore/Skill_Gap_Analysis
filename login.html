@@ -152,6 +152,12 @@
     if (pw.type === 'password') { pw.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
     else { pw.type = 'password'; icon.className = 'fa-solid fa-eye'; }
   });
+
+  // Login form submit — redirect to dashboard (HTML-only mode)
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    window.location.href = 'student-dashboard.html';
+  });
 </script>
 </body>
 </html>

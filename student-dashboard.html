@@ -30,7 +30,7 @@
         <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
         <span>Dashboard</span>
       </a>
-      <a href="#" class="sidebar-nav-item">
+      <a href="profile.html" class="sidebar-nav-item">
         <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
         <span>My Profile</span>
       </a>
@@ -63,7 +63,7 @@
         <div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div>
         <span>Reports</span>
       </a>
-      <a href="#" class="sidebar-nav-item">
+      <a href="account-settings.html" class="sidebar-nav-item">
         <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
         <span>Settings</span>
       </a>
@@ -71,10 +71,10 @@
 
     <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="avatar avatar-sm avatar-placeholder" id="sidebarAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
         <div class="sidebar-user-info">
-          <div class="sidebar-user-name">Arjun Kapoor</div>
-          <div class="sidebar-user-role">Student · CSE</div>
+          <div class="sidebar-user-name" id="sidebarName">Arjun Kapoor</div>
+          <div class="sidebar-user-role">Student · <span id="sidebarBranch">Computer Science</span></div>
         </div>
         <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
       </div>
@@ -91,7 +91,7 @@
         </button>
         <div>
           <div class="topnav-title">Dashboard</div>
-          <div class="topnav-breadcrumb">Welcome back, <span>Arjun</span> 👋</div>
+          <div class="topnav-breadcrumb">Welcome back, <span id="welcomeName">Arjun</span> 👋</div>
         </div>
       </div>
       <div class="search-bar" style="display:flex">
@@ -105,13 +105,20 @@
           <span class="notif-dot"></span>
         </div>
         <div class="topnav-icon-btn" title="Messages"><i class="fa-solid fa-message"></i></div>
-        <div class="topnav-profile">
-          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+        <div class="topnav-profile" id="topnavProfileBtn">
+          <div class="avatar avatar-sm avatar-placeholder" id="topnavAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
           <div class="topnav-profile-info">
-            <div class="topnav-profile-name">Arjun Kapoor</div>
+            <div class="topnav-profile-name" id="topnavName">Arjun Kapoor</div>
             <div class="topnav-profile-role">Student</div>
           </div>
           <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;color:var(--text-muted)"></i>
+          <!-- Premium Dropdown Menu -->
+          <div class="premium-dropdown" id="profileDropdown">
+            <a href="profile.html" class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="help.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+            <div class="dropdown-divider"></div>
+            <a href="login.html" class="dropdown-item" style="color:#EF4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
         </div>
       </div>
     </header>
@@ -121,7 +128,7 @@
       <!-- Header -->
       <div class="dash-header flex-between">
         <div>
-          <h1>Good Morning, Arjun! ☀️</h1>
+          <h1>Good Morning, <span id="greetName">Arjun</span>! ☀️</h1>
           <p>Here's your learning overview for today — keep the streak alive!</p>
         </div>
         <div class="flex gap-3">
@@ -198,7 +205,7 @@
                 <div class="skill-bar-track"><div class="skill-bar-fill" style="width:28%;background:linear-gradient(90deg,#EF4444,#F87171)"></div></div>
               </div>
               <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">SQL & Databases</span><span class="skill-score">71%</span></div>
+                <div class="skill-bar-meta"><span class="skill-name">SQL &amp; Databases</span><span class="skill-score">71%</span></div>
                 <div class="skill-bar-track"><div class="skill-bar-fill" style="width:71%;background:linear-gradient(90deg,#3B82F6,#60A5FA)"></div></div>
               </div>
             </div>
@@ -399,6 +406,56 @@
     sidebar.classList.toggle('mobile-open');
     overlay.classList.toggle('active');
   }
+
+  // Topnav dropdown trigger
+  const topnavProfileBtn = document.getElementById('topnavProfileBtn');
+  if (topnavProfileBtn) {
+    const profileDropdown = document.getElementById('profileDropdown');
+    topnavProfileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', () => {
+      profileDropdown.classList.remove('show');
+    });
+  }
+
+  // ─── Load profile data from localStorage ───
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('skillbridge_theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+    }
+
+    const profileData = JSON.parse(localStorage.getItem('skillbridge_profile')) || {};
+    if (profileData.name) {
+      const firstName = profileData.name.split(' ')[0];
+      document.getElementById('sidebarName').textContent = profileData.name;
+      document.getElementById('topnavName').textContent = profileData.name;
+      document.getElementById('welcomeName').textContent = firstName;
+      document.getElementById('greetName').textContent = firstName;
+      const initials = profileData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      if (!profileData.avatar) {
+        document.getElementById('sidebarAvatar').textContent = initials;
+        document.getElementById('topnavAvatar').textContent = initials;
+      }
+    }
+    if (profileData.branch) {
+      document.getElementById('sidebarBranch').textContent = profileData.branch;
+    }
+    if (profileData.avatar) {
+      ['sidebarAvatar', 'topnavAvatar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.backgroundImage = `url(${profileData.avatar})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
+          el.style.color = 'transparent';
+        }
+      });
+    }
+  });
 </script>
 </body>
 </html>

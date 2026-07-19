@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile – SkillBridge</title>
+  <meta name="description" content="Your personalized profile, skill analysis, and achievements." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body class="profile-page-content">
+<div class="dashboard-layout">
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+      <span class="sidebar-brand-text">SkillBridge</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="student-dashboard.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
+        <span>Dashboard</span>
+      </a>
+      <a href="profile.html" class="sidebar-nav-item active">
+        <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
+        <span>My Profile</span>
+      </a>
+      <a href="assessment.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+        <span>Assessments</span>
+        <span class="nav-badge">3</span>
+      </a>
+
+      <div class="sidebar-section-label">Learning</div>
+      <a href="skill-gap.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div>
+        <span>Skill Gap</span>
+      </a>
+      <a href="courses.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <span>Courses</span>
+      </a>
+      <a href="roadmap.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-road"></i></div>
+        <span>Roadmap</span>
+      </a>
+      <a href="progress.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <span>Progress</span>
+      </a>
+
+      <div class="sidebar-section-label">Other</div>
+      <a href="reports.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div>
+        <span>Reports</span>
+      </a>
+      <a href="account-settings.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm avatar-placeholder" id="sidebarAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarName">Arjun Kapoor</div>
+          <div class="sidebar-user-role">Student · <span id="sidebarBranch">Computer Science</span></div>
+        </div>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="dashboard-main" id="dashMain">
+    <!-- Top Nav -->
+    <header class="topnav">
+      <div class="topnav-left">
+        <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <div class="topnav-title">My Profile</div>
+          <div class="topnav-breadcrumb">Manage your details and achievements</div>
+        </div>
+      </div>
+      <div class="search-bar" style="display:flex">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Search skills, courses, assessments..." />
+        <kbd style="font-size:0.65rem;color:var(--text-muted);border:1px solid var(--border);padding:2px 6px;border-radius:4px">⌘K</kbd>
+      </div>
+      <div class="topnav-right">
+        <div class="topnav-icon-btn icon-badge" title="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-dot"></span>
+        </div>
+        <div class="topnav-icon-btn" title="Messages"><i class="fa-solid fa-message"></i></div>
+        <div class="topnav-profile" id="topnavProfileBtn">
+          <div class="avatar avatar-sm avatar-placeholder" id="topnavAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+          <div class="topnav-profile-info">
+            <div class="topnav-profile-name" id="topnavName">Arjun Kapoor</div>
+            <div class="topnav-profile-role">Student</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;color:var(--text-muted)"></i>
+          <!-- Premium Dropdown Menu -->
+          <div class="premium-dropdown" id="profileDropdown">
+            <a href="profile.html" class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="help.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+            <div class="dropdown-divider"></div>
+            <a href="login.html" class="dropdown-item" style="color:#EF4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dash-content">
+      
+      <!-- Profile Header -->
+      <div class="profile-header animate-slideUp">
+        <div class="profile-header-content">
+          <div class="profile-header-left">
+            <div class="profile-avatar-wrapper">
+              <div class="profile-avatar" id="mainAvatar">AK</div>
+              <div class="profile-online" title="Online"></div>
+              <div class="profile-camera" title="Update Photo"><i class="fa-solid fa-camera"></i></div>
+            </div>
+            <div class="profile-info">
+              <h2 class="profile-name">
+                <span id="displayName">Arjun Kapoor</span>
+              </h2>
+              <div class="profile-title-sub"><i class="fa-solid fa-user-graduate"></i> IT Student</div>
+              <div class="profile-meta">
+                <div><i class="fa-solid fa-envelope"></i> <span id="displayEmail">arjun@example.com</span></div>
+                <div><i class="fa-solid fa-phone"></i> <span id="displayPhone">+91 9876543210</span></div>
+                <div><i class="fa-solid fa-location-dot"></i> <span id="displayLocation">Mumbai, India</span></div>
+                <div><i class="fa-solid fa-building-columns"></i> <span id="displayCollege">XYZ College of Engineering</span></div>
+                <div><i class="fa-solid fa-laptop-code"></i> <span id="displayBranch">Computer Science (CSE)</span></div>
+                <div><i class="fa-solid fa-graduation-cap"></i> <span id="displayYear">3rd Year</span></div>
+                <div><i class="fa-solid fa-id-card"></i> <span id="displayStudentId">STU2021890</span></div>
+                <div><i class="fa-solid fa-calendar-days"></i> <span id="displayJoinedDate">Joined July 2024</span></div>
+              </div>
+              <p class="profile-bio" id="displayBio">Passionate IT student with a strong interest in AI, web development, and data science. Always looking to grow and learn new technologies.</p>
+              
+              <!-- Profile Completion Progress Bar -->
+              <div class="profile-progress-container">
+                <div class="profile-progress-info">
+                  <span>Profile Completion</span>
+                  <span id="completionPercent">80%</span>
+                </div>
+                <div class="profile-progress-bar">
+                  <div class="profile-progress-fill" id="completionFill" style="width: 80%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <a href="edit-profile.html" class="btn-primary-gradient"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+            <a href="account-settings.html" class="btn-outline"><i class="fa-solid fa-sliders"></i> Account Settings</a>
+            <a href="login.html" class="btn-outline btn-danger-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid (6 cards, reduced height) -->
+      <div class="profile-stats-grid stagger">
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-blue"><i class="fa-solid fa-star"></i></div>
+          <div class="stat-info">
+            <h4>74/100</h4>
+            <p>Overall Skill Score</p>
+          </div>
+        </div>
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-orange"><i class="fa-solid fa-medal"></i></div>
+          <div class="stat-info">
+            <h4>#42</h4>
+            <p>Leaderboard Rank</p>
+          </div>
+        </div>
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-green"><i class="fa-solid fa-code"></i></div>
+          <div class="stat-info">
+            <h4>12</h4>
+            <p>Skills Learned</p>
+          </div>
+        </div>
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-purple"><i class="fa-solid fa-book-open"></i></div>
+          <div class="stat-info">
+            <h4>5</h4>
+            <p>Courses Completed</p>
+          </div>
+        </div>
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-green"><i class="fa-solid fa-certificate"></i></div>
+          <div class="stat-info">
+            <h4>2</h4>
+            <p>Certificates Earned</p>
+          </div>
+        </div>
+        <div class="stat-card animate-slideUp">
+          <div class="stat-icon-wrapper stat-red"><i class="fa-solid fa-fire"></i></div>
+          <div class="stat-info">
+            <h4>14 Days</h4>
+            <p>Learning Streak</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout: 2-Column Grid -->
+
+      <!-- Row 1: Skill Analysis | Company Eligibility -->
+      <div class="profile-two-col">
+        
+        <!-- Skill Analysis -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-chart-pie"></i> Skill Analysis</h3>
+          
+          <div class="skill-item">
+            <div class="skill-item-header"><span>HTML</span> <span>90%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill fill-blue" style="width:90%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-item-header"><span>CSS</span> <span>85%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill fill-purple" style="width:85%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-item-header"><span>PHP</span> <span>75%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:75%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-item-header"><span>MySQL</span> <span>80%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill fill-orange" style="width:80%"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-item-header"><span>Communication</span> <span>95%</span></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill fill-teal" style="width:95%"></div></div>
+          </div>
+        </div>
+
+        <!-- Company Eligibility -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-building"></i> Company Eligibility</h3>
+          <div class="eligibility-layout">
+            <div class="circular-progress" id="eligibilityProgress">
+              <div class="circular-value" id="eligibilityPercent">75%</div>
+            </div>
+            <div class="eligibility-info">
+              <div class="eligibility-chips">
+                <div class="eligibility-chip-row">
+                  <span class="eligibility-label">Eligible:</span>
+                  <div class="eligibility-tags">
+                    <span class="tag tag-success"><i class="fa-solid fa-check"></i> TCS Ninja</span>
+                    <span class="tag tag-success"><i class="fa-solid fa-check"></i> Infosys</span>
+                    <span class="tag tag-success"><i class="fa-solid fa-check"></i> Wipro</span>
+                  </div>
+                </div>
+                <div class="eligibility-chip-row">
+                  <span class="eligibility-label">Need Improvement:</span>
+                  <div class="eligibility-tags">
+                    <span class="tag tag-warning"><i class="fa-solid fa-triangle-exclamation"></i> Amazon SDE</span>
+                    <span class="tag tag-warning"><i class="fa-solid fa-triangle-exclamation"></i> Microsoft</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="openModal()" class="btn-primary-gradient" style="font-size:0.75rem; padding: 6px 12px;"><i class="fa-solid fa-list-check"></i> View Requirements</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Achievement Badges | Certificates -->
+      <div class="profile-two-col">
+
+        <!-- Achievement Badges -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-shield-halved"></i> Achievement Badges</h3>
+          <div class="badge-carousel-container">
+            <button class="carousel-btn carousel-left" onclick="scrollCarousel('badgeList', -1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="badge-carousel" id="badgeList">
+              <div class="badge-card">
+                <div class="badge-emoji">🔥</div>
+                <div class="badge-title">Streak Master</div>
+                <div class="badge-date">14 Days</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-emoji">🏆</div>
+                <div class="badge-title">Top Performer</div>
+                <div class="badge-date">Leaderboard</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-emoji">⚡</div>
+                <div class="badge-title">Fast Learner</div>
+                <div class="badge-date">Completed</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-emoji">🎯</div>
+                <div class="badge-title">Goal Getter</div>
+                <div class="badge-date">Assessments</div>
+              </div>
+              <div class="badge-card">
+                <div class="badge-emoji">💻</div>
+                <div class="badge-title">Code Warrior</div>
+                <div class="badge-date">Languages</div>
+              </div>
+            </div>
+            <button class="carousel-btn carousel-right" onclick="scrollCarousel('badgeList', 1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-certificate"></i> Certificates</h3>
+          <div class="cert-carousel-container">
+            <button class="carousel-btn carousel-left" onclick="scrollCarousel('certList', -1)"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="cert-carousel" id="certList">
+              <div class="cert-card">
+                <div class="cert-thumb"><i class="fa-brands fa-python"></i></div>
+                <div class="cert-info">
+                  <h5>Python Basic</h5>
+                  <p>HackerRank</p>
+                </div>
+                <div class="cert-actions">
+                  <a href="#"><i class="fa-solid fa-eye"></i> View</a>
+                  <a href="#"><i class="fa-solid fa-download"></i> Download</a>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-thumb" style="color:#10B981; background:rgba(16,185,129,0.08)"><i class="fa-solid fa-database"></i></div>
+                <div class="cert-info">
+                  <h5>SQL Intermediate</h5>
+                  <p>HackerRank</p>
+                </div>
+                <div class="cert-actions">
+                  <a href="#"><i class="fa-solid fa-eye"></i> View</a>
+                  <a href="#"><i class="fa-solid fa-download"></i> Download</a>
+                </div>
+              </div>
+              <div class="cert-card">
+                <div class="cert-thumb" style="color:#F59E0B; background:rgba(245,158,11,0.08)"><i class="fa-solid fa-cloud"></i></div>
+                <div class="cert-info">
+                  <h5>AWS Cloud</h5>
+                  <p>Coursera</p>
+                </div>
+                <div class="cert-actions">
+                  <a href="#"><i class="fa-solid fa-eye"></i> View</a>
+                  <a href="#"><i class="fa-solid fa-download"></i> Download</a>
+                </div>
+              </div>
+            </div>
+            <button class="carousel-btn carousel-right" onclick="scrollCarousel('certList', 1)"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 3: Global Leaderboard | Recent Activity -->
+      <div class="profile-two-col">
+
+        <!-- Global Leaderboard -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-ranking-star"></i> Global Leaderboard</h3>
+          <div class="leaderboard-container">
+            <div class="leaderboard-list" id="leaderboardList">
+              <!-- Top 3 -->
+              <div class="leaderboard-item">
+                <div class="lb-rank"><i class="fa-solid fa-medal gold"></i> 1</div>
+                <div class="lb-user">
+                  <div class="lb-avatar" style="background:#FEF3C7; color:#D97706;">SJ</div>
+                  <span>Shruti J.</span>
+                </div>
+                <div class="lb-score">98</div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="lb-rank"><i class="fa-solid fa-medal silver"></i> 2</div>
+                <div class="lb-user">
+                  <div class="lb-avatar" style="background:#F1F5F9; color:#475569;">RM</div>
+                  <span>Rahul M.</span>
+                </div>
+                <div class="lb-score">95</div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="lb-rank"><i class="fa-solid fa-medal bronze"></i> 3</div>
+                <div class="lb-user">
+                  <div class="lb-avatar" style="background:#FFF7ED; color:#EA580C;">PK</div>
+                  <span>Priya K.</span>
+                </div>
+                <div class="lb-score">92</div>
+              </div>
+              <!-- Hidden Top 4-10 -->
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;4</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">AS</div>
+                  <span>Aman S.</span>
+                </div>
+                <div class="lb-score">88</div>
+              </div>
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;5</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">ND</div>
+                  <span>Neha D.</span>
+                </div>
+                <div class="lb-score">85</div>
+              </div>
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;6</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">VK</div>
+                  <span>Vikram K.</span>
+                </div>
+                <div class="lb-score">83</div>
+              </div>
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;7</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">RT</div>
+                  <span>Rohan T.</span>
+                </div>
+                <div class="lb-score">81</div>
+              </div>
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;8</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">SP</div>
+                  <span>Sania P.</span>
+                </div>
+                <div class="lb-score">79</div>
+              </div>
+              <div class="leaderboard-item lb-more-item" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;9</div>
+                <div class="lb-user">
+                  <div class="lb-avatar">KK</div>
+                  <span>Karan K.</span>
+                </div>
+                <div class="lb-score">77</div>
+              </div>
+              <div class="leaderboard-item lb-more-item active" style="display: none;">
+                <div class="lb-rank">&nbsp;&nbsp;10</div>
+                <div class="lb-user">
+                  <div class="lb-avatar" style="background:linear-gradient(135deg,#2563EB,#3B82F6); color:#fff;">AK</div>
+                  <span>Arjun K.</span>
+                </div>
+                <div class="lb-score">74</div>
+              </div>
+            </div>
+            <button id="btnViewLeaderboard" class="btn-outline" style="width:100%; margin-top:12px; font-size:0.75rem; padding: 6px; justify-content:center;">View More</button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="profile-card animate-slideUp">
+          <h3 class="profile-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+          <div class="timeline-container">
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-icon success"></div>
+                <div class="timeline-content">
+                  Completed Assessment <strong>Python Intermediate</strong>
+                </div>
+                <div class="timeline-date">2 hours ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon"></div>
+                <div class="timeline-content">
+                  Completed Course <strong>SQL Fundamentals</strong>
+                </div>
+                <div class="timeline-date">Yesterday</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon warning"></div>
+                <div class="timeline-content">
+                  Earned Badge <strong>Streak Master</strong>
+                </div>
+                <div class="timeline-date">3 days ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon"></div>
+                <div class="timeline-content">
+                  Downloaded Certificate <strong>HTML/CSS Basics</strong>
+                </div>
+                <div class="timeline-date">5 days ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon success"></div>
+                <div class="timeline-content">
+                  Completed Assessment <strong>Data Visualization Basics</strong>
+                </div>
+                <div class="timeline-date">1 week ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon"></div>
+                <div class="timeline-content">
+                  Started Course <strong>Machine Learning Advanced</strong>
+                </div>
+                <div class="timeline-date">2 weeks ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon warning"></div>
+                <div class="timeline-content">
+                  Earned Badge <strong>Fast Learner</strong>
+                </div>
+                <div class="timeline-date">2 weeks ago</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon"></div>
+                <div class="timeline-content">
+                  Joined SkillBridge <strong>Account Created</strong>
+                </div>
+                <div class="timeline-date">3 weeks ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div><!-- /dash-content -->
+  </main>
+</div>
+
+<!-- Company Requirements Modal Overlay -->
+<div id="requirementsModal" class="modal-overlay" style="display:none;">
+  <div class="modal-content animate-slideUp">
+    <div class="modal-body">
+      <div class="modal-header">
+        <h3 class="profile-section-title" style="margin:0; border:none; padding:0;"><i class="fa-solid fa-list-check"></i> Company Requirements</h3>
+        <button onclick="closeModal()" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <div style="max-height:450px; overflow-y:auto; padding-right:8px; display:flex; flex-direction:column; gap:16px;">
+        
+        <!-- Current Status -->
+        <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; border:1px solid var(--profile-border);">
+          <div>
+            <div style="font-size:0.75rem; color:var(--profile-text-secondary);">Your Score</div>
+            <div style="font-size:1.2rem; font-weight:700; color:var(--profile-primary);">74 / 100</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; color:var(--profile-text-secondary);">Eligibility Status</div>
+            <span class="tag tag-success" style="display:inline-flex; border:none; padding:4px 8px; margin:0;"><i class="fa-solid fa-circle-check"></i> Eligible for 3/5 Companies</span>
+          </div>
+        </div>
+
+        <!-- TCS -->
+        <div style="border:1px solid rgba(16,185,129,0.2); background:rgba(16,185,129,0.02); padding:16px; border-radius:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:#10B981; font-size:0.9rem;">TCS Ninja (Eligible)</strong>
+            <span style="font-size:0.75rem; color:var(--profile-text-secondary);">Min Score: 60</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem;">
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> HTML</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> CSS</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> PHP</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> MySQL</span>
+          </div>
+          <div style="font-size:0.7rem; color:var(--profile-text-secondary); margin-top:8px;">Recommendation: Ready to apply! Keep your core skills sharp.</div>
+        </div>
+
+        <!-- Infosys -->
+        <div style="border:1px solid rgba(16,185,129,0.2); background:rgba(16,185,129,0.02); padding:16px; border-radius:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:#10B981; font-size:0.9rem;">Infosys (Eligible)</strong>
+            <span style="font-size:0.75rem; color:var(--profile-text-secondary);">Min Score: 65</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem;">
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> HTML</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> CSS</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> Communication</span>
+          </div>
+          <div style="font-size:0.7rem; color:var(--profile-text-secondary); margin-top:8px;">Recommendation: Ready to apply! Keep your core skills sharp.</div>
+        </div>
+
+        <!-- Accenture -->
+        <div style="border:1px solid rgba(239,68,68,0.2); background:rgba(239,68,68,0.02); padding:16px; border-radius:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:#EF4444; font-size:0.9rem;">Accenture (Not Eligible)</strong>
+            <span style="font-size:0.75rem; color:var(--profile-text-secondary);">Min Score: 70</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem; margin-bottom:8px;">
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> HTML</span>
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> CSS</span>
+            <span style="color:#EF4444;"><i class="fa-solid fa-circle-xmark"></i> Communication</span>
+            <span style="color:#EF4444;"><i class="fa-solid fa-circle-xmark"></i> Aptitude</span>
+            <span style="color:#EF4444;"><i class="fa-solid fa-circle-xmark"></i> Problem Solving</span>
+          </div>
+          <div style="font-size:0.7rem; color:#F59E0B;"><i class="fa-solid fa-circle-info"></i> Recommendation: Complete the Communication course and practice Aptitude tests to unlock.</div>
+        </div>
+
+        <!-- Amazon SDE -->
+        <div style="border:1px solid rgba(239,68,68,0.2); background:rgba(239,68,68,0.02); padding:16px; border-radius:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:#EF4444; font-size:0.9rem;">Amazon SDE (Not Eligible)</strong>
+            <span style="font-size:0.75rem; color:var(--profile-text-secondary);">Min Score: 80</span>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem; margin-bottom:8px;">
+            <span style="color:#10B981;"><i class="fa-solid fa-circle-check"></i> MySQL</span>
+            <span style="color:#EF4444;"><i class="fa-solid fa-circle-xmark"></i> Machine Learning</span>
+            <span style="color:#EF4444;"><i class="fa-solid fa-circle-xmark"></i> Data Structures</span>
+          </div>
+          <div style="font-size:0.7rem; color:#F59E0B;"><i class="fa-solid fa-circle-info"></i> Recommendation: Boost Overall Score to 80 and complete the Machine Learning pathway.</div>
+        </div>
+
+      </div>
+      
+      <div style="display:flex; justify-content:flex-end; gap:16px; margin-top:24px; padding-top:16px; border-top:1px solid var(--profile-border);">
+        <button onclick="closeModal()" class="btn-outline" style="padding:8px 20px; font-size:0.8rem; font-weight:600;">Close</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('active');
+  }
+
+  // Topnav dropdown trigger
+  const topnavProfileBtn = document.getElementById('topnavProfileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  topnavProfileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+  });
+  document.addEventListener('click', () => {
+    profileDropdown.classList.remove('show');
+  });
+
+  // Carousel scrolling helper
+  function scrollCarousel(id, direction) {
+    const container = document.getElementById(id);
+    if (container) {
+      const scrollAmount = direction * 160;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  }
+
+
+  // Modal Functions
+  function openModal() {
+    document.getElementById('requirementsModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('requirementsModal').style.display = 'none';
+  }
+
+  // Close modal when clicking outside content
+  window.addEventListener('click', (e) => {
+    const modal = document.getElementById('requirementsModal');
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // ─── Theme Toggle Logic ───
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('skillbridge_theme');
+
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      if (themeToggle) themeToggle.checked = true;
+    } else {
+      document.body.classList.remove('light-theme');
+      if (themeToggle) themeToggle.checked = false;
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
+          document.body.classList.add('light-theme');
+          localStorage.setItem('skillbridge_theme', 'light');
+        } else {
+          document.body.classList.remove('light-theme');
+          localStorage.setItem('skillbridge_theme', 'dark');
+        }
+      });
+    }
+
+    // ─── Leaderboard View More ───
+    const btnViewLeaderboard = document.getElementById('btnViewLeaderboard');
+    const lbMoreItems = document.querySelectorAll('.lb-more-item');
+    btnViewLeaderboard.addEventListener('click', () => {
+      const isExpanded = btnViewLeaderboard.textContent === 'View Less';
+      lbMoreItems.forEach(item => {
+        item.style.display = isExpanded ? 'none' : 'flex';
+      });
+      btnViewLeaderboard.textContent = isExpanded ? 'View More' : 'View Less';
+    });
+
+    // ─── Local Storage Loader ───
+    const profileData = JSON.parse(localStorage.getItem('skillbridge_profile'));
+    if (profileData) {
+      if (profileData.name) {
+        document.getElementById('displayName').textContent = profileData.name;
+        document.querySelectorAll('.sidebar-user-name, .topnav-profile-name').forEach(el => el.textContent = profileData.name);
+        const initials = profileData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        document.querySelectorAll('.avatar-placeholder, #mainAvatar, #sidebarAvatar, #topnavAvatar').forEach(el => {
+          if (!profileData.avatar) el.textContent = initials;
+        });
+      }
+      if (profileData.email) document.getElementById('displayEmail').textContent = profileData.email;
+      if (profileData.phone) document.getElementById('displayPhone').textContent = profileData.phone;
+      if (profileData.location) document.getElementById('displayLocation').textContent = profileData.location;
+      if (profileData.college) document.getElementById('displayCollege').textContent = profileData.college;
+      if (profileData.branch) {
+        document.getElementById('displayBranch').textContent = profileData.branch;
+        document.getElementById('sidebarBranch').textContent = profileData.branch;
+      }
+      if (profileData.year) document.getElementById('displayYear').textContent = profileData.year;
+      if (profileData.student_id) document.getElementById('displayStudentId').textContent = profileData.student_id;
+      if (profileData.bio) document.getElementById('displayBio').textContent = profileData.bio;
+      if (profileData.avatar) {
+        document.querySelectorAll('.avatar-placeholder, #mainAvatar, #sidebarAvatar, #topnavAvatar').forEach(el => {
+          el.style.backgroundImage = `url(${profileData.avatar})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
+          el.style.color = 'transparent';
+        });
+      }
+    }
+  });
+</script>
+</body>
+</html>
