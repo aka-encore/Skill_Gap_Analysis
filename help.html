@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help & Support – SkillBridge</title>
+  <meta name="description" content="Find answers to frequently asked questions and get support on SkillBridge." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/dashboard-custom.css" />
+</head>
+<body>
+  <div class="dashboard-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <button class="mobile-menu-toggle sidebar-toggle-btn" id="sidebarCloseToggle" onclick="toggleSidebar()"
+          style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"
+          title="Close Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="sidebar-brand-text">SkillBridge</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a href="student-dashboard.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
+          <span>My Profile</span>
+        </a>
+        <a href="assessment.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+          <span>Assessments</span>
+          <span class="nav-badge">3</span>
+        </a>
+        <a href="notification.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-bell"></i></div>
+          <span>Notifications</span><span class="nav-badge">4</span>
+        </a>
+
+        <div class="sidebar-section-label">Learning</div>
+        <a href="skill-gap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <span>Skill Gap</span>
+        </a>
+        <a href="courses.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <span>Courses</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-road"></i></div>
+          <span>Roadmap</span>
+        </a>
+        <a href="progress.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <span>Progress</span>
+        </a>
+
+        <div class="sidebar-section-label">Other</div>
+
+        <a href="feedback.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-comments"></i></div>
+          <span>Feedback</span>
+        </a>
+
+        <a href="about.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span>About Us</span>
+        </a>
+
+        <a href="help.html" class="sidebar-nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div>
+          <span>Help</span>
+        </a>
+
+        <a href="settings.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <a href="profile.html" class="sidebar-profile-link" title="View Profile">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#26658C,#14B8A6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;color:#fff">
+              AK</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name">Coder</div>
+              <div class="sidebar-user-role">Student · CSE</div>
+            </div>
+          </a>
+          <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i
+              class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <header class="topnav">
+        <div class="topnav-left">
+          <button class="mobile-menu-toggle" onclick="toggleSidebar()"
+            style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <div class="topnav-title">Help & Support</div>
+            <div class="topnav-breadcrumb">Dashboard / <span>Help Center</span></div>
+          </div>
+        </div>
+        <div class="topnav-right">
+          <a href="profile.html" class="topnav-profile" style="text-decoration:none;">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#26658C,#14B8A6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">
+              AK</div>
+            <div class="topnav-profile-info">
+              <div class="topnav-profile-name">Coder</div>
+              <div class="topnav-profile-role">Student</div>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <div class="dash-body" style="padding: var(--space-6);">
+        <div class="card" style="max-width: 800px; margin: 0 auto; padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl);">
+          <h2 style="color: var(--text-primary); margin-bottom: var(--space-6);"><i class="fa-solid fa-life-ring text-primary"></i> Frequently Asked Questions</h2>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div style="padding: var(--space-4); background: #F4F9FF; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <h4 style="color: var(--text-primary); margin-bottom: 6px;"><i class="fa-solid fa-circle-question text-accent"></i> How does Skill Gap Analysis work?</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0; line-height: 1.5;">SkillBridge analyzes your performance across assessments and compares your scores against industry standards to highlight your strong concepts and vulnerabilities.</p>
+            </div>
+
+            <div style="padding: var(--space-4); background: #F4F9FF; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <h4 style="color: var(--text-primary); margin-bottom: 6px;"><i class="fa-solid fa-circle-question text-accent"></i> What happens if I switch tabs during an assessment?</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0; line-height: 1.5;">Our automatic proctoring system flags tab switches. Accumulating 3 warnings triggers automatic test submission.</p>
+            </div>
+
+            <div style="padding: var(--space-4); background: #F4F9FF; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <h4 style="color: var(--text-primary); margin-bottom: 6px;"><i class="fa-solid fa-circle-question text-accent"></i> How do I claim my Certificate of Skill Attainment?</h4>
+              <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0; line-height: 1.5;">Achieve a score of 80% or higher on any assessment to unlock your verifiable digital certificate on the results screen.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('mobile-open');
+    }
+  </script>
+</body>
+</html>

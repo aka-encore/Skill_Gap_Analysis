@@ -11,25 +11,33 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <style>
+    .sidebar{transform:translateX(-100%);z-index:1000;box-shadow:var(--shadow-lg)}.sidebar.mobile-open{transform:translateX(0)}.dashboard-main{margin-left:0!important}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:999}.sidebar-overlay.active{display:block}.mobile-menu-toggle{display:flex!important}
+    .topnav-profile{position:relative;cursor:pointer}.profile-chevron{font-size:0.7rem;color:var(--text-muted);transition:transform var(--transition-fast);margin-left:4px}.topnav-profile.open .profile-chevron{transform:rotate(180deg)}.profile-dropdown{position:absolute;top:50px;right:0;width:165px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);padding:var(--space-2);display:flex;flex-direction:column;gap:4px;z-index:1000;opacity:0;transform:translateY(10px);pointer-events:none;transition:all var(--transition-fast);text-align:left}.profile-dropdown.active{opacity:1;transform:translateY(0);pointer-events:auto}.profile-dropdown a{display:flex;align-items:center;gap:10px;padding:8px 12px;color:var(--text-secondary);font-size:var(--font-size-sm);text-decoration:none;border-radius:var(--radius-sm);font-weight:500;transition:all var(--transition-fast)}.profile-dropdown a:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+    .topnav-icon-btn{position:relative}.notif-dropdown{position:absolute;top:50px;right:0;width:300px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);z-index:1000;opacity:0;transform:translateY(10px);pointer-events:none;transition:all var(--transition-fast);text-align:left}.notif-dropdown.active{opacity:1;transform:translateY(0);pointer-events:auto}.notif-header{padding:var(--space-4);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.notif-header span{font-weight:600;font-size:var(--font-size-base);color:var(--text-primary)}.mark-read-btn{background:none;border:none;color:var(--primary-light);font-size:var(--font-size-xs);cursor:pointer;font-weight:500}.notif-list{max-height:200px;overflow-y:auto}.notif-item{display:flex;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border);cursor:pointer}.notif-item:hover{background:rgba(255,255,255,0.02)}.notif-item-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.85rem}.notif-item-icon.success{background:rgba(16,185,129,0.15);color:var(--success)}.notif-item-icon.warning{background:rgba(245,158,11,0.15);color:var(--warning)}.notif-content{flex:1}.notif-title{font-size:var(--font-size-sm);font-weight:600;color:var(--text-primary);margin-bottom:2px}.notif-desc{font-size:var(--font-size-xs);color:var(--text-secondary);line-height:1.4;margin-bottom:4px}.notif-time{font-size:10px;color:var(--text-muted)}.notif-footer{padding:var(--space-3);text-align:center;border-top:1px solid var(--border)}.notif-footer a{color:var(--primary-light);font-size:var(--font-size-xs);font-weight:500;text-decoration:none}.notif-footer a:hover{text-decoration:underline}
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span class="sidebar-brand-text">SkillBridge</span></div>
     <nav class="sidebar-nav">
       <div class="sidebar-section-label">Main</div>
       <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
-      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span></a>
+      <a href="profile.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
+      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span class="nav-badge">3</span></a>
+      <a href="notification.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-bell"></i></div><span>Notifications</span><span class="nav-badge">4</span></a>
       <div class="sidebar-section-label">Learning</div>
-      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
+      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><span>Skill Gap</span></a>
       <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
       <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
       <a href="progress.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
       <div class="sidebar-section-label">Other</div>
-      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
+      <a href="feedback.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-comments"></i></div><span>Feedback</span></a>
+      <a href="about.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div><span>About Us</span></a>
+      <a href="help.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div><span>Help</span></a>
+      <a href="settings.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
@@ -47,10 +55,25 @@
         <div><div class="topnav-title">Progress Tracking</div><div class="topnav-breadcrumb">Dashboard / <span>Progress</span></div></div>
       </div>
       <div class="topnav-right">
-        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
-        <div class="topnav-profile">
+        <div class="topnav-icon-btn icon-badge" id="notifBell" onclick="toggleNotifDropdown(event)" style="position:relative;">
+          <i class="fa-solid fa-bell"></i><span class="notif-dot" id="notifDot" style="display:block"></span>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-header"><span>Notifications</span><button class="mark-read-btn" onclick="clearNotifDot(event)">Mark all read</button></div>
+            <div class="notif-list">
+              <div class="notif-item"><div class="notif-item-icon success"><i class="fa-solid fa-circle-check"></i></div><div class="notif-content"><div class="notif-title">Assessment Completed</div><div class="notif-desc">You scored 88% on React Intermediate...</div><div class="notif-time">2 hours ago</div></div></div>
+              <div class="notif-item"><div class="notif-item-icon warning"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="notif-content"><div class="notif-title">Assessment Reminder</div><div class="notif-desc">Deep Learning at 3:00 PM today</div><div class="notif-time">3 hours ago</div></div></div>
+            </div>
+            <div class="notif-footer"><a href="notification.html">View All Messages</a></div>
+          </div>
+        </div>
+        <div class="topnav-profile" id="profileToggle" onclick="toggleProfileDropdown(event)" style="position:relative;">
           <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
           <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
+          <i class="fa-solid fa-chevron-down profile-chevron"></i>
+          <div class="profile-dropdown" id="profileDropdown">
+            <a href="profile.html"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+            <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
         </div>
       </div>
     </header>
@@ -286,14 +309,13 @@
   </main>
 </div>
 <script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('mobile-open');
-    document.getElementById('sidebarOverlay').classList.toggle('active');
-  }
-  function toggleView(v) {
-    document.getElementById('viewM').className = v === 'month' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
-    document.getElementById('viewW').className = v === 'week'  ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
-  }
+  function toggleSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('sidebarOverlay');s.classList.toggle('mobile-open');o.classList.toggle('active');}
+  document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
+  function toggleProfileDropdown(e){e.stopPropagation();var d=document.getElementById('profileDropdown'),n=document.getElementById('notifDropdown'),t=document.getElementById('profileToggle');if(n)n.classList.remove('active');d.classList.toggle('active');t.classList.toggle('open',d.classList.contains('active'));}
+  function toggleNotifDropdown(e){e.stopPropagation();var d=document.getElementById('notifDropdown'),p=document.getElementById('profileDropdown'),t=document.getElementById('profileToggle');if(p){p.classList.remove('active');t.classList.remove('open');}d.classList.toggle('active');}
+  function clearNotifDot(e){if(e)e.stopPropagation();var dot=document.getElementById('notifDot');if(dot)dot.style.display='none';}
+  window.addEventListener('click',function(e){var p=document.getElementById('profileDropdown'),n=document.getElementById('notifDropdown'),pt=document.getElementById('profileToggle'),nb=document.getElementById('notifBell');if(p&&p.classList.contains('active')&&!pt.contains(e.target)){p.classList.remove('active');pt.classList.remove('open');}if(n&&n.classList.contains('active')&&!nb.contains(e.target)){n.classList.remove('active');}});
+  function toggleView(v){document.getElementById('viewM').className=v==='month'?'btn btn-primary btn-sm':'btn btn-ghost btn-sm';document.getElementById('viewW').className=v==='week'?'btn btn-primary btn-sm':'btn btn-ghost btn-sm';}
 </script>
 </body>
 </html>

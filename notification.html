@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notification Center - SkillBridge</title>
+  <meta name="description"
+    content="Stay updated with your assessment results, course recommendations, skill score updates, and learning reminders." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/notification.css" />
+
+</head>
+
+<body>
+  <div class="dashboard-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="sidebar-brand-text">SkillBridge</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a href="student-dashboard.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span>
+        </a>
+        <a href="assessment.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span
+            class="nav-badge">3</span>
+        </a>
+        <a href="notification.html" class="sidebar-nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-bell"></i></div><span>Notifications</span><span
+            class="nav-badge">4</span>
+        </a>
+        <div class="sidebar-section-label">Learning</div>
+        <a href="skill-gap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><span>Skill Gap</span>
+        </a>
+        <a href="courses.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span>
+        </a>
+        <a href="progress.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span>
+        </a>
+        <div class="sidebar-section-label">Other</div>
+
+        <a href="feedback.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-comments"></i></div>
+          <span>Feedback</span>
+        </a>
+
+        <a href="about.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span>About Us</span>
+        </a>
+
+        <a href="help.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div>
+          <span>Help</span>
+        </a>
+
+        <a href="settings.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar avatar-sm avatar-placeholder"
+            style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">
+            AK</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Arjun Kapoor</div>
+            <div class="sidebar-user-role">Student . CSE</div>
+          </div>
+          <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i
+              class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="topnav">
+        <div class="topnav-left">
+          <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()"
+            style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i
+              class="fa-solid fa-bars"></i></button>
+          <div>
+            <div class="topnav-title">Notifications</div>
+            <div class="topnav-breadcrumb">Dashboard / <span>Notification Center</span></div>
+          </div>
+        </div>
+        <div class="topnav-right">
+          <div class="topnav-icon-btn icon-badge" id="notifBell" onclick="toggleNotifDropdown(event)"
+            title="Notifications" style="position:relative;">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot" id="notifDot"></span>
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header"><span>Notifications</span><button class="mark-read-btn"
+                  onclick="markAllRead(event)">Mark all read</button></div>
+              <div class="notif-list" id="notifListMini"></div>
+              <div class="notif-footer"><a href="notification.html">View All Messages</a></div>
+            </div>
+          </div>
+          <div class="topnav-profile" id="profileToggle" onclick="toggleProfileDropdown(event)"
+            style="position:relative;">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">
+              AK</div>
+            <div class="topnav-profile-info">
+              <div class="topnav-profile-name">Arjun Kapoor</div>
+              <div class="topnav-profile-role">Student</div>
+            </div>
+            <i class="fa-solid fa-chevron-down profile-chevron" id="profileChevron"></i>
+            <div class="profile-dropdown" id="profileDropdown">
+              <a href="profile.html"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+              <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="dash-content">
+        <div class="dash-header flex-between">
+          <div>
+            <h1>Notification Center</h1>
+            <p>Stay on top of your learning journey with real-time alerts and updates.</p>
+          </div>
+          <div class="flex gap-3">
+            <div class="streak-badge" id="unreadBadge"><i class="fa-solid fa-bell"></i> 4 Unread</div>
+          </div>
+        </div>
+
+        <div class="notif-page-header">
+          <div class="notif-filter-tabs" role="tablist">
+            <button class="notif-filter-tab active" id="tab-all" onclick="filterTab('all')" role="tab">All <span
+                class="tab-count" id="count-all">8</span></button>
+            <button class="notif-filter-tab" id="tab-unread" onclick="filterTab('unread')" role="tab">Unread <span
+                class="tab-count" id="count-unread">4</span></button>
+            <button class="notif-filter-tab" id="tab-read" onclick="filterTab('read')" role="tab">Read <span
+                class="tab-count" id="count-read">4</span></button>
+          </div>
+          <div class="notif-action-btns">
+            <button class="btn btn-ghost btn-sm" onclick="markAllPageRead()"><i class="fa-solid fa-check-double"></i>
+              Mark All as Read</button>
+            <button class="btn btn-ghost btn-sm" style="color:var(--danger);border-color:rgba(239,68,68,0.3)"
+              onclick="clearAllNotifs()"><i class="fa-solid fa-trash"></i> Clear All</button>
+          </div>
+        </div>
+
+        <div id="notifPageList"></div>
+
+        <div class="notif-empty-state" id="emptyState">
+          <div class="empty-icon-ring">&#128276;</div>
+          <div class="empty-state-title">All caught up!</div>
+          <div class="empty-state-desc">You have no notifications here. Keep learning and we will alert you of updates,
+            achievements, and reminders.</div>
+          <a href="student-dashboard.html" class="btn btn-primary"><i class="fa-solid fa-gauge-high"></i> Back to
+            Dashboard</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var allNotifications = [
+      { id: 1, read: false, type: 'success', icon: 'fa-solid fa-circle-check', title: 'Assessment Completed - 88%', desc: 'You scored 88% on the React Intermediate assessment! Your skill score increased by +6 points. Your dynamic certificate is now available for download.', time: '2 hours ago', tag: 'Assessment', tagClass: 'tag-assessment' },
+      { id: 2, read: false, type: 'warning', icon: 'fa-solid fa-triangle-exclamation', title: 'Upcoming Assessment Reminder', desc: "Your 'Deep Learning Fundamentals' challenge is scheduled for today at 3:00 PM IST. Make sure you're prepared - review your notes before starting.", time: '3 hours ago', tag: 'Reminder', tagClass: 'tag-reminder' },
+      { id: 3, read: false, type: 'primary', icon: 'fa-solid fa-graduation-cap', title: 'New Course Recommendation', desc: "Based on your Machine Learning skill gap (52%), our AI recommends enrolling in 'Machine Learning A-Z' on Udemy. This is tailored for your career path.", time: '5 hours ago', tag: 'Course', tagClass: 'tag-course' },
+      { id: 4, read: false, type: 'accent', icon: 'fa-solid fa-chart-line', title: 'Skill Score Updated', desc: 'Your overall Skill Score has increased by +12 points this week - from 62 to 74. You are now ranked in the top 28% of your cohort. Keep it up!', time: '1 day ago', tag: 'Skill', tagClass: 'tag-skill' },
+      { id: 5, read: true, type: 'success', icon: 'fa-solid fa-trophy', title: 'New Achievement - "Fast Learner"', desc: "You've earned the 'Fast Learner' badge by completing 3 courses in under 2 weeks! This badge has been added to your profile.", time: '2 days ago', tag: 'Assessment', tagClass: 'tag-assessment' },
+      { id: 6, read: true, type: 'primary', icon: 'fa-solid fa-road', title: 'Roadmap Milestone Reached', desc: "Congratulations! You've completed the 'Python Fundamentals' phase of your Data Scientist roadmap. You can now advance to Machine Learning phase.", time: '3 days ago', tag: 'Course', tagClass: 'tag-course' },
+      { id: 7, read: true, type: 'accent', icon: 'fa-solid fa-fire', title: '14-Day Learning Streak!', desc: "You've maintained a 14-day learning streak - incredible dedication! Keep learning every day to beat your personal best of 21 days.", time: '4 days ago', tag: 'Skill', tagClass: 'tag-skill' },
+      { id: 8, read: true, type: 'warning', icon: 'fa-solid fa-bell', title: 'Weekly Progress Summary', desc: "This week: +12 skill score, 2 assessments completed, 14 hours of learning. You're on track toward your Data Scientist goal!", time: '5 days ago', tag: 'Reminder', tagClass: 'tag-reminder' }
+    ];
+
+    var currentTab = 'all';
+
+    function renderPageNotifs() {
+      var list = document.getElementById('notifPageList');
+      var emptyState = document.getElementById('emptyState');
+      var filtered = allNotifications.slice();
+      if (currentTab === 'unread') filtered = allNotifications.filter(function (n) { return !n.read; });
+      if (currentTab === 'read') filtered = allNotifications.filter(function (n) { return n.read; });
+      list.innerHTML = '';
+      if (filtered.length === 0) { emptyState.classList.add('visible'); updateCounts(); return; }
+      emptyState.classList.remove('visible');
+      filtered.forEach(function (n, i) {
+        var card = document.createElement('div');
+        card.className = 'notif-card' + (n.read ? '' : ' unread');
+        card.id = 'notif-card-' + n.id;
+        card.style.animationDelay = (i * 0.06) + 's';
+        card.innerHTML = '<div class="notif-card-icon ' + n.type + '"><i class="' + n.icon + '"></i></div>' +
+          '<div class="notif-card-body">' +
+          '<div class="notif-card-title">' + n.title + '</div>' +
+          '<div class="notif-card-desc">' + n.desc + '</div>' +
+          '<div class="notif-card-meta">' +
+          '<span class="notif-card-time"><i class="fa-regular fa-clock"></i> ' + n.time + '</span>' +
+          '<span class="notif-card-tag ' + n.tagClass + '">' + n.tag + '</span>' +
+          (!n.read ? '<span class="notif-card-tag" style="background:rgba(99,102,241,0.12);color:var(--primary-light)">Unread</span>' : '') +
+          '</div>' +
+          '</div>' +
+          '<div class="notif-card-actions">' +
+          (!n.read ? '<button class="notif-action-btn" title="Mark as Read" onclick="markRead(' + n.id + ')"><i class="fa-solid fa-check"></i></button>' : '') +
+          '<button class="notif-action-btn delete" title="Delete" onclick="deleteNotif(' + n.id + ')"><i class="fa-solid fa-trash"></i></button>' +
+          '</div>';
+        list.appendChild(card);
+      });
+      updateCounts();
+    }
+
+    function updateCounts() {
+      var total = allNotifications.length;
+      var unread = allNotifications.filter(function (n) { return !n.read; }).length;
+      var read = allNotifications.filter(function (n) { return n.read; }).length;
+      document.getElementById('count-all').textContent = total;
+      document.getElementById('count-unread').textContent = unread;
+      document.getElementById('count-read').textContent = read;
+      var badge = document.getElementById('unreadBadge');
+      if (badge) badge.innerHTML = '<i class="fa-solid fa-bell"></i> ' + unread + ' Unread';
+      var dot = document.getElementById('notifDot');
+      if (dot) dot.style.display = unread > 0 ? 'block' : 'none';
+    }
+
+    function filterTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.notif-filter-tab').forEach(function (t) { t.classList.remove('active'); });
+      document.getElementById('tab-' + tab).classList.add('active');
+      renderPageNotifs();
+    }
+
+    function markRead(id) {
+      var n = allNotifications.find(function (x) { return x.id === id; });
+      if (n) { n.read = true; renderPageNotifs(); renderMiniNotifs(); }
+    }
+
+    function deleteNotif(id) {
+      var card = document.getElementById('notif-card-' + id);
+      if (card) {
+        card.style.transition = 'all 0.3s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(40px)';
+        setTimeout(function () {
+          allNotifications = allNotifications.filter(function (x) { return x.id !== id; });
+          renderPageNotifs(); renderMiniNotifs();
+        }, 300);
+      }
+    }
+
+    function markAllPageRead() {
+      allNotifications.forEach(function (n) { n.read = true; });
+      renderPageNotifs(); renderMiniNotifs();
+    }
+
+    function clearAllNotifs() {
+      allNotifications = [];
+      renderPageNotifs(); renderMiniNotifs();
+    }
+
+    function renderMiniNotifs() {
+      var container = document.getElementById('notifListMini');
+      var unread = allNotifications.filter(function (n) { return !n.read; }).slice(0, 4);
+      if (unread.length === 0) {
+        container.innerHTML = '<div class="notif-empty"><i class="fa-regular fa-bell-slash" style="font-size:1.5rem;margin-bottom:8px;display:block;"></i>No new notifications</div>';
+        return;
+      }
+      container.innerHTML = '';
+      unread.forEach(function (n) {
+        var div = document.createElement('div');
+        div.className = 'notif-item';
+        div.innerHTML = '<div class="notif-item-icon ' + n.type + '"><i class="' + n.icon + '"></i></div><div class="notif-content"><div class="notif-title">' + n.title + '</div><div class="notif-desc">' + n.desc.substring(0, 80) + '...</div><div class="notif-time">' + n.time + '</div></div>';
+        container.appendChild(div);
+      });
+    }
+
+    function markAllRead(event) { if (event) event.stopPropagation(); markAllPageRead(); }
+
+    function toggleSidebar() {
+      var sidebar = document.getElementById('sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('active');
+    }
+    document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      var dd = document.getElementById('profileDropdown');
+      var nd = document.getElementById('notifDropdown');
+      var toggle = document.getElementById('profileToggle');
+      if (nd) nd.classList.remove('active');
+      dd.classList.toggle('active');
+      toggle.classList.toggle('open', dd.classList.contains('active'));
+    }
+
+    function toggleNotifDropdown(event) {
+      event.stopPropagation();
+      var dd = document.getElementById('notifDropdown');
+      var pd = document.getElementById('profileDropdown');
+      var toggle = document.getElementById('profileToggle');
+      if (pd) { pd.classList.remove('active'); toggle.classList.remove('open'); }
+      dd.classList.toggle('active');
+    }
+
+    window.addEventListener('click', function (e) {
+      var pd = document.getElementById('profileDropdown');
+      var nd = document.getElementById('notifDropdown');
+      var pt = document.getElementById('profileToggle');
+      var nb = document.getElementById('notifBell');
+      if (pd && pd.classList.contains('active') && !pt.contains(e.target)) { pd.classList.remove('active'); pt.classList.remove('open'); }
+      if (nd && nd.classList.contains('active') && !nb.contains(e.target)) { nd.classList.remove('active'); }
+    });
+
+    renderPageNotifs();
+    renderMiniNotifs();
+  </script>
+</body>
+
+</html>

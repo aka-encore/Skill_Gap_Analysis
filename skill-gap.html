@@ -4,13 +4,128 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill Gap Analysis – SkillBridge</title>
-  <meta name="description" content="Deep dive into your skill gaps with AI-powered analysis, radar charts, priority skills, and recommended learning paths." />
+  <meta name="description" content="Deep dive into your skill gaps with interactive radar charts, priority skills, and detailed analytics." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/dashboard-custom.css" />
+
+  <!-- jsPDF & AutoTable for PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    /* ── Custom Skill Gap Specific Styles ── */
+    .clickable-skill-item, .card-stat-clickable {
+      cursor: pointer;
+      transition: all var(--transition-base);
+      user-select: none;
+    }
+    .clickable-skill-item:hover, .card-stat-clickable:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary) !important;
+      background: rgba(38, 101, 140, 0.06) !important;
+    }
+    .card-stat-clickable:active {
+      transform: translateY(-1px);
+    }
+
+    /* Modal Backdrop & Container */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 16, 36, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-6);
+      position: relative;
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-backdrop.open .modal-container {
+      transform: scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F4F9FF;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all var(--transition-fast);
+    }
+    .modal-close-btn:hover {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+
+    /* Clickable Sub-Feature Pills inside Modal */
+    .modal-interactive-pill {
+      cursor: pointer;
+      padding: var(--space-3) var(--space-4);
+      background: #F4F9FF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-fast);
+    }
+    .modal-interactive-pill:hover {
+      border-color: var(--primary);
+      background: rgba(38, 101, 140, 0.08);
+      transform: translateY(-1px);
+    }
+
+    /* Animated Progress Bars */
+    .cmp-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Full Width Horizontal Smart Suggestions Card */
+    .smart-suggestions-full {
+      width: 100%;
+      grid-column: 1 / -1;
+      margin-top: var(--space-6);
+    }
+  </style>
 </head>
 <body>
 <div class="dashboard-layout">
@@ -18,336 +133,479 @@
 
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span class="sidebar-brand-text">SkillBridge</span></div>
+    <div class="sidebar-brand">
+      <button class="mobile-menu-toggle sidebar-toggle-btn" id="sidebarCloseToggle" onclick="toggleSidebar()"
+        style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"
+        title="Close Sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+      <span class="sidebar-brand-text">SkillBridge</span>
+    </div>
+
     <nav class="sidebar-nav">
       <div class="sidebar-section-label">Main</div>
-      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
-      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span></a>
+      <a href="student-dashboard.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span>
+      </a>
+      <a href="profile.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span>
+      </a>
+      <a href="assessment.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span class="nav-badge">3</span>
+      </a>
+      <a href="notification.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-bell"></i></div><span>Notifications</span><span class="nav-badge">4</span>
+      </a>
+
       <div class="sidebar-section-label">Learning</div>
-      <a href="skill-gap.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
-      <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
-      <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
-      <a href="progress.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
+      <a href="skill-gap.html" class="sidebar-nav-item active">
+        <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><span>Skill Gap</span>
+      </a>
+      <a href="courses.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span>
+      </a>
+      <a href="roadmap.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span>
+      </a>
+      <a href="progress.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span>
+      </a>
+
       <div class="sidebar-section-label">Other</div>
-      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
+      <a href="feedback.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-comments"></i></div><span>Feedback</span>
+      </a>
+      <a href="about.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div><span>About Us</span>
+      </a>
+      <a href="help.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div><span>Help</span>
+      </a>
+      <a href="settings.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span>
+      </a>
     </nav>
+
     <div class="sidebar-footer">
       <div class="sidebar-user">
-        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
-        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
-        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
+        <a href="profile.html" class="sidebar-profile-link" title="View Profile">
+          <div class="avatar avatar-sm avatar-placeholder"
+            style="background:linear-gradient(135deg,#26658C,#14B8A6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;color:#fff">
+            AK</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Coder</div>
+            <div class="sidebar-user-role">Student · CSE</div>
+          </div>
+        </a>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i
+            class="fa-solid fa-right-from-bracket"></i></a>
       </div>
     </div>
   </aside>
 
-  <!-- Main -->
+  <!-- Main Content Area -->
   <main class="dashboard-main">
+    <!-- Topnav Header -->
     <header class="topnav">
       <div class="topnav-left">
-        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
-        <div><div class="topnav-title">Skill Gap Analysis</div><div class="topnav-breadcrumb">Dashboard / <span>Skill Gap</span></div></div>
+        <button onclick="toggleSidebar()"
+          style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <div class="topnav-title">Skill Gap Analysis</div>
+          <div class="topnav-breadcrumb">Dashboard / <span>Skill Gap</span></div>
+        </div>
       </div>
       <div class="topnav-right">
-        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
-        <div class="topnav-profile">
-          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
-          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
-        </div>
+        <a href="profile.html" class="topnav-profile" style="text-decoration:none;">
+          <div class="avatar avatar-sm avatar-placeholder"
+            style="background:linear-gradient(135deg,#26658C,#14B8A6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">
+            AK</div>
+          <div class="topnav-profile-info">
+            <div class="topnav-profile-name">Coder</div>
+            <div class="topnav-profile-role">Student</div>
+          </div>
+        </a>
       </div>
     </header>
 
     <div class="dash-content">
-      <!-- Header -->
-      <div class="dash-header flex-between">
+      
+      <!-- 1. SKILL GAP ANALYSIS HEADING -->
+      <div class="dash-header flex-between mb-6">
         <div>
-          <h1>Skill Gap Analysis <span class="badge badge-primary" style="font-size:0.75rem;vertical-align:middle">AI Powered</span></h1>
-          <p>Detailed breakdown of your current vs required skills for your target career path: <strong style="color:var(--primary-light)">Data Scientist</strong></p>
+          <h1 style="color: var(--text-primary); font-size: 1.8rem; font-weight: 700; margin: 0 0 4px 0;">Skill Gap Analysis</h1>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Detailed breakdown of your current vs required skills for your target career path: <strong style="color:var(--primary)">Data Scientist</strong></p>
         </div>
         <div class="flex gap-3">
-          <span class="badge badge-success" style="padding:10px 18px;font-size:0.8rem"><i class="fa-solid fa-calendar"></i> Updated Today</span>
-          <a href="reports.html" class="btn btn-secondary btn-sm"><i class="fa-solid fa-download"></i> Export Report</a>
+          <span class="badge badge-success" style="padding:10px 18px;font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-calendar"></i> Updated Today</span>
+          <button onclick="exportPDFReport(event)" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;"><i class="fa-solid fa-file-pdf"></i> Export Report</button>
         </div>
       </div>
 
-      <!-- Top KPIs -->
-      <div class="stats-grid stagger" style="grid-template-columns:repeat(4,1fr)">
-        <div class="card card-stat animate-slideUp">
+      <!-- 2. SKILL STATISTICS CARDS (4 Top Clickable KPIs) -->
+      <div class="stats-grid stagger mb-6" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+        
+        <!-- A. Current Skill Level -->
+        <div class="card card-stat card-stat-clickable animate-slideUp" onclick="openStatCardModal('skill-level')" title="Click for Skill Progress Breakdown">
           <div class="stat-icon primary"><i class="fa-solid fa-star"></i></div>
-          <div><div class="stat-value gradient-text">74%</div><div class="stat-label">Current Skill Level</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +8% this month</div></div>
+          <div>
+            <div class="stat-value gradient-text" id="statCurrentSkill">74%</div>
+            <div class="stat-label">Current Skill Level</div>
+            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +8% this month</div>
+          </div>
         </div>
-        <div class="card card-stat animate-slideUp">
+
+        <!-- B. Overall Skill Gap -->
+        <div class="card card-stat card-stat-clickable animate-slideUp" onclick="openStatCardModal('skill-gap')" title="Click for Gap Breakdown & Priorities">
           <div class="stat-icon danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div><div class="stat-value" style="color:var(--danger)">26%</div><div class="stat-label">Overall Skill Gap</div><div class="stat-change down"><i class="fa-solid fa-arrow-down"></i> -4% improvement</div></div>
+          <div>
+            <div class="stat-value" style="color:var(--danger)" id="statOverallGap">26%</div>
+            <div class="stat-label">Overall Skill Gap</div>
+            <div class="stat-change down"><i class="fa-solid fa-arrow-down"></i> -4% improvement</div>
+          </div>
         </div>
-        <div class="card card-stat animate-slideUp">
+
+        <!-- C. Target Career Match -->
+        <div class="card card-stat card-stat-clickable animate-slideUp" onclick="openStatCardModal('career-match')" title="Click for Career Readiness & Requirements">
           <div class="stat-icon warning"><i class="fa-solid fa-briefcase"></i></div>
-          <div><div class="stat-value" style="color:var(--warning)">68%</div><div class="stat-label">Career Match %</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12% this month</div></div>
+          <div>
+            <div class="stat-value" style="color:var(--warning)" id="statCareerMatch">68%</div>
+            <div class="stat-label">Target Career Match</div>
+            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12% this month</div>
+          </div>
         </div>
-        <div class="card card-stat animate-slideUp">
+
+        <!-- D. Estimated Learning Time -->
+        <div class="card card-stat card-stat-clickable animate-slideUp" onclick="openStatCardModal('learning-time')" title="Click for Study Plan & Milestones">
           <div class="stat-icon success"><i class="fa-solid fa-clock"></i></div>
-          <div><div class="stat-value" style="color:var(--success)">3.5mo</div><div class="stat-label">Est. Learning Time</div><div class="stat-change up"><i class="fa-solid fa-arrow-down"></i> -2wk saved</div></div>
+          <div>
+            <div class="stat-value" style="color:var(--success)">3.5mo</div>
+            <div class="stat-label">Est. Learning Time</div>
+            <div class="stat-change up"><i class="fa-solid fa-arrow-down"></i> -2wk saved</div>
+          </div>
         </div>
+
       </div>
 
-      <!-- Main Content Grid -->
-      <div class="dashboard-grid" style="grid-template-columns:1fr 1fr;gap:var(--space-6);margin-bottom:var(--space-6)">
-        <!-- Radar Chart -->
+      <!-- 3. SKILL RADAR CHART + SKILL COMPARISON (SIDE BY SIDE) -->
+      <div class="dashboard-grid mb-6" style="grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+        
+        <!-- Skill Radar Chart -->
         <div class="card animate-slideUp">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-chart-radar" style="color:var(--primary);margin-right:8px"></i>Skill Radar</h3>
-            <div class="flex gap-2">
-              <span style="display:flex;align-items:center;gap:6px;font-size:0.75rem"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary);display:inline-block"></span>Current</span>
-              <span style="display:flex;align-items:center;gap:6px;font-size:0.75rem"><span style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);display:inline-block"></span>Required</span>
+          <div class="card-header flex-between mb-4">
+            <h3 style="font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-chart-radar" style="color:var(--primary);margin-right:8px"></i>Skill Radar</h3>
+            <div class="flex gap-3">
+              <span style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary);display:inline-block"></span>Current Score</span>
+              <span style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:var(--border);display:inline-block"></span>Required</span>
             </div>
           </div>
-          <div style="position:relative;max-width:320px;margin:0 auto">
-            <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" style="width:100%">
-              <!-- Grid rings -->
-              <g opacity="0.2" stroke="white" stroke-width="1" fill="none">
-                <polygon points="200,40 340,120 340,260 200,340 60,260 60,120"/>
-                <polygon points="200,80 310,145 310,235 200,305 90,235 90,145"/>
-                <polygon points="200,120 280,170 280,210 200,270 120,210 120,170"/>
-                <polygon points="200,160 250,195 250,185 200,235 150,185 150,195"/>
+
+          <div style="position:relative; max-width:380px; margin:0 auto; padding: 10px 0;">
+            <svg viewBox="0 0 460 420" xmlns="http://www.w3.org/2000/svg" style="width:100%; overflow:visible;">
+              <defs>
+                <filter id="radarGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              <!-- Radar rings -->
+              <g opacity="0.25" stroke="var(--primary)" stroke-width="1" fill="none">
+                <polygon points="230,50 375,130 375,290 230,370 85,290 85,130"/>
+                <polygon points="230,90 338,150 338,270 230,330 122,270 122,150"/>
+                <polygon points="230,130 300,170 300,250 230,290 160,250 160,170"/>
+                <polygon points="230,170 262,190 262,230 230,250 198,230 198,190"/>
               </g>
-              <!-- Grid spokes -->
-              <g opacity="0.15" stroke="white" stroke-width="1">
-                <line x1="200" y1="40"  x2="200" y2="340"/>
-                <line x1="340" y1="120" x2="60"  y2="260"/>
-                <line x1="340" y1="260" x2="60"  y2="120"/>
+
+              <!-- Radar spokes -->
+              <g opacity="0.2" stroke="var(--primary)" stroke-width="1">
+                <line x1="230" y1="50"  x2="230" y2="370"/>
+                <line x1="375" y1="130" x2="85"  y2="290"/>
+                <line x1="375" y1="290" x2="85"  y2="130"/>
               </g>
-              <!-- Required area (outer) -->
-              <polygon points="200,50 330,130 330,250 200,330 70,250 70,130" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="6,3"/>
-              <!-- Current skill area -->
-              <polygon points="200,88 295,152 310,232 200,298 102,228 98,145" fill="rgba(99,102,241,0.25)" stroke="#6366F1" stroke-width="2.5"/>
-              <!-- Dots at vertices for current -->
-              <circle cx="200" cy="88"  r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <circle cx="295" cy="152" r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <circle cx="310" cy="232" r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <circle cx="200" cy="298" r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <circle cx="102" cy="228" r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <circle cx="98"  cy="145" r="7" fill="#6366F1" stroke="var(--bg-card)" stroke-width="3"/>
-              <!-- Labels -->
-              <text x="200" y="28"  text-anchor="middle" fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">Python (78%)</text>
-              <text x="360" y="124" text-anchor="start"  fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">ML (52%)</text>
-              <text x="352" y="268" text-anchor="start"  fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">DL (34%)</text>
-              <text x="200" y="362" text-anchor="middle" fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">Data Viz (65%)</text>
-              <text x="38"  y="244" text-anchor="end"    fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">Cloud (28%)</text>
-              <text x="38"  y="140" text-anchor="end"    fill="#94A3B8" font-size="13" font-weight="600" font-family="Poppins">SQL (71%)</text>
-              <!-- Center label -->
-              <circle cx="200" cy="190" r="38" fill="rgba(15,23,42,0.95)" stroke="rgba(99,102,241,0.4)" stroke-width="1.5"/>
-              <text x="200" y="185" text-anchor="middle" fill="white" font-size="20" font-weight="800" font-family="Poppins">74%</text>
-              <text x="200" y="202" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="Poppins">Skill Score</text>
+
+              <!-- Required target area (dashed outer) -->
+              <polygon points="230,60 365,140 365,280 230,360 95,280 95,140" fill="rgba(38,101,140,0.04)" stroke="var(--border)" stroke-width="2" stroke-dasharray="6,4"/>
+
+              <!-- Animated Current Skill Polygon -->
+              <polygon id="radarPolygon" points="230,210 230,210 230,210 230,210 230,210 230,210" 
+                fill="rgba(20,184,166,0.25)" stroke="var(--accent)" stroke-width="2.5" filter="url(#radarGlow)" style="transition: all 1.4s ease-out;" />
+
+              <!-- Vertex Dots -->
+              <g id="radarDots" style="transition: all 1.4s ease-out;">
+                <circle id="dot1" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+                <circle id="dot2" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+                <circle id="dot3" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+                <circle id="dot4" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+                <circle id="dot5" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+                <circle id="dot6" cx="230" cy="210" r="6" fill="var(--accent)" stroke="white" stroke-width="2"/>
+              </g>
+
+              <!-- Non-overlapping Skill Labels -->
+              <text x="230" y="32"  text-anchor="middle" fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">Python (78%)</text>
+              <text x="390" y="130" text-anchor="start"  fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">ML (52%)</text>
+              <text x="390" y="300" text-anchor="start"  fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">DL (34%)</text>
+              <text x="230" y="396" text-anchor="middle" fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">Data Viz (65%)</text>
+              <text x="70"  y="300" text-anchor="end"    fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">Cloud (28%)</text>
+              <text x="70"  y="130" text-anchor="end"    fill="var(--text-primary)" font-size="12" font-weight="600" font-family="Poppins">SQL (71%)</text>
+
+              <!-- Center Score Badge -->
+              <circle cx="230" cy="210" r="34" fill="#FFFFFF" stroke="var(--primary)" stroke-width="2"/>
+              <text x="230" y="206" text-anchor="middle" fill="var(--primary)" font-size="18" font-weight="800" font-family="Poppins" id="radarCenterScore">0%</text>
+              <text x="230" y="222" text-anchor="middle" fill="var(--text-muted)" font-size="8" font-weight="600" font-family="Poppins">SCORE</text>
             </svg>
           </div>
         </div>
 
-        <!-- Skill Comparison Bars -->
-        <div class="card animate-slideUp">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-arrow-right-arrow-left" style="color:var(--accent);margin-right:8px"></i>Skill Comparison</h3>
+        <!-- Skill Comparison Progress Bars Section -->
+        <div class="card animate-slideUp" id="skillComparisonSection">
+          <div class="card-header flex-between mb-4">
+            <h3 style="font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-arrow-right-arrow-left" style="color:var(--accent);margin-right:8px"></i>Skill Comparison</h3>
             <span class="badge badge-accent">vs Required</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-5)">
-            <!-- Each skill -->
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px">
-                <span>Python Programming</span>
-                <span><span style="color:var(--primary)">78%</span> / <span style="color:var(--text-muted)">90%</span></span>
+
+          <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+            
+            <!-- Python (78% - Green) -->
+            <div class="skill-cmp-row" data-percent="78" data-color="#10B981">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">Python Programming</span>
+                <span><span class="cmp-counter" style="color:#10B981">0</span>% / <span style="color:var(--text-muted)">90%</span></span>
               </div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:visible">
-                <div style="position:absolute;left:0;top:0;height:100%;width:90%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:78%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:999px"></div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #10B981;"></div>
               </div>
-              <div style="font-size:0.7rem;color:var(--warning);margin-top:3px"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 12%</div>
+              <div style="font-size:0.75rem;color:#10B981;margin-top:4px;font-weight:500;"><i class="fa-solid fa-circle-check"></i> Gap: 12% — Strong Skill</div>
             </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px"><span>Machine Learning</span><span><span style="color:var(--primary)">52%</span> / <span style="color:var(--text-muted)">85%</span></span></div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px">
-                <div style="position:absolute;left:0;top:0;height:100%;width:85%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:52%;background:linear-gradient(90deg,#8B5CF6,#A78BFA);border-radius:999px"></div>
+
+            <!-- SQL (71% - Green) -->
+            <div class="skill-cmp-row" data-percent="71" data-color="#10B981">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">SQL & Databases</span>
+                <span><span class="cmp-counter" style="color:#10B981">0</span>% / <span style="color:var(--text-muted)">80%</span></span>
               </div>
-              <div style="font-size:0.7rem;color:var(--danger);margin-top:3px"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 33% — High Priority</div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px"><span>Deep Learning</span><span><span style="color:var(--primary)">34%</span> / <span style="color:var(--text-muted)">80%</span></span></div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px">
-                <div style="position:absolute;left:0;top:0;height:100%;width:80%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:34%;background:linear-gradient(90deg,#EF4444,#F87171);border-radius:999px"></div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #10B981;"></div>
               </div>
-              <div style="font-size:0.7rem;color:var(--danger);margin-top:3px"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 46% — Critical</div>
+              <div style="font-size:0.75rem;color:#10B981;margin-top:4px;font-weight:500;"><i class="fa-solid fa-circle-check"></i> Gap: 9% — Strong Skill</div>
             </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px"><span>Data Visualization</span><span><span style="color:var(--success)">65%</span> / <span style="color:var(--text-muted)">70%</span></span></div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px">
-                <div style="position:absolute;left:0;top:0;height:100%;width:70%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:65%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:999px"></div>
+
+            <!-- Data Visualization (65% - Orange) -->
+            <div class="skill-cmp-row" data-percent="65" data-color="#F59E0B">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">Data Visualization</span>
+                <span><span class="cmp-counter" style="color:#F59E0B">0</span>% / <span style="color:var(--text-muted)">70%</span></span>
               </div>
-              <div style="font-size:0.7rem;color:var(--success);margin-top:3px"><i class="fa-solid fa-check"></i> Gap: 5% — Almost There!</div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px"><span>Cloud Computing</span><span><span style="color:var(--primary)">28%</span> / <span style="color:var(--text-muted)">75%</span></span></div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px">
-                <div style="position:absolute;left:0;top:0;height:100%;width:75%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:28%;background:linear-gradient(90deg,#F59E0B,#FCD34D);border-radius:999px"></div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #F59E0B;"></div>
               </div>
-              <div style="font-size:0.7rem;color:var(--danger);margin-top:3px"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 47% — Critical</div>
+              <div style="font-size:0.75rem;color:#F59E0B;margin-top:4px;font-weight:500;"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 5% — Needs Improvement</div>
             </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;margin-bottom:6px"><span>SQL & Databases</span><span><span style="color:var(--success)">71%</span> / <span style="color:var(--text-muted)">80%</span></span></div>
-              <div style="position:relative;height:12px;background:rgba(255,255,255,0.06);border-radius:999px">
-                <div style="position:absolute;left:0;top:0;height:100%;width:80%;background:rgba(255,255,255,0.1);border-radius:999px"></div>
-                <div style="position:absolute;left:0;top:0;height:100%;width:71%;background:linear-gradient(90deg,#3B82F6,#60A5FA);border-radius:999px"></div>
+
+            <!-- Machine Learning (52% - Orange) -->
+            <div class="skill-cmp-row" data-percent="52" data-color="#F59E0B">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">Machine Learning</span>
+                <span><span class="cmp-counter" style="color:#F59E0B">0</span>% / <span style="color:var(--text-muted)">85%</span></span>
               </div>
-              <div style="font-size:0.7rem;color:var(--warning);margin-top:3px"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 9%</div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #F59E0B;"></div>
+              </div>
+              <div style="font-size:0.75rem;color:#F59E0B;margin-top:4px;font-weight:500;"><i class="fa-solid fa-triangle-exclamation"></i> Gap: 33% — Needs Improvement</div>
             </div>
+
+            <!-- Deep Learning (34% - Red) -->
+            <div class="skill-cmp-row" data-percent="34" data-color="#EF4444">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">Deep Learning</span>
+                <span><span class="cmp-counter" style="color:#EF4444">0</span>% / <span style="color:var(--text-muted)">80%</span></span>
+              </div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #EF4444;"></div>
+              </div>
+              <div style="font-size:0.75rem;color:#EF4444;margin-top:4px;font-weight:500;"><i class="fa-solid fa-circle-xmark"></i> Gap: 46% — Low Skill (Critical)</div>
+            </div>
+
+            <!-- Cloud Computing (28% - Red) -->
+            <div class="skill-cmp-row" data-percent="28" data-color="#EF4444">
+              <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:600;margin-bottom:6px">
+                <span style="color: var(--text-primary);">Cloud Computing</span>
+                <span><span class="cmp-counter" style="color:#EF4444">0</span>% / <span style="color:var(--text-muted)">75%</span></span>
+              </div>
+              <div style="position:relative;height:12px;background:#E5E7EB;border-radius:999px;overflow:hidden">
+                <div class="cmp-bar-fill" style="background: #EF4444;"></div>
+              </div>
+              <div style="font-size:0.75rem;color:#EF4444;margin-top:4px;font-weight:500;"><i class="fa-solid fa-circle-xmark"></i> Gap: 47% — Low Skill (Critical)</div>
+            </div>
+
           </div>
         </div>
+
       </div>
 
-      <!-- Bottom: Priority Skills + Missing + AI + Learning Path -->
-      <div class="dashboard-grid-3" style="grid-template-columns:1fr 1fr 1fr">
-        <!-- Priority Skills -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-bullseye" style="color:var(--danger);margin-right:8px"></i>Priority Skills</h3></div>
+      <!-- 4. PRIORITY SKILLS & MISSING SKILLS (SIDE BY SIDE EQUAL CARDS) -->
+      <div class="dashboard-grid mb-6" style="grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: stretch;">
+        
+        <!-- Priority Skills Card -->
+        <div class="card animate-slideUp" style="display:flex; flex-direction:column; justify-content:space-between;">
           <div>
-            <div class="priority-skill">
-              <div class="priority-rank">1</div>
-              <div style="flex:1">
-                <div style="font-weight:600;font-size:0.85rem">Deep Learning</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">46% gap · 6 weeks</div>
-              </div>
-              <span class="badge badge-danger">Critical</span>
+            <div class="card-header flex-between mb-4">
+              <h3 style="font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-bullseye" style="color:var(--danger);margin-right:8px"></i>Priority Skills</h3>
+              <span class="badge badge-danger">High Impact</span>
             </div>
-            <div class="priority-skill">
-              <div class="priority-rank">2</div>
-              <div style="flex:1">
-                <div style="font-weight:600;font-size:0.85rem">Cloud Computing</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">47% gap · 8 weeks</div>
+
+            <div style="display:flex; flex-direction:column; gap: var(--space-3);">
+              <div class="priority-skill clickable-skill-item" onclick="openSkillModal('dl')">
+                <div class="priority-rank">1</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:0.85rem; color: var(--text-primary);">Deep Learning</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">46% gap · 6 weeks est.</div>
+                </div>
+                <span class="badge badge-danger">Critical</span>
               </div>
-              <span class="badge badge-danger">Critical</span>
-            </div>
-            <div class="priority-skill">
-              <div class="priority-rank">3</div>
-              <div style="flex:1">
-                <div style="font-weight:600;font-size:0.85rem">Machine Learning</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">33% gap · 4 weeks</div>
+
+              <div class="priority-skill clickable-skill-item" onclick="openSkillModal('cloud')">
+                <div class="priority-rank">2</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:0.85rem; color: var(--text-primary);">Cloud Computing</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">47% gap · 8 weeks est.</div>
+                </div>
+                <span class="badge badge-danger">Critical</span>
               </div>
-              <span class="badge badge-warning">High</span>
-            </div>
-            <div class="priority-skill">
-              <div class="priority-rank">4</div>
-              <div style="flex:1">
-                <div style="font-weight:600;font-size:0.85rem">Python Programming</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">12% gap · 1 week</div>
+
+              <div class="priority-skill clickable-skill-item" onclick="openSkillModal('ml')">
+                <div class="priority-rank">3</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:0.85rem; color: var(--text-primary);">Machine Learning</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">33% gap · 4 weeks est.</div>
+                </div>
+                <span class="badge badge-warning">High</span>
               </div>
-              <span class="badge badge-primary">Medium</span>
-            </div>
-            <div class="priority-skill">
-              <div class="priority-rank">5</div>
-              <div style="flex:1">
-                <div style="font-weight:600;font-size:0.85rem">SQL & Databases</div>
-                <div style="font-size:0.75rem;color:var(--text-muted)">9% gap · 3 days</div>
+
+              <div class="priority-skill clickable-skill-item" onclick="openSkillModal('python')">
+                <div class="priority-rank">4</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:0.85rem; color: var(--text-primary);">Python Programming</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">12% gap · 1 week est.</div>
+                </div>
+                <span class="badge badge-primary">Medium</span>
               </div>
-              <span class="badge badge-success">Low</span>
+
+              <div class="priority-skill clickable-skill-item" onclick="openSkillModal('sql')">
+                <div class="priority-rank">5</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:0.85rem; color: var(--text-primary);">SQL & Databases</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">9% gap · 3 days est.</div>
+                </div>
+                <span class="badge badge-success">Low</span>
+              </div>
             </div>
           </div>
-          <a href="courses.html" class="btn btn-primary btn-sm mt-4" style="width:100%;justify-content:center"><i class="fa-solid fa-graduation-cap"></i> Start Learning</a>
+
+          <a href="courses.html" class="btn btn-primary btn-sm mt-4" style="width:100%;justify-content:center; padding: 12px;"><i class="fa-solid fa-graduation-cap"></i> Start Priority Learning</a>
         </div>
 
-        <!-- Missing Skills -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-circle-xmark" style="color:var(--danger);margin-right:8px"></i>Missing Skills</h3><span class="badge badge-danger">6 skills</span></div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
-              <div><div style="font-weight:600;font-size:0.85rem">MLOps</div><div style="font-size:0.7rem;color:var(--text-muted)">Model deployment & monitoring</div></div>
-              <span class="badge badge-danger">0%</span>
+        <!-- Missing Skills Card -->
+        <div class="card animate-slideUp" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="card-header flex-between mb-4">
+              <h3 style="font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-circle-xmark" style="color:var(--danger);margin-right:8px"></i>Missing Skills</h3>
+              <span class="badge badge-danger">5 Required Gaps</span>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
-              <div><div style="font-weight:600;font-size:0.85rem">Docker & Kubernetes</div><div style="font-size:0.7rem;color:var(--text-muted)">Containerization & orchestration</div></div>
-              <span class="badge badge-danger">0%</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
-              <div><div style="font-weight:600;font-size:0.85rem">Spark / Big Data</div><div style="font-size:0.7rem;color:var(--text-muted)">Large-scale data processing</div></div>
-              <span class="badge badge-warning">5%</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
-              <div><div style="font-weight:600;font-size:0.85rem">NLP / Transformers</div><div style="font-size:0.7rem;color:var(--text-muted)">Language model applications</div></div>
-              <span class="badge badge-warning">8%</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
-              <div><div style="font-weight:600;font-size:0.85rem">Statistics & Probability</div><div style="font-size:0.7rem;color:var(--text-muted)">Mathematical foundations</div></div>
-              <span class="badge badge-danger">12%</span>
+
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <div class="clickable-skill-item" onclick="openSkillModal('mlops')" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem; color:var(--text-primary);">MLOps & Deployment</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Model serving & pipelines</div>
+                </div>
+                <span class="badge badge-danger">0% Score</span>
+              </div>
+
+              <div class="clickable-skill-item" onclick="openSkillModal('dockerk8s')" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem; color:var(--text-primary);">Docker & Kubernetes</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Container orchestration</div>
+                </div>
+                <span class="badge badge-danger">0% Score</span>
+              </div>
+
+              <div class="clickable-skill-item" onclick="openSkillModal('spark')" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem; color:var(--text-primary);">Spark & Big Data</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Large-scale data processing</div>
+                </div>
+                <span class="badge badge-warning">5% Score</span>
+              </div>
+
+              <div class="clickable-skill-item" onclick="openSkillModal('nlp')" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem; color:var(--text-primary);">NLP & Transformers</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Language model applications</div>
+                </div>
+                <span class="badge badge-warning">8% Score</span>
+              </div>
+
+              <div class="clickable-skill-item" onclick="openSkillModal('stats')" style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
+                <div>
+                  <div style="font-weight:600;font-size:0.85rem; color:var(--text-primary);">Statistics & Probability</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted)">Mathematical foundations</div>
+                </div>
+                <span class="badge badge-danger">12% Score</span>
+              </div>
             </div>
           </div>
+
+          <a href="courses.html" class="btn btn-secondary btn-sm mt-4" style="width:100%;justify-content:center; padding: 12px;"><i class="fa-solid fa-list-check"></i> Explore All Skill Modules</a>
         </div>
 
-        <!-- AI Suggestions -->
-        <div class="ai-card animate-slideUp">
-          <div class="ai-header">
-            <div class="ai-icon"><i class="fa-solid fa-robot"></i></div>
-            <div>
-              <div class="ai-label">AI Powered</div>
-              <div class="ai-title">Smart Suggestions</div>
-            </div>
-          </div>
-          <div class="ai-suggestions">
-            <div class="ai-suggestion">
-              <i class="fa-solid fa-lightbulb"></i>
-              <span>Focus on <strong>Deep Learning</strong> first — it has the highest impact on your Data Scientist role match score (+14%).</span>
-            </div>
-            <div class="ai-suggestion">
-              <i class="fa-solid fa-route"></i>
-              <span>Complete the <strong>MLOps specialization</strong> to stand out in 92% of Data Science job postings.</span>
-            </div>
-            <div class="ai-suggestion">
-              <i class="fa-solid fa-clock"></i>
-              <span>Dedicating <strong>2 hours/day</strong> puts you on track to close all critical gaps within 3.5 months.</span>
-            </div>
-            <div class="ai-suggestion">
-              <i class="fa-solid fa-trophy"></i>
-              <span>Your <strong>SQL & Visualization</strong> skills are already near industry standard — great foundation!</span>
-            </div>
-          </div>
-          <a href="roadmap.html" class="btn btn-primary btn-sm mt-4" style="width:100%;justify-content:center">
-            <i class="fa-solid fa-road"></i> View Full Roadmap
-          </a>
-        </div>
       </div>
 
-      <!-- Roadmap Timeline Preview -->
-      <div class="card animate-slideUp mt-6">
-        <div class="card-header">
-          <h3><i class="fa-solid fa-timeline" style="color:var(--success);margin-right:8px"></i>Recommended Learning Path</h3>
-          <a href="roadmap.html" class="btn btn-ghost btn-sm">Full Roadmap →</a>
+      <!-- 5. SMART SUGGESTIONS (FULL WIDTH HORIZONTAL CARD BELOW PRIORITY & MISSING SKILLS) -->
+      <div class="card animate-slideUp smart-suggestions-full mb-6" style="background: linear-gradient(135deg, rgba(38,101,140,0.05), rgba(20,184,166,0.04)); border: 1px solid rgba(38,101,140,0.2);">
+        <div class="card-header flex-between mb-4">
+          <div style="display:flex; align-items:center; gap: 12px;">
+            <div style="width:42px; height:42px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <h3 style="font-size: 1.1rem; color: var(--text-primary); margin:0;">Smart Suggestions & AI Insights</h3>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); margin:0;">Automated gap reduction strategies for your Data Scientist career target.</p>
+            </div>
+          </div>
+          <span class="badge badge-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendations</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)">
-          <div style="padding:var(--space-5);background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-lg);text-align:center">
-            <div style="width:40px;height:40px;background:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1rem;color:white"><i class="fa-solid fa-check"></i></div>
-            <div style="font-weight:700;margin-bottom:4px">Foundation</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">Python, Math, Stats</div>
-            <span class="badge badge-success mt-2">Completed</span>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-5);">
+          <div style="padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);">
+            <div style="color:var(--primary); font-weight:600; font-size:0.9rem; margin-bottom:4px;"><i class="fa-solid fa-lightbulb"></i> Focus Priority</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:0; line-height:1.5;">Focus on <strong>Deep Learning</strong> first — closing this gap increases your target Data Scientist role match score by <strong>+14%</strong>.</p>
           </div>
-          <div style="padding:var(--space-5);background:rgba(99,102,241,0.08);border:2px solid rgba(99,102,241,0.4);border-radius:var(--radius-lg);text-align:center;position:relative">
-            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap">IN PROGRESS</div>
-            <div style="width:40px;height:40px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1rem;color:white;animation:glow-pulse 2s infinite"><i class="fa-solid fa-cog"></i></div>
-            <div style="font-weight:700;margin-bottom:4px">ML Basics</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">ML A-Z, Scikit-learn</div>
-            <span class="badge badge-primary mt-2">Week 6 of 10</span>
+
+          <div style="padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);">
+            <div style="color:var(--accent); font-weight:600; font-size:0.9rem; margin-bottom:4px;"><i class="fa-solid fa-route"></i> Career Requirement</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:0; line-height:1.5;">Complete the <strong>MLOps specialization</strong> to stand out in 92% of competitive Data Science candidate pools.</p>
           </div>
-          <div style="padding:var(--space-5);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:center;opacity:0.7">
-            <div style="width:40px;height:40px;background:rgba(139,92,246,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1rem;color:var(--accent)"><i class="fa-solid fa-lock"></i></div>
-            <div style="font-weight:700;margin-bottom:4px">Deep Learning</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">CNN, RNN, Transformers</div>
-            <span class="badge badge-accent mt-2">Starts in 4wk</span>
+
+          <div style="padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);">
+            <div style="color:var(--warning); font-weight:600; font-size:0.9rem; margin-bottom:4px;"><i class="fa-solid fa-clock"></i> Schedule Optimization</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:0; line-height:1.5;">Dedicating <strong>2 hours/day</strong> puts you on track to close all critical skill gaps within 3.5 months.</p>
           </div>
-          <div style="padding:var(--space-5);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:center;opacity:0.5">
-            <div style="width:40px;height:40px;background:rgba(245,158,11,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1rem;color:var(--warning)"><i class="fa-solid fa-lock"></i></div>
-            <div style="font-weight:700;margin-bottom:4px">MLOps & Cloud</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">Deployment, AWS, Docker</div>
-            <span class="badge badge-warning mt-2">Unlocks in 10wk</span>
+
+          <div style="padding:var(--space-4); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg);">
+            <div style="color:var(--success); font-weight:600; font-size:0.9rem; margin-bottom:4px;"><i class="fa-solid fa-trophy"></i> Strong Foundation</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin:0; line-height:1.5;">Your <strong>SQL & Data Visualization</strong> skills are already near senior industry standard benchmarks!</p>
           </div>
+        </div>
+
+        <!-- Keep View Full Analysis Button -->
+        <div style="text-align: center;">
+          <a href="roadmap.html" class="btn btn-primary" style="padding: 12px 28px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-chart-line"></i> View Full Analysis & Roadmap
+          </a>
         </div>
       </div>
 
@@ -355,11 +613,950 @@
   </main>
 </div>
 
+<!-- ══════════ TOP STAT CARDS MODAL POPUP ══════════ -->
+<div id="statCardModal" class="modal-backdrop" onclick="handleStatModalBackdropClick(event)">
+  <div class="modal-container">
+    <button class="modal-close-btn" onclick="closeStatModal()" title="Close (Esc)">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div id="statCardModalContent">
+      <!-- Dynamic Stat Card View injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DYNAMIC SKILL DETAIL MODAL POPUP ══════════ -->
+<div id="skillDetailModal" class="modal-backdrop" onclick="handleModalBackdropClick(event)">
+  <div class="modal-container">
+    <button class="modal-close-btn" onclick="closeSkillModal()" title="Close (Esc)">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom: var(--space-4);">
+      <div id="modalSkillIcon" style="width:48px; height:48px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">
+        <i class="fa-solid fa-code"></i>
+      </div>
+      <div>
+        <h2 id="modalSkillName" style="font-size: 1.35rem; color: var(--text-primary); margin:0 0 2px 0;">Skill Name</h2>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span id="modalSkillStatus" class="badge">Status</span>
+          <span id="modalSkillDifficulty" style="font-size:0.75rem; color:var(--text-muted);">Difficulty: Intermediate</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clickable Interactive Metric Cards Grid -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: var(--space-5);">
+      
+      <!-- 1. Current Score (Clickable -> Score History Graph) -->
+      <div class="modal-interactive-pill" onclick="switchModalSubView('score')">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Current Score</div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--primary);" id="modalSkillScore">78%</div>
+        <div style="font-size:0.68rem; color:var(--primary); font-weight:600;"><i class="fa-solid fa-chart-line"></i> View Graph</div>
+      </div>
+
+      <!-- 2. Learning Time (Clickable -> Day-wise Roadmap) -->
+      <div class="modal-interactive-pill" onclick="switchModalSubView('timeline')">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Est. Time</div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--accent);" id="modalSkillTime">14 Days</div>
+        <div style="font-size:0.68rem; color:var(--accent); font-weight:600;"><i class="fa-solid fa-calendar-days"></i> View Timeline</div>
+      </div>
+
+      <!-- 3. Overall Skills (Clickable -> Overall Completion Status) -->
+      <div class="modal-interactive-pill" onclick="switchModalSubView('overall')">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Overall Skills</div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--success);" id="modalSkillCount">11 Skills</div>
+        <div style="font-size:0.68rem; color:var(--success); font-weight:600;"><i class="fa-solid fa-list-check"></i> Skill Status</div>
+      </div>
+
+      <!-- 4. Career Match (Clickable -> Target Career Match Graph) -->
+      <div class="modal-interactive-pill" onclick="switchModalSubView('career')">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Career Match</div>
+        <div style="font-size:1.3rem; font-weight:800; color:var(--warning);" id="modalCareerMatch">68%</div>
+        <div style="font-size:0.68rem; color:var(--warning); font-weight:600;"><i class="fa-solid fa-briefcase"></i> Match Details</div>
+      </div>
+    </div>
+
+    <!-- Description & Why Important -->
+    <div style="margin-bottom: var(--space-4); background:#F4F9FF; padding:var(--space-4); border-radius:var(--radius-lg); border:1px solid var(--border);">
+      <h4 style="color:var(--text-primary); font-size:0.9rem; margin:0 0 4px 0;"><i class="fa-solid fa-circle-info text-primary"></i> Skill Description & Importance</h4>
+      <p id="modalSkillDesc" style="color:var(--text-secondary); font-size:0.85rem; margin:0 0 8px 0; line-height:1.5;">Description</p>
+      <div style="font-size:0.8rem; color:var(--text-primary); font-weight:600;">
+        <span style="color:var(--primary)">Why Important:</span> <span id="modalSkillImportance" style="font-weight:400; color:var(--text-secondary);">Importance detail</span>
+      </div>
+    </div>
+
+    <!-- Recommended Topics to Learn -->
+    <div style="margin-bottom: var(--space-5);">
+      <h4 style="color:var(--text-primary); font-size:0.9rem; margin:0 0 8px 0;"><i class="fa-solid fa-book-bookmark text-accent"></i> Recommended Topics to Learn</h4>
+      <div id="modalSkillTopics" style="display:flex; flex-wrap:wrap; gap:6px;">
+        <!-- Injected topic badges -->
+      </div>
+    </div>
+
+    <!-- DYNAMIC EXPANDABLE SUB-VIEW AREA -->
+    <div id="modalDynamicSubView" style="background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius-lg); padding:var(--space-4); box-shadow:var(--shadow-sm);">
+      <!-- Default Sub-View Content populated by JS -->
+    </div>
+
+  </div>
+</div>
+
 <script>
+  // ── SIDEBAR TOGGLE ──
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('mobile-open');
     document.getElementById('sidebarOverlay').classList.toggle('active');
   }
+
+  // ── DYNAMIC SKILL DATABASE ──
+  const skillDatabase = {
+    "python": {
+      name: "Python Programming",
+      score: 78,
+      prevScore: 62,
+      status: "Strong Skill",
+      statusClass: "badge-success",
+      difficulty: "Intermediate",
+      estTime: "14 Days",
+      desc: "Core programming language for data manipulation, automation, machine learning pipelines, and backend logic.",
+      importance: "Python is the primary language used in 90%+ of data science, AI, and modern web analytics workflows.",
+      topics: ["AsyncIO & Threading", "Pandas & NumPy Optimization", "OOP Design Patterns", "Memory Profiling"],
+      history: [45, 58, 62, 70, 78],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Python", "SQL", "Pandas", "Machine Learning", "Docker"],
+      existingSkills: ["Python", "SQL", "Pandas"],
+      missingSkills: ["Machine Learning", "Docker"],
+      careerMatch: 78,
+      roadmapDays: [
+        { day: "Days 1-3", title: "Advanced Data Structures & OOP", status: "Completed" },
+        { day: "Days 4-7", title: "Memory Profiling & Generators", status: "In Progress" },
+        { day: "Days 8-11", title: "AsyncIO & Multiprocessing", status: "Upcoming" },
+        { day: "Days 12-14", title: "Capstones & Code Audits", status: "Upcoming" }
+      ]
+    },
+    "ml": {
+      name: "Machine Learning",
+      score: 52,
+      prevScore: 35,
+      status: "Needs Improvement",
+      statusClass: "badge-warning",
+      difficulty: "Intermediate",
+      estTime: "30 Days",
+      desc: "Supervised and unsupervised learning algorithms, model evaluation, cross-validation, and hyperparameter tuning.",
+      importance: "Fundamental for building predictive models, statistical classifiers, and intelligent data systems.",
+      topics: ["Scikit-Learn Workflows", "Feature Engineering", "Gradient Boosting (XGBoost)", "Cross-Validation"],
+      history: [20, 28, 35, 42, 52],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Python", "Machine Learning", "Deep Learning", "SQL", "MLOps"],
+      existingSkills: ["Python", "SQL", "Machine Learning (Basic)"],
+      missingSkills: ["Deep Learning", "MLOps"],
+      careerMatch: 62,
+      roadmapDays: [
+        { day: "Days 1-7", title: "Regression & Classification Math", status: "Completed" },
+        { day: "Days 8-15", title: "Ensemble Models & XGBoost", status: "In Progress" },
+        { day: "Days 16-23", title: "Feature Selection & Pipeline Tuning", status: "Upcoming" },
+        { day: "Days 24-30", title: "Model Validation & Capstone Project", status: "Upcoming" }
+      ]
+    },
+    "dl": {
+      name: "Deep Learning",
+      score: 34,
+      prevScore: 18,
+      status: "Critical Gap",
+      statusClass: "badge-danger",
+      difficulty: "Advanced",
+      estTime: "45 Days",
+      desc: "Neural network architectures including CNNs, RNNs, LSTMs, and modern Transformer models using PyTorch/TensorFlow.",
+      importance: "Crucial for complex unstructured data tasks including Computer Vision, NLP, and Generative AI.",
+      topics: ["PyTorch Fundamentals", "Convolutional Neural Networks", "Transformers & Attention Mechanisms", "GPU Acceleration"],
+      history: [10, 14, 18, 25, 34],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Python", "PyTorch", "Transformers", "CUDA", "Math & Linear Algebra"],
+      existingSkills: ["Python"],
+      missingSkills: ["PyTorch", "Transformers", "CUDA"],
+      careerMatch: 45,
+      roadmapDays: [
+        { day: "Days 1-10", title: "Neural Net Math & Backpropagation", status: "Completed" },
+        { day: "Days 11-22", title: "PyTorch & CNN Computer Vision", status: "In Progress" },
+        { day: "Days 23-35", title: "Sequence Models & Transformers", status: "Upcoming" },
+        { day: "Days 36-45", title: "Model Optimization & Fine-tuning", status: "Upcoming" }
+      ]
+    },
+    "cloud": {
+      name: "Cloud Computing",
+      score: 28,
+      prevScore: 15,
+      status: "Critical Gap",
+      statusClass: "badge-danger",
+      difficulty: "Intermediate",
+      estTime: "30 Days",
+      desc: "Cloud infrastructure deployment, AWS/GCP services, serverless execution, and cloud storage management.",
+      importance: "Essential for hosting scalable applications, managing cloud database clusters, and deploying AI models.",
+      topics: ["AWS EC2 & S3 Basics", "Docker Containerization", "Serverless Lambda Functions", "IAM Security Policies"],
+      history: [5, 10, 15, 20, 28],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["AWS", "Docker", "Kubernetes", "Linux", "Terraform"],
+      existingSkills: ["Linux Basics"],
+      missingSkills: ["AWS", "Docker", "Kubernetes", "Terraform"],
+      careerMatch: 38,
+      roadmapDays: [
+        { day: "Days 1-7", title: "AWS Core Services (EC2, S3, RDS)", status: "Completed" },
+        { day: "Days 8-15", title: "Docker Networking & Storage", status: "In Progress" },
+        { day: "Days 16-23", title: "Kubernetes Pod Orchestration", status: "Upcoming" },
+        { day: "Days 24-30", title: "Cloud Security & Infrastructure as Code", status: "Upcoming" }
+      ]
+    },
+    "sql": {
+      name: "SQL & Databases",
+      score: 71,
+      prevScore: 55,
+      status: "Strong Skill",
+      statusClass: "badge-success",
+      difficulty: "Intermediate",
+      estTime: "7 Days",
+      desc: "Relational database design, complex JOIN operations, indexing techniques, and window query functions.",
+      importance: "The foundational language for querying analytical data warehouses and transaction processing databases.",
+      topics: ["Window Functions (ROW_NUMBER, RANK)", "Query Indexing & Execution Plans", "Database Normalization", "Transactions & Locks"],
+      history: [35, 42, 55, 64, 71],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["SQL", "PostgreSQL", "Data Modeling", "ETL", "Python"],
+      existingSkills: ["SQL", "Data Modeling", "Python"],
+      missingSkills: ["PostgreSQL Advanced", "ETL Pipelines"],
+      careerMatch: 82,
+      roadmapDays: [
+        { day: "Days 1-2", title: "Advanced Window Functions & CTEs", status: "Completed" },
+        { day: "Days 3-4", title: "Index Optimization & Query Tuning", status: "In Progress" },
+        { day: "Days 5-6", title: "ACID Transactions & Lock Analysis", status: "Upcoming" },
+        { day: "Day 7", title: "Complex Analytics Capstone", status: "Upcoming" }
+      ]
+    },
+    "dataviz": {
+      name: "Data Visualization",
+      score: 65,
+      prevScore: 48,
+      status: "Needs Improvement",
+      statusClass: "badge-warning",
+      difficulty: "Beginner",
+      estTime: "10 Days",
+      desc: "Translating data insights into visual dashboards using Matplotlib, Seaborn, Tableau, and PowerBI.",
+      importance: "Key communication skill for presenting analytical findings to executive stakeholders.",
+      topics: ["Seaborn & Plotly Interactivity", "Dashboard Layout Principles", "Color Theory for Data", "Storytelling with Metrics"],
+      history: [25, 36, 48, 58, 65],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Plotly", "Tableau", "Python", "SQL", "Dashboard Design"],
+      existingSkills: ["Python", "SQL", "Basic Matplotlib"],
+      missingSkills: ["Plotly Interactive", "Tableau"],
+      careerMatch: 70,
+      roadmapDays: [
+        { day: "Days 1-3", title: "Seaborn & Statistical Charts", status: "Completed" },
+        { day: "Days 4-6", title: "Plotly Interactive Dashboards", status: "In Progress" },
+        { day: "Days 7-8", title: "Executive Report Visual Layouts", status: "Upcoming" },
+        { day: "Days 9-10", title: "Final Interactive Portfolio Piece", status: "Upcoming" }
+      ]
+    },
+    "mlops": {
+      name: "MLOps & Model Deployment",
+      score: 0,
+      prevScore: 0,
+      status: "Missing Skill",
+      statusClass: "badge-danger",
+      difficulty: "Advanced",
+      estTime: "30 Days",
+      desc: "Automating machine learning lifecycle pipelines, continuous integration, model monitoring, and drift detection.",
+      importance: "Required by 90%+ of engineering teams to bridge ML models from notebooks into production APIs.",
+      topics: ["MLflow Experiment Tracking", "FastAPI Model Serving", "Data & Concept Drift Monitoring", "CI/CD Pipelines"],
+      history: [0, 0, 0, 0, 0],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["MLflow", "FastAPI", "Docker", "CI/CD", "Kubernetes"],
+      existingSkills: [],
+      missingSkills: ["MLflow", "FastAPI", "Docker", "CI/CD", "Kubernetes"],
+      careerMatch: 20,
+      roadmapDays: [
+        { day: "Days 1-7", title: "Model Packaging & FastAPI REST Wrappers", status: "Upcoming" },
+        { day: "Days 8-15", title: "MLflow Experiment & Artifact Tracking", status: "Upcoming" },
+        { day: "Days 16-23", title: "CI/CD Automation for Machine Learning", status: "Upcoming" },
+        { day: "Days 24-30", title: "Monitoring Drift & Automated Retraining", status: "Upcoming" }
+      ]
+    },
+    "dockerk8s": {
+      name: "Docker & Kubernetes",
+      score: 0,
+      prevScore: 0,
+      status: "Missing Skill",
+      statusClass: "badge-danger",
+      difficulty: "Intermediate",
+      estTime: "21 Days",
+      desc: "Containerizing software applications and orchestrating multi-container deployments across clusters.",
+      importance: "Industry standard for consistent environment provisioning and microservice scalability.",
+      topics: ["Dockerfile Optimization", "Docker Compose Multi-Containers", "Kubernetes Pods & Services", "Helm Package Charts"],
+      history: [0, 0, 0, 0, 0],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Docker", "Kubernetes", "Linux", "CI/CD"],
+      existingSkills: ["Linux Basics"],
+      missingSkills: ["Docker", "Kubernetes", "CI/CD"],
+      careerMatch: 30,
+      roadmapDays: [
+        { day: "Days 1-5", title: "Docker Image Creation & Micro-containers", status: "Upcoming" },
+        { day: "Days 6-10", title: "Docker Compose Multi-Container Stacks", status: "Upcoming" },
+        { day: "Days 11-16", title: "Kubernetes Cluster Architecture & Ingress", status: "Upcoming" },
+        { day: "Days 17-21", title: "Production Deployment & Health Probes", status: "Upcoming" }
+      ]
+    },
+    "spark": {
+      name: "Spark & Big Data",
+      score: 5,
+      prevScore: 0,
+      status: "Missing Skill",
+      statusClass: "badge-warning",
+      difficulty: "Advanced",
+      estTime: "30 Days",
+      desc: "Distributed big data processing using Apache Spark, PySpark DataFrames, and streaming pipelines.",
+      importance: "Required for processing multi-terabyte datasets that exceed single-machine memory capacity.",
+      topics: ["PySpark RDDs & DataFrames", "Spark SQL Query Optimization", "Spark Streaming Pipelines", "Hadoop Architecture"],
+      history: [0, 0, 0, 2, 5],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["PySpark", "Hadoop", "SQL", "Python", "Kafka"],
+      existingSkills: ["SQL", "Python"],
+      missingSkills: ["PySpark", "Hadoop", "Kafka"],
+      careerMatch: 40,
+      roadmapDays: [
+        { day: "Days 1-7", title: "PySpark Distributed RDDs & DataFrames", status: "Upcoming" },
+        { day: "Days 8-15", title: "Partitioning & Memory Join Optimization", status: "Upcoming" },
+        { day: "Days 16-23", title: "Structured Streaming & Kafka Integration", status: "Upcoming" },
+        { day: "Days 24-30", title: "Delta Lake & Big Data Pipeline Capstone", status: "Upcoming" }
+      ]
+    },
+    "nlp": {
+      name: "NLP & Transformers",
+      score: 8,
+      prevScore: 0,
+      status: "Missing Skill",
+      statusClass: "badge-warning",
+      difficulty: "Advanced",
+      estTime: "25 Days",
+      desc: "Natural Language Processing, text tokenization, embeddings (Word2Vec, BERT), and LLM fine-tuning.",
+      importance: "Powers modern AI applications, intelligent search, chatbots, and automated text analysis.",
+      topics: ["HuggingFace Transformers", "Tokenization & Vector Embeddings", "Fine-Tuning BERT/LLMs", "RAG & Vector Databases"],
+      history: [0, 0, 0, 4, 8],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Python", "HuggingFace", "PyTorch", "Vector DBs", "LLMs"],
+      existingSkills: ["Python"],
+      missingSkills: ["HuggingFace", "PyTorch", "Vector DBs", "LLMs"],
+      careerMatch: 35,
+      roadmapDays: [
+        { day: "Days 1-6", title: "Tokenization & Word Embedding Math", status: "Upcoming" },
+        { day: "Days 7-13", title: "Attention Mechanism & Transformer Architecture", status: "Upcoming" },
+        { day: "Days 14-19", title: "Fine-Tuning Pretrained Models with HuggingFace", status: "Upcoming" },
+        { day: "Days 20-25", title: "RAG Architecture & Vector DB Integration", status: "Upcoming" }
+      ]
+    },
+    "stats": {
+      name: "Statistics & Probability",
+      score: 12,
+      prevScore: 5,
+      status: "Missing Skill",
+      statusClass: "badge-danger",
+      difficulty: "Intermediate",
+      estTime: "14 Days",
+      desc: "Mathematical foundations including hypothesis testing, p-values, probability distributions, and A/B testing math.",
+      importance: "Guarantees statistical rigor when evaluating machine learning models and experiment results.",
+      topics: ["Hypothesis Testing (t-test, ANOVA)", "Bayesian Probability", "A/B Testing Frameworks", "Distribution Sampling"],
+      history: [0, 2, 5, 8, 12],
+      historyDates: ["Jan", "Feb", "Mar", "Apr", "May"],
+      targetCareer: "Data Scientist",
+      requiredSkills: ["Statistics", "Python", "SQL", "Experimental Design"],
+      existingSkills: ["Python", "SQL"],
+      missingSkills: ["Statistics", "Experimental Design"],
+      careerMatch: 50,
+      roadmapDays: [
+        { day: "Days 1-4", title: "Probability Distributions & Central Limit Theorem", status: "Upcoming" },
+        { day: "Days 5-8", title: "Hypothesis Testing & p-value Calculation", status: "Upcoming" },
+        { day: "Days 9-11", title: "A/B Testing & Sample Size Calculation", status: "Upcoming" },
+        { day: "Days 12-14", title: "Applied Statistical Modeling Project", status: "Upcoming" }
+      ]
+    }
+  };
+
+  let activeModalSkillId = null;
+
+  // ── MODAL SINGLETON OPEN / CLOSE BEHAVIOR FOR INDIVIDUAL SKILLS ──
+  function openSkillModal(skillId) {
+    const data = skillDatabase[skillId];
+    if (!data) return;
+
+    if (activeModalSkillId === skillId) {
+      closeSkillModal();
+      return;
+    }
+
+    activeModalSkillId = skillId;
+
+    document.getElementById('modalSkillName').textContent = data.name;
+    document.getElementById('modalSkillStatus').textContent = data.status;
+    document.getElementById('modalSkillStatus').className = `badge ${data.statusClass}`;
+    document.getElementById('modalSkillDifficulty').textContent = `Difficulty: ${data.difficulty}`;
+    document.getElementById('modalSkillScore').textContent = `${data.score}%`;
+    document.getElementById('modalSkillTime').textContent = data.estTime;
+    document.getElementById('modalCareerMatch').textContent = `${data.careerMatch}%`;
+    document.getElementById('modalSkillDesc').textContent = data.desc;
+    document.getElementById('modalSkillImportance').textContent = data.importance;
+
+    const topicsContainer = document.getElementById('modalSkillTopics');
+    topicsContainer.innerHTML = '';
+    data.topics.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'badge badge-primary';
+      span.style.fontSize = '0.75rem';
+      span.textContent = t;
+      topicsContainer.appendChild(span);
+    });
+
+    switchModalSubView('score');
+
+    const backdrop = document.getElementById('skillDetailModal');
+    backdrop.classList.add('open');
+  }
+
+  function closeSkillModal() {
+    const backdrop = document.getElementById('skillDetailModal');
+    if (backdrop) backdrop.classList.remove('open');
+    activeModalSkillId = null;
+  }
+
+  function handleModalBackdropClick(e) {
+    if (e.target.id === 'skillDetailModal') {
+      closeSkillModal();
+    }
+  }
+
+  // ── TOP STAT CARDS CLICKABLE MODAL BEHAVIOR ──
+  function openStatCardModal(statType) {
+    const container = document.getElementById('statCardModalContent');
+    const modal = document.getElementById('statCardModal');
+    if (!container || !modal) return;
+
+    if (statType === 'skill-level') {
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom: var(--space-4);">
+          <div style="width:48px; height:48px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--text-primary); margin:0 0 2px 0;">Current Skill Level (74%)</h2>
+            <span class="badge badge-primary">+8% Improvement this Month</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+          <div style="background:#F4F9FF; padding:var(--space-4); border-radius:var(--radius-lg); border:1px solid var(--border);">
+            <h4 style="font-size:0.9rem; color:var(--text-primary); margin:0 0 8px 0;"><i class="fa-solid fa-chart-line text-primary"></i> Overall Skill Progress History</h4>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; height:100px; padding-top:10px; border-bottom:1px solid var(--border);">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;"><span style="font-size:0.7rem; font-weight:700; color:var(--text-primary);">50%</span><div style="width:20px; height:50%; background:var(--primary-light); border-radius:4px 4px 0 0;"></div><span style="font-size:0.65rem; color:var(--text-muted);">Jan</span></div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;"><span style="font-size:0.7rem; font-weight:700; color:var(--text-primary);">58%</span><div style="width:20px; height:58%; background:var(--primary-light); border-radius:4px 4px 0 0;"></div><span style="font-size:0.65rem; color:var(--text-muted);">Feb</span></div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;"><span style="font-size:0.7rem; font-weight:700; color:var(--text-primary);">64%</span><div style="width:20px; height:64%; background:var(--primary-light); border-radius:4px 4px 0 0;"></div><span style="font-size:0.65rem; color:var(--text-muted);">Mar</span></div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;"><span style="font-size:0.7rem; font-weight:700; color:var(--text-primary);">69%</span><div style="width:20px; height:69%; background:var(--primary-light); border-radius:4px 4px 0 0;"></div><span style="font-size:0.65rem; color:var(--text-muted);">Apr</span></div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;"><span style="font-size:0.7rem; font-weight:700; color:var(--text-primary);">74%</span><div style="width:20px; height:74%; background:var(--primary); border-radius:4px 4px 0 0;"></div><span style="font-size:0.65rem; color:var(--primary); font-weight:700;">May</span></div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.9rem; color:var(--text-primary); margin:0 0 8px 0;"><i class="fa-solid fa-trophy text-warning"></i> Strongest 5 Skills Contributing to Score</h4>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md); font-size:0.85rem;"><span style="font-weight:600; color:var(--text-primary);">1. Python Programming</span><span class="badge badge-success">78%</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md); font-size:0.85rem;"><span style="font-weight:600; color:var(--text-primary);">2. SQL & Databases</span><span class="badge badge-success">71%</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md); font-size:0.85rem;"><span style="font-weight:600; color:var(--text-primary);">3. Data Visualization</span><span class="badge badge-warning">65%</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md); font-size:0.85rem;"><span style="font-weight:600; color:var(--text-primary);">4. Machine Learning</span><span class="badge badge-warning">52%</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md); font-size:0.85rem;"><span style="font-weight:600; color:var(--text-primary);">5. Deep Learning</span><span class="badge badge-danger">34%</span></div>
+            </div>
+          </div>
+
+          <div style="padding:var(--space-3) var(--space-4); background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-md); font-size:0.85rem; color:var(--text-primary);">
+            <strong style="color:var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> Recently Improved Skills:</strong>
+            <ul style="margin:4px 0 0 18px; padding:0;">
+              <li>Python Programming: +8% gain after OOP Capstone</li>
+              <li>Machine Learning: +12% gain after Supervised Classification Exam</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    } else if (statType === 'skill-gap') {
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom: var(--space-4);">
+          <div style="width:48px; height:48px; border-radius:var(--radius-md); background:linear-gradient(135deg,#EF4444,#F59E0B); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--text-primary); margin:0 0 2px 0;">Overall Skill Gap Analysis (26%)</h2>
+            <span class="badge badge-danger">-4% Gap Reduction this Month</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; text-align:center;">
+            <div style="padding:10px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:var(--radius-md);">
+              <div style="font-weight:800; color:var(--danger); font-size:1.2rem;">2 Critical</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">High Priority Gaps</div>
+            </div>
+            <div style="padding:10px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:var(--radius-md);">
+              <div style="font-weight:800; color:var(--warning); font-size:1.2rem;">2 Medium</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Moderate Gaps</div>
+            </div>
+            <div style="padding:10px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-md);">
+              <div style="font-weight:800; color:var(--success); font-size:1.2rem;">2 Minor</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">Low Priority Gaps</div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.9rem; color:var(--text-primary); margin:0 0 8px 0;"><i class="fa-solid fa-list-check text-primary"></i> Gap Percentage & Est. Time Breakdown</h4>
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; text-align:left;">
+              <thead>
+                <tr style="background:#F4F9FF; color:var(--text-primary);">
+                  <th style="padding:8px; border-bottom:1px solid var(--border);">Skill Name</th>
+                  <th style="padding:8px; border-bottom:1px solid var(--border);">Missing %</th>
+                  <th style="padding:8px; border-bottom:1px solid var(--border);">Est. Time</th>
+                  <th style="padding:8px; border-bottom:1px solid var(--border);">Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:8px; border-bottom:1px solid var(--border);">Cloud Computing</td><td style="padding:8px; border-bottom:1px solid var(--border); color:var(--danger); font-weight:700;">47% Gap</td><td style="padding:8px; border-bottom:1px solid var(--border);">8 Weeks</td><td style="padding:8px; border-bottom:1px solid var(--border);"><span class="badge badge-danger">High</span></td></tr>
+                <tr><td style="padding:8px; border-bottom:1px solid var(--border);">Deep Learning</td><td style="padding:8px; border-bottom:1px solid var(--border); color:var(--danger); font-weight:700;">46% Gap</td><td style="padding:8px; border-bottom:1px solid var(--border);">6 Weeks</td><td style="padding:8px; border-bottom:1px solid var(--border);"><span class="badge badge-danger">High</span></td></tr>
+                <tr><td style="padding:8px; border-bottom:1px solid var(--border);">Machine Learning</td><td style="padding:8px; border-bottom:1px solid var(--border); color:var(--warning); font-weight:700;">33% Gap</td><td style="padding:8px; border-bottom:1px solid var(--border);">4 Weeks</td><td style="padding:8px; border-bottom:1px solid var(--border);"><span class="badge badge-warning">Medium</span></td></tr>
+                <tr><td style="padding:8px; border-bottom:1px solid var(--border);">Python Programming</td><td style="padding:8px; border-bottom:1px solid var(--border); color:var(--success); font-weight:700;">12% Gap</td><td style="padding:8px; border-bottom:1px solid var(--border);">1 Week</td><td style="padding:8px; border-bottom:1px solid var(--border);"><span class="badge badge-success">Low</span></td></tr>
+                <tr><td style="padding:8px; border-bottom:1px solid var(--border);">SQL & Databases</td><td style="padding:8px; border-bottom:1px solid var(--border); color:var(--success); font-weight:700;">9% Gap</td><td style="padding:8px; border-bottom:1px solid var(--border);">3 Days</td><td style="padding:8px; border-bottom:1px solid var(--border);"><span class="badge badge-success">Low</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    } else if (statType === 'career-match') {
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom: var(--space-4);">
+          <div style="width:48px; height:48px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--warning),var(--primary)); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--text-primary); margin:0 0 2px 0;">Target Career Match (68%)</h2>
+            <span class="badge badge-warning">Target Role: Data Scientist</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+          <div style="padding:var(--space-4); background:#F4F9FF; border-radius:var(--radius-lg); border:1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:var(--text-primary); margin-bottom:6px;">
+              <span>Readiness Score</span>
+              <span style="color:var(--primary);">78% Industry Ready</span>
+            </div>
+            <div style="height:10px; background:#E5E7EB; border-radius:999px; overflow:hidden;">
+              <div style="height:100%; width:78%; background:linear-gradient(90deg,var(--warning),var(--primary)); border-radius:999px;"></div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.8rem;">
+            <div style="padding:10px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:var(--radius-md);">
+              <strong style="color:var(--danger); display:block; margin-bottom:4px;"><i class="fa-solid fa-code"></i> Missing Technical Skills</strong>
+              <span style="color:var(--text-secondary);">Deep Learning, Cloud Computing, MLOps, Docker, PySpark</span>
+            </div>
+            <div style="padding:10px; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:var(--radius-md);">
+              <strong style="color:var(--warning); display:block; margin-bottom:4px;"><i class="fa-solid fa-comments"></i> Missing Soft Skills</strong>
+              <span style="color:var(--text-secondary);">Executive Presentation, Agile Sprint Planning</span>
+            </div>
+          </div>
+
+          <div style="padding:10px; background:#F4F9FF; border-radius:var(--radius-md); border:1px solid var(--border); font-size:0.8rem;">
+            <strong style="color:var(--text-primary); display:block; margin-bottom:4px;"><i class="fa-solid fa-certificate text-accent"></i> Required Industry Certifications</strong>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+              <span class="badge badge-accent">AWS Certified Machine Learning Specialty</span>
+              <span class="badge badge-primary">TensorFlow Developer Certificate</span>
+            </div>
+          </div>
+
+          <div style="padding:10px; background:#F4F9FF; border-radius:var(--radius-md); border:1px solid var(--border); font-size:0.8rem;">
+            <strong style="color:var(--text-primary); display:block; margin-bottom:4px;"><i class="fa-solid fa-building text-primary"></i> Top Companies Hiring For This Role</strong>
+            <span style="color:var(--text-secondary);">Google, Microsoft, Amazon, Meta, IBM, Databricks</span>
+          </div>
+
+          <div style="text-align:center; margin-top:4px;">
+            <a href="roadmap.html" class="btn btn-primary" style="padding:10px 20px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-road"></i> Open Full Career Roadmap
+            </a>
+          </div>
+        </div>
+      `;
+    } else if (statType === 'learning-time') {
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom: var(--space-4);">
+          <div style="width:48px; height:48px; border-radius:var(--radius-md); background:linear-gradient(135deg,#10B981,var(--primary)); color:white; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div>
+            <h2 style="font-size: 1.35rem; color: var(--text-primary); margin:0 0 2px 0;">Estimated Learning Time (3.5 Months)</h2>
+            <span class="badge badge-success">-2 Weeks Ahead of Schedule</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap: var(--space-4);">
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; text-align:center; font-size:0.8rem;">
+            <div style="padding:10px; background:#F4F9FF; border:1px solid var(--border); border-radius:var(--radius-md);">
+              <div style="font-size:1.2rem; font-weight:800; color:var(--primary);">2 Hrs/Day</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">Daily Pace</div>
+            </div>
+            <div style="padding:10px; background:#F4F9FF; border:1px solid var(--border); border-radius:var(--radius-md);">
+              <div style="font-size:1.2rem; font-weight:800; color:var(--accent);">210 Hrs</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">Remaining Study</div>
+            </div>
+            <div style="padding:10px; background:#F4F9FF; border:1px solid var(--border); border-radius:var(--radius-md);">
+              <div style="font-size:1.2rem; font-weight:800; color:var(--success);">Nov 5, 2026</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">Target Date</div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.9rem; color:var(--text-primary); margin:0 0 8px 0;"><i class="fa-solid fa-timeline text-success"></i> Key Milestones & Completion Schedule</h4>
+            <div style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem;">
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md);"><span style="font-weight:600; color:var(--text-primary);">Month 1: Deep Learning & PyTorch</span><span class="badge badge-primary">45 Hrs</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md);"><span style="font-weight:600; color:var(--text-primary);">Month 2: Cloud Infrastructure & MLOps</span><span class="badge badge-primary">60 Hrs</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md);"><span style="font-weight:600; color:var(--text-primary);">Month 3: Big Data, PySpark & NLP</span><span class="badge badge-accent">60 Hrs</span></div>
+              <div style="display:flex; justify-content:space-between; padding:8px 12px; background:#F4F9FF; border-radius:var(--radius-md);"><span style="font-weight:600; color:var(--text-primary);">Month 3.5: Capstone AI Deployment</span><span class="badge badge-success">45 Hrs</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    modal.classList.add('open');
+  }
+
+  function closeStatModal() {
+    const modal = document.getElementById('statCardModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function handleStatModalBackdropClick(e) {
+    if (e.target.id === 'statCardModal') {
+      closeStatModal();
+    }
+  }
+
+  // Keyboard Escape listener for all modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeSkillModal();
+      closeStatModal();
+    }
+  });
+
+  // ── INTERACTIVE SUB-VIEWS INSIDE SKILL MODAL ──
+  function switchModalSubView(viewType) {
+    const container = document.getElementById('modalDynamicSubView');
+    if (!container || !activeModalSkillId) return;
+    const data = skillDatabase[activeModalSkillId];
+
+    if (viewType === 'score') {
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="font-size:0.85rem; color:var(--text-primary); margin:0;"><i class="fa-solid fa-chart-line text-primary"></i> Score Improvement Over Time</h4>
+          <span style="font-size:0.75rem; color:var(--success); font-weight:600;">+${data.score - data.prevScore}% Gain</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; height:90px; padding:10px 10px 0; border-bottom:1px solid var(--border); margin-bottom:6px;">
+          ${data.history.map((val, idx) => `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1;">
+              <span style="font-size:0.65rem; font-weight:700; color:var(--text-primary);">${val}%</span>
+              <div style="width:18px; height:${Math.max(val, 6)}%; background:${val >= 70 ? '#10B981' : val >= 40 ? '#F59E0B' : '#EF4444'}; border-radius:4px 4px 0 0; transition:height 0.8s ease;"></div>
+              <span style="font-size:0.65rem; color:var(--text-muted);">${data.historyDates[idx]}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center;">Previous: <strong>${data.prevScore}%</strong> → Current: <strong style="color:var(--primary)">${data.score}%</strong></div>
+      `;
+    } else if (viewType === 'timeline') {
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="font-size:0.85rem; color:var(--text-primary); margin:0;"><i class="fa-solid fa-calendar-days text-accent"></i> ${data.estTime} Learning Roadmap</h4>
+          <span class="badge badge-accent">${data.roadmapDays.length} Milestones</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${data.roadmapDays.map(item => `
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:#F4F9FF; border-radius:var(--radius-md); border:1px solid var(--border);">
+              <div>
+                <span style="font-size:0.7rem; font-weight:700; color:var(--primary); display:block;">${item.day}</span>
+                <span style="font-size:0.8rem; font-weight:600; color:var(--text-primary);">${item.title}</span>
+              </div>
+              <span class="badge ${item.status === 'Completed' ? 'badge-success' : item.status === 'In Progress' ? 'badge-primary' : 'badge-ghost'}" style="font-size:0.7rem;">${item.status}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if (viewType === 'career') {
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="font-size:0.85rem; color:var(--text-primary); margin:0;"><i class="fa-solid fa-briefcase text-warning"></i> Career Match: ${data.targetCareer}</h4>
+          <span style="font-size:0.85rem; font-weight:800; color:var(--warning);">${data.careerMatch}% Match</span>
+        </div>
+        <div style="margin-bottom:8px;">
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">Target Competency Match Progress</div>
+          <div style="height:10px; background:#E5E7EB; border-radius:999px; overflow:hidden;">
+            <div style="height:100%; width:${data.careerMatch}%; background:linear-gradient(90deg,var(--warning),var(--primary)); border-radius:999px;"></div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.75rem; margin-top:8px;">
+          <div style="padding:6px 8px; background:#F4F9FF; border-radius:var(--radius-md);">
+            <strong style="color:var(--success); display:block; margin-bottom:2px;">Existing Skills (${data.existingSkills.length})</strong>
+            <span style="color:var(--text-secondary);">${data.existingSkills.join(', ') || 'None'}</span>
+          </div>
+          <div style="padding:6px 8px; background:#F4F9FF; border-radius:var(--radius-md);">
+            <strong style="color:var(--danger); display:block; margin-bottom:2px;">Missing Skills (${data.missingSkills.length})</strong>
+            <span style="color:var(--text-secondary);">${data.missingSkills.join(', ') || 'None'}</span>
+          </div>
+        </div>
+      `;
+    } else if (viewType === 'overall') {
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="font-size:0.85rem; color:var(--text-primary); margin:0;"><i class="fa-solid fa-list-check text-success"></i> Overall Skills Portfolio Status</h4>
+          <span class="badge badge-success">74% Target Achieved</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center; margin-bottom:8px;">
+          <div style="padding:6px; background:rgba(16,185,129,0.08); border-radius:var(--radius-md); border:1px solid rgba(16,185,129,0.2);">
+            <div style="font-size:1rem; font-weight:800; color:var(--success);">2</div>
+            <div style="font-size:0.65rem; color:var(--text-muted);">Strong Skills</div>
+          </div>
+          <div style="padding:6px; background:rgba(245,158,11,0.08); border-radius:var(--radius-md); border:1px solid rgba(245,158,11,0.2);">
+            <div style="font-size:1rem; font-weight:800; color:var(--warning);">4</div>
+            <div style="font-size:0.65rem; color:var(--text-muted);">Needs Imp.</div>
+          </div>
+          <div style="padding:6px; background:rgba(239,68,68,0.08); border-radius:var(--radius-md); border:1px solid rgba(239,68,68,0.2);">
+            <div style="font-size:1rem; font-weight:800; color:var(--danger);">5</div>
+            <div style="font-size:0.65rem; color:var(--text-muted);">Missing Skills</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ── ANIMATION TRIGGERS FOR RADAR CHART & COMPARISON BARS ──
+  function triggerDashboardAnimations() {
+    const rows = document.querySelectorAll('.skill-cmp-row');
+    rows.forEach(row => {
+      const targetPercent = parseInt(row.getAttribute('data-percent'), 10) || 0;
+      const barFill = row.querySelector('.cmp-bar-fill');
+      const counterEl = row.querySelector('.cmp-counter');
+
+      if (barFill) {
+        setTimeout(() => {
+          barFill.style.width = targetPercent + '%';
+        }, 150);
+      }
+
+      if (counterEl) {
+        let current = 0;
+        const stepTime = Math.max(Math.floor(1400 / (targetPercent || 1)), 15);
+        const timer = setInterval(() => {
+          current++;
+          if (current >= targetPercent) {
+            current = targetPercent;
+            clearInterval(timer);
+          }
+          counterEl.textContent = current;
+        }, stepTime);
+      }
+    });
+
+    const targetPoints = "230,85 305,168 310,237 230,296 142,232 128,153";
+    const targetDots = [
+      { cx: 230, cy: 85 },
+      { cx: 305, cy: 168 },
+      { cx: 310, cy: 237 },
+      { cx: 230, cy: 296 },
+      { cx: 142, cy: 232 },
+      { cx: 128, cy: 153 }
+    ];
+
+    const poly = document.getElementById('radarPolygon');
+    if (poly) {
+      setTimeout(() => {
+        poly.setAttribute('points', targetPoints);
+      }, 150);
+    }
+
+    targetDots.forEach((dot, idx) => {
+      const dotEl = document.getElementById(`dot${idx + 1}`);
+      if (dotEl) {
+        setTimeout(() => {
+          dotEl.setAttribute('cx', dot.cx);
+          dotEl.setAttribute('cy', dot.cy);
+        }, 150);
+      }
+    });
+
+    const centerScore = document.getElementById('radarCenterScore');
+    if (centerScore) {
+      let count = 0;
+      const timer = setInterval(() => {
+        count++;
+        if (count >= 74) {
+          count = 74;
+          clearInterval(timer);
+        }
+        centerScore.textContent = count + '%';
+      }, 18);
+    }
+  }
+
+  // ── EXPORT PDF REPORT FEATURE (jsPDF + AutoTable) ──
+  function exportPDFReport(e) {
+    if (e) e.preventDefault();
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert("PDF library is loading, please try again in a moment!");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    const timeStr = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // 1. Primary Header Banner
+    doc.setFillColor(38, 101, 140); // #26658C Primary Blue
+    doc.rect(0, 0, 210, 32, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text("SkillBridge", 14, 18);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text("AI Skill Gap Analysis Report", 14, 25);
+
+    doc.setFontSize(8.5);
+    doc.text(`Student: Arjun Kapoor (CSE)`, 140, 14);
+    doc.text(`Generated: ${dateStr} ${timeStr}`, 140, 20);
+    doc.text(`Target Career: Data Scientist`, 140, 26);
+
+    // 2. Executive Analytics Summary
+    doc.setTextColor(2, 16, 36);
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text("1. Executive Analytics Summary", 14, 44);
+
+    doc.autoTable({
+      startY: 48,
+      head: [['Metric Name', 'Current Score', 'Target Benchmark', 'Monthly Progress']],
+      body: [
+        ['Current Skill Level', '74%', '85%', '+8% Increase'],
+        ['Overall Skill Gap', '26%', '0%', '-4% Improvement'],
+        ['Target Career Match', '68%', '100%', '+12% Increase'],
+        ['Est. Learning Time', '3.5 Months', '0 Months', '-2 Weeks Saved']
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [38, 101, 140], textColor: [255, 255, 255], fontStyle: 'bold' },
+      styles: { fontSize: 9, cellPadding: 4 }
+    });
+
+    // 3. Skill Competency Comparison Table
+    let currentY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text("2. Skill Competency Comparison", 14, currentY);
+
+    doc.autoTable({
+      startY: currentY + 4,
+      head: [['Skill Name', 'Current Score', 'Required Score', 'Gap %', 'Status Level']],
+      body: [
+        ['Python Programming', '78%', '90%', '12%', 'Strong Skill'],
+        ['SQL & Databases', '71%', '80%', '9%', 'Strong Skill'],
+        ['Data Visualization', '65%', '70%', '5%', 'Needs Improvement'],
+        ['Machine Learning', '52%', '85%', '33%', 'Needs Improvement'],
+        ['Deep Learning', '34%', '80%', '46%', 'Low Skill (Critical)'],
+        ['Cloud Computing', '28%', '75%', '47%', 'Low Skill (Critical)']
+      ],
+      theme: 'grid',
+      headStyles: { fillColor: [20, 184, 166], textColor: [255, 255, 255], fontStyle: 'bold' },
+      styles: { fontSize: 9, cellPadding: 3.5 }
+    });
+
+    // 4. Priority Skills & Missing Modules
+    currentY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text("3. Priority Action Items & Missing Skill Modules", 14, currentY);
+
+    doc.autoTable({
+      startY: currentY + 4,
+      head: [['Rank', 'Skill Module', 'Gap %', 'Est. Time', 'Status / Category']],
+      body: [
+        ['#1', 'Deep Learning', '46%', '6 Weeks', 'Critical Gap'],
+        ['#2', 'Cloud Computing', '47%', '8 Weeks', 'Critical Gap'],
+        ['#3', 'Machine Learning', '33%', '4 Weeks', 'High Priority'],
+        ['#4', 'MLOps & Deployment', '100%', '30 Days', 'Missing Module (0%)'],
+        ['#5', 'Docker & Kubernetes', '100%', '21 Days', 'Missing Module (0%)'],
+        ['#6', 'Spark & Big Data', '95%', '30 Days', 'Missing Module (5%)']
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [38, 101, 140], textColor: [255, 255, 255], fontStyle: 'bold' },
+      styles: { fontSize: 9, cellPadding: 3.5 }
+    });
+
+    // 5. Smart AI Suggestions & Career Roadmap
+    currentY = doc.lastAutoTable.finalY + 10;
+    if (currentY > 230) {
+      doc.addPage();
+      currentY = 20;
+    }
+
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'bold');
+    doc.text("4. AI Recommendations & Career Strategy", 14, currentY);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const suggestions = [
+      "• Focus Priority: Prioritize Deep Learning first to gain +14% match score increase toward Data Scientist target.",
+      "• Specialization: Complete MLOps specialization to stand out in 92% of competitive job application pools.",
+      "• Schedule Strategy: Dedicating 2 hours/day will close all critical technical skill gaps within 3.5 months.",
+      "• Strong Foundation: SQL & Visualization skills meet senior industry benchmark standards."
+    ];
+
+    let sugY = currentY + 6;
+    suggestions.forEach(s => {
+      doc.text(s, 14, sugY);
+      sugY += 6;
+    });
+
+    // Footer on all pages
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setDrawColor(229, 231, 235);
+      doc.line(14, 280, 196, 280);
+      doc.setFontSize(8);
+      doc.setTextColor(107, 114, 128);
+      doc.text(`Generated by SkillBridge • Version 1.0 • ${dateStr}`, 14, 286);
+      doc.text(`Page ${i} of ${pageCount}`, 180, 286);
+    }
+
+    doc.save(`SkillBridge_Report_${dateStr}.pdf`);
+  }
+
+  // Run animations when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    triggerDashboardAnimations();
+  });
 </script>
 </body>
 </html>

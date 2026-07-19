@@ -1,243 +1,2270 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skill Assessment – SkillBridge</title>
-  <meta name="description" content="Take your skill assessment quiz with a timer, progress tracking, and instant results." />
+  <meta name="description"
+    content="Premium, production-ready skill assessment module with anti-cheating, timer, dynamic progress dashboard, admin console, and certificate generator." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/assessment.css" />
+
+  <style>
+    /* ── Assessment: Text Color Accessibility Fixes ──
+       White + Blue + Teal theme — ONLY color/text properties changed.
+       Zero changes to layout, spacing, animations, or structure. */
+
+    /* ── Sidebar menu toggle button ── */
+    .mobile-menu-toggle {
+      background: #F4F9FF !important;
+      color: var(--text-secondary) !important;
+    }
+
+    .mobile-menu-toggle:hover {
+      color: var(--primary) !important;
+    }
+
+    /* ── Topnav ── */
+    .topnav-title {
+      color: var(--text-primary);
+    }
+
+    .topnav-breadcrumb {
+      color: var(--text-secondary);
+    }
+
+    .topnav-breadcrumb span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .topnav-profile-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .topnav-profile-role {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    /* ── Sidebar user info ── */
+    .sidebar-user-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .sidebar-user-role {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    /* ── Stage heading gradient (was white→gray on white bg, now primary→accent) ── */
+    .stage-heading {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+    }
+
+    /* ── Selection cards ── */
+    .selection-card h3 {
+      color: var(--text-primary);
+    }
+
+    .selection-card p {
+      color: var(--text-secondary);
+    }
+
+    /* ── Step indicator dots ── */
+    .step-dot {
+      color: var(--text-secondary);
+    }
+
+    .step-dot.active {
+      color: var(--primary);
+    }
+
+    .step-dot.completed {
+      color: white;
+    }
+
+    /* ── Section tag (Step X of 4) ── */
+    .section-tag {
+      color: var(--primary);
+    }
+
+    /* ── Assessment preview card (Stage 4 glass-card) ── */
+    /* Override inline white text within the preview glass card */
+    #stageStart h2,
+    #stageStart #previewSkillName {
+      color: var(--text-primary) !important;
+    }
+
+    #stageStart .preview-detail-val {
+      color: var(--text-primary) !important;
+    }
+
+    #previewTimer {
+      color: var(--text-primary) !important;
+    }
+
+    /* ── Workspace stage ── */
+    #workspaceSkill {
+      color: var(--text-primary) !important;
+    }
+
+    #workspaceTimer {
+      color: var(--text-primary) !important;
+      font-family: monospace;
+    }
+
+    #workspaceQuestionText {
+      color: var(--text-primary) !important;
+    }
+
+    #workspaceQuestionNum {
+      color: var(--text-muted) !important;
+    }
+
+    #proctorWarningsCount {
+      color: var(--warning);
+    }
+
+    .quiz-header-bar {
+      color: var(--text-primary);
+    }
+
+    /* Progress Navigator panel */
+    .progress-navigator-title {
+      color: var(--text-primary);
+    }
+
+    /* Timer container bg */
+    .quiz-timer {
+      background: #F4F9FF !important;
+    }
+
+    /* Workspace level badge */
+    #workspaceLevelBadge {
+      background: rgba(38, 101, 140, 0.12) !important;
+      border-color: rgba(38, 101, 140, 0.25) !important;
+      color: var(--primary) !important;
+    }
+
+    /* Unattempted dot legend */
+    .dot-legend-unattempted {
+      background: #E5E7EB !important;
+      border-color: var(--border) !important;
+    }
+
+    /* Option panel text */
+    .option-panel {
+      color: #000000 !important;
+    }
+
+    .option-panel div {
+      color: #000000 !important;
+    }
+
+    .option-panel.selected {
+      color: #000000 !important;
+    }
+
+    .option-panel.selected div {
+      color: #000000 !important;
+    }
+
+    .option-panel .option-check {
+      color: var(--primary) !important;
+    }
+
+    .option-panel.selected .option-check {
+      color: #ffffff !important;
+    }
+
+    /* ── Results stage ── */
+    #resultsRatingTitle {
+      color: var(--text-primary) !important;
+    }
+
+    #resultsMotivationalMsg {
+      color: var(--text-secondary) !important;
+    }
+
+    #resultsScoreCount,
+    #resultsTimeTaken {
+      color: var(--text-primary) !important;
+    }
+
+    #resultsRadialPercent {
+      color: var(--primary) !important;
+    }
+
+    #stageResults h3 {
+      color: var(--text-primary) !important;
+    }
+
+    #resultsCertificateCard h3 {
+      color: var(--text-primary) !important;
+    }
+
+    /* Results metric mini-boxes */
+    .results-metric-box {
+      background: #F4F9FF !important;
+    }
+
+    .results-metric-val {
+      color: var(--text-primary) !important;
+    }
+
+    /* Strong concepts heading */
+    .strong-concepts-heading {
+      color: #059669 !important;
+    }
+
+    .gap-concepts-heading {
+      color: var(--danger) !important;
+    }
+
+    .next-step-heading {
+      color: var(--primary) !important;
+    }
+
+    /* ── Solutions stage ── */
+    #solutionsPageTitle {
+      color: var(--text-primary) !important;
+    }
+
+    #stageSolutions p {
+      color: var(--text-secondary);
+    }
+
+    /* Warning overlay: keep white text (overlay is dark #021024 bg) */
+    .warning-overlay h2,
+    .warning-overlay p {
+      color: #FFFFFF;
+    }
+
+    .warning-overlay .glass-card {
+      background: #021024;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Cheat warning stays white on dark overlay */
+    #cheatWarningModal h2 {
+      color: white !important;
+    }
+
+    #cheatWarningModal p {
+      color: rgba(255, 255, 255, 0.80) !important;
+    }
+
+    /* ── JS-injected skill card text ── */
+    .skill-card-name {
+      color: var(--text-primary) !important;
+    }
+  </style>
 </head>
+
 <body>
-<div class="dashboard-layout">
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="dashboard-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
-      <span class="sidebar-brand-text">SkillBridge</span>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-label">Main</div>
-      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
-      <a href="assessment.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span class="nav-badge">3</span></a>
-      <div class="sidebar-section-label">Learning</div>
-      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
-      <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
-      <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
-      <a href="progress.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
-      <div class="sidebar-section-label">Other</div>
-      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
-        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
-        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
-      </div>
-    </div>
-  </aside>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
 
-  <!-- Main -->
-  <main class="dashboard-main">
-    <header class="topnav">
-      <div class="topnav-left">
-        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
-        <div><div class="topnav-title">Skill Assessment</div><div class="topnav-breadcrumb">Dashboard / <span>Assessment</span></div></div>
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="sidebar-brand-text">SkillBridge</span>
       </div>
-      <div class="topnav-right">
-        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
-        <div class="topnav-profile">
-          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
-          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
-        </div>
-      </div>
-    </header>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a href="student-dashboard.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span>
+        </a>
+        <a href="assessment.html" class="sidebar-nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span><span
+            class="nav-badge">3</span>
+        </a>
+        <a href="notification.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-bell"></i></div>
+          <span>Notifications</span><span class="nav-badge">4</span>
+        </a>
+        <div class="sidebar-section-label">Learning</div>
+        <a href="skill-gap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><span>Skill Gap</span>
+        </a>
+        <a href="courses.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span>
+        </a>
+        <a href="progress.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span>
+        </a>
 
-    <div class="dash-content">
-      <!-- Quiz Header Bar -->
-      <div class="quiz-header-bar">
-        <div>
-          <div class="section-tag" style="margin-bottom:8px">Machine Learning – Module 3</div>
-          <h1 style="font-size:1.75rem">Deep Learning Fundamentals</h1>
-          <p style="font-size:0.875rem">Test your knowledge of neural networks, activation functions, and optimization.</p>
-        </div>
-        <div class="flex gap-4 align-items-center">
-          <div class="quiz-timer">
-            <i class="fa-solid fa-clock"></i>
-            <span id="timerDisplay">24:35</span>
+        <div class="sidebar-section-label">Other</div>
+
+        <a href="feedback.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-comments"></i></div>
+          <span>Feedback</span>
+        </a>
+
+        <a href="about.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span>About Us</span>
+        </a>
+
+        <a href="help.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div>
+          <span>Help</span>
+        </a>
+
+        <a href="settings.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar avatar-sm avatar-placeholder"
+            style="background:linear-gradient(135deg,#26658C,#14B8A6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;color:#fff">
+            AK</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Arjun Kapoor</div>
+            <div class="sidebar-user-role">Student · CSE</div>
           </div>
-          <button onclick="submitQuiz()" class="btn btn-danger"><i class="fa-solid fa-flag-checkered"></i> Submit</button>
+          <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i
+              class="fa-solid fa-right-from-bracket"></i></a>
         </div>
       </div>
+    </aside>
 
-      <!-- Progress Bar -->
-      <div class="card mb-6" style="padding:var(--space-4)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3)">
-          <span style="font-size:0.875rem;font-weight:600">Progress</span>
-          <span style="font-size:0.875rem;color:var(--text-secondary)" id="progressText">Question 4 of 10</span>
-        </div>
-        <div class="progress-track" style="height:12px">
-          <div class="progress-fill" id="quizProgress" style="width:40%"></div>
-        </div>
-        <div class="question-dots mt-4" id="questionDots"></div>
-      </div>
-
-      <!-- Quiz Container -->
-      <div class="quiz-container">
-        <!-- Question Card -->
-        <div class="question-card" id="questionCard">
-          <div class="question-number">
-            <i class="fa-solid fa-circle-question"></i>
-            Question <span id="qNum">4</span> of 10
-          </div>
-          <div class="question-text" id="questionText">
-            Which activation function is commonly used in the output layer for binary classification problems?
-          </div>
-          <div class="options-grid" id="optionsGrid">
-            <!-- Options injected by JS -->
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header class="topnav">
+        <div class="topnav-left">
+          <button onclick="toggleSidebar()"
+            style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i
+              class="fa-solid fa-bars"></i></button>
+          <div>
+            <div class="topnav-title">Skill Assessment</div>
+            <div class="topnav-breadcrumb">Dashboard / <span id="breadcrumbPath">Assessment Setup</span></div>
           </div>
         </div>
+        <div class="topnav-right">
+          <div class="topnav-icon-btn icon-badge" id="notifBell" onclick="toggleNotifDropdown(event)"
+            title="Notifications" style="position: relative; cursor: pointer;">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot" id="notifDot"></span>
 
-        <!-- Navigation -->
-        <div class="quiz-nav">
-          <button class="btn btn-secondary" id="prevBtn" onclick="navigate(-1)">
-            <i class="fa-solid fa-arrow-left"></i> Previous
-          </button>
-          <div style="text-align:center">
-            <div style="font-size:0.75rem;color:var(--text-muted)">4 Answered · 6 Remaining</div>
-          </div>
-          <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">
-            Next <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Result Modal (hidden by default) -->
-      <div id="resultModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:9999;display:none;align-items:center;justify-content:center">
-        <div class="card" style="max-width:480px;width:90%;text-align:center;padding:var(--space-10);animation:scaleIn 0.5s ease">
-          <div style="font-size:4rem;margin-bottom:var(--space-4)">🎉</div>
-          <h2 style="margin-bottom:var(--space-2)">Assessment Complete!</h2>
-          <p style="margin-bottom:var(--space-6)">You've completed the Deep Learning Fundamentals quiz</p>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-6)">
-            <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
-              <div style="font-size:2rem;font-weight:800;color:var(--success)">7/10</div>
-              <div style="font-size:0.75rem;color:var(--text-muted)">Score</div>
-            </div>
-            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
-              <div style="font-size:2rem;font-weight:800;color:var(--primary)">70%</div>
-              <div style="font-size:0.75rem;color:var(--text-muted)">Accuracy</div>
-            </div>
-            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:var(--space-4);border-radius:var(--radius-md)">
-              <div style="font-size:2rem;font-weight:800;color:var(--warning)">15:25</div>
-              <div style="font-size:0.75rem;color:var(--text-muted)">Time Taken</div>
+            <!-- Notifications Dropdown -->
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button class="mark-read-btn" onclick="clearNotifDot(event)">Mark all read</button>
+              </div>
+              <div class="notif-list" id="notifList">
+                <!-- Injected by JS -->
+              </div>
+              <div class="notif-footer">
+                <a href="#" onclick="viewAllNotifications(event)">View All Notifications</a>
+              </div>
             </div>
           </div>
-          <div style="display:flex;gap:var(--space-3);justify-content:center">
-            <a href="skill-gap.html" class="btn btn-primary"><i class="fa-solid fa-chart-radar"></i> View Gap Analysis</a>
-            <a href="student-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+          <div class="topnav-profile" id="profileToggle" onclick="toggleProfileDropdown(event)">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#26658C,#14B8A6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">
+              AK</div>
+            <div class="topnav-profile-info">
+              <div class="topnav-profile-name">Arjun Kapoor</div>
+              <div class="topnav-profile-role">Student</div>
+            </div>
+            <i class="fa-solid fa-chevron-down profile-chevron"></i>
+
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+              <a href="profile.html"><i class="fa-solid fa-user-pen"></i> View Profile</a>
+              <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+              <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
           </div>
         </div>
+      </header>
+
+      <div class="dash-content">
+
+        <!-- Anti-Cheat and App Warnings -->
+        <div id="cheatWarningModal" class="warning-overlay" style="display: none;">
+          <div class="glass-card" style="max-width: 500px; width: 90%;">
+            <i class="fa-solid fa-triangle-exclamation text-danger"
+              style="font-size: 3.5rem; margin-bottom: var(--space-4);"></i>
+            <h2 class="text-danger" style="margin-bottom: var(--space-2);">Security Violation Warning!</h2>
+            <p id="cheatWarningMsg"
+              style="margin-bottom: var(--space-5); color: var(--text-secondary); line-height: 1.6;">
+              Tab switching or leaving fullscreen mode is strictly prohibited. Future events will lead to immediate
+              submission.
+            </p>
+            <button onclick="resumeCheatTest()" class="btn btn-primary w-full">I Understand, Continue Test</button>
+          </div>
+        </div>
+
+        <!-- App States Container -->
+        <div id="assessmentApp">
+
+          <!-- STEP INDICATOR -->
+          <div id="stepIndicatorContainer" class="step-indicator">
+            <div class="step-dot active" id="dot1">1</div>
+            <div class="step-dot" id="dot2">2</div>
+            <div class="step-dot" id="dot3">3</div>
+            <div class="step-dot" id="dot4">4</div>
+          </div>
+
+          <!-- STAGE 1: CATEGORY SELECTION -->
+          <div id="stageCategory" class="stage-pane">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+              <div class="section-tag" style="margin-bottom: 8px;">Step 1 of 4</div>
+              <h1
+                style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Select Assessment Path</h1>
+              <p style="color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">Choose the category of
+                skills you wish to evaluate your gaps against.</p>
+            </div>
+
+            <div
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); max-width: 960px; margin: 0 auto var(--space-8);">
+              <div class="selection-card" onclick="selectCategory('frontend')">
+                <div class="card-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <h3 style="font-size: 1.25rem;">💻 Frontend Development</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">Evaluate your styling,
+                  layout construction, responsive design, framework mechanics, and frontend scripting abilities.</p>
+              </div>
+              <div class="selection-card" onclick="selectCategory('backend')">
+                <div class="card-icon"><i class="fa-solid fa-server"></i></div>
+                <h3 style="font-size: 1.25rem;">⚙️ Backend Development</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">Verify your capability in
+                  server-side scripting, database query architecture, structures, routing, and APIs.</p>
+              </div>
+              <div class="selection-card" onclick="selectCategory('soft')">
+                <div class="card-icon"><i class="fa-solid fa-people-arrows"></i></div>
+                <h3 style="font-size: 1.25rem;">🤝 Soft Skills</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">Evaluate professional
+                  behaviors, emotional intelligence, leadership potential, communication methods, and workflows.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; max-width: 960px; margin: 0 auto;">
+              <button class="btn btn-glow" id="categoryContinue" disabled
+                onclick="transitionStage('stageSkill')">Continue <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- STAGE 2: SKILL SELECTION -->
+          <div id="stageSkill" class="stage-pane" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+              <div class="section-tag" style="margin-bottom: 8px;">Step 2 of 4</div>
+              <h1
+                style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Select Specific Skill</h1>
+              <p style="color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">Choose the skill tool you
+                want to challenge.</p>
+            </div>
+
+            <div id="skillsGrid"
+              style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-4); max-width: 1000px; margin: 0 auto var(--space-8);">
+              <!-- Rendered by JS -->
+            </div>
+
+            <div style="display: flex; justify-content: space-between; max-width: 1000px; margin: 0 auto;">
+              <button class="btn btn-secondary" onclick="goBackToCategory()"><i class="fa-solid fa-arrow-left"></i>
+                Categories</button>
+              <button class="btn btn-glow" id="skillContinue" disabled
+                onclick="transitionStage('stageDifficulty')">Continue <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- STAGE 3: DIFFICULTY SELECTION -->
+          <div id="stageDifficulty" class="stage-pane" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+              <div class="section-tag" style="margin-bottom: 8px;">Step 3 of 4</div>
+              <h1
+                style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Choose Assessment Difficulty</h1>
+              <p style="color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">Evaluations increase in
+                logic and architecture complexity as difficulty climbs.</p>
+            </div>
+
+            <div
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-4); max-width: 960px; margin: 0 auto var(--space-8);">
+              <div class="selection-card" onclick="selectDifficulty(1)">
+                <div class="stars-glow"><i class="fa-solid fa-star"></i></div>
+                <h3 style="font-size: 1.15rem;">⭐ Level 1 – Beginner</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">Evaluates fundamental
+                  syntax, core vocabulary definitions, simple layouts, and absolute basic properties. (15 min timer)</p>
+              </div>
+              <div class="selection-card" onclick="selectDifficulty(2)">
+                <div class="stars-glow"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <h3 style="font-size: 1.15rem;">⭐⭐ Level 2 – Basic</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">Focuses on functions,
+                  functional execution errors, structural properties, and secondary constructs. (20 min timer)</p>
+              </div>
+              <div class="selection-card" onclick="selectDifficulty(3)">
+                <div class="stars-glow"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i></div>
+                <h3 style="font-size: 1.15rem;">⭐⭐⭐ Level 3 – Intermediate</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">Scenario questions,
+                  intermediate logic debugging, functional decoupling, scoping issues, and MCQ trick queries. (25 min
+                  timer)</p>
+              </div>
+              <div class="selection-card" onclick="selectDifficulty(4)">
+                <div class="stars-glow"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <h3 style="font-size: 1.15rem;">⭐⭐⭐⭐ Level 4 – Advanced</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">Deals with complex
+                  optimization, architectural edge cases, clean refactoring scenarios, and enterprise-level details. (30
+                  min timer)</p>
+              </div>
+              <div class="selection-card" onclick="selectDifficulty(5)">
+                <div class="stars-glow"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <h3 style="font-size: 1.15rem;">⭐⭐⭐⭐⭐ Level 5 – Expert</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;">Industry architectural
+                  design, garbage collection and memory leak patterns, decoupling mechanisms, and scalability paradigms.
+                  (35 min timer)</p>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; max-width: 960px; margin: 0 auto;">
+              <button class="btn btn-secondary" onclick="transitionStage('stageSkill')"><i
+                  class="fa-solid fa-arrow-left"></i> Select Skill</button>
+              <button class="btn btn-glow" id="difficultyContinue" disabled
+                onclick="transitionStage('stageStart')">Continue <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- STAGE 4: START ASSESSMENT PREVIEW -->
+          <div id="stageStart" class="stage-pane" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+              <div class="section-tag" style="margin-bottom: 8px;">Step 4 of 4</div>
+              <h1
+                style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Start Assessment</h1>
+              <p style="color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">Review your setup. Ready to
+                start?</p>
+            </div>
+
+            <div class="glass-card"
+              style="max-width: 650px; margin: 0 auto var(--space-6); background: var(--bg-card); padding: var(--space-8); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+              <div style="text-align: center; margin-bottom: var(--space-6);">
+                <h2 id="previewSkillName" style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 6px;">
+                  JavaScript</h2>
+                <div id="previewDifficultyStars" class="stars-glow"
+                  style="font-size: 1.1rem; margin-bottom: var(--space-3);">⭐⭐⭐</div>
+                <span id="previewDifficultyName" class="section-tag">Intermediate</span>
+              </div>
+
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: var(--space-5) 0;">
+                <div>
+                  <div
+                    style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Total Questions</div>
+                  <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">25 MCQs</div>
+                </div>
+                <div>
+                  <div
+                    style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Estimated Time</div>
+                  <div id="previewTimer" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">25
+                    Minutes</div>
+                </div>
+                <div>
+                  <div
+                    style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Passing Marks</div>
+                  <div style="font-size: 1.25rem; font-weight: 700; color: var(--success);">80% (20/25 Correct)</div>
+                </div>
+                <div>
+                  <div
+                    style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                    System Security</div>
+                  <div style="font-size: 1.25rem; font-weight: 700; color: var(--danger);">Strict Proctoring</div>
+                </div>
+              </div>
+
+              <div
+                style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid var(--danger); padding: var(--space-4); border-radius: var(--radius-sm); margin-bottom: var(--space-6);">
+                <h4 style="color: var(--danger); font-size: 0.9rem; font-weight: 600; margin-bottom: 4px;"><i
+                    class="fa-solid fa-shield-halved"></i> Proctoring Notice</h4>
+                <p style="font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary);">
+                  By launching, you confirm you will not switch windows/tabs, press back, or copy content. Doing so
+                  triggers warnings. A limit of 3 violations triggers immediate quiz submission.
+                </p>
+              </div>
+
+              <button onclick="startTestActual()" class="btn btn-glow w-full"
+                style="padding: 14px; font-weight: 600; font-size: 1.05rem;"><i class="fa-solid fa-rocket"></i> Launch
+                Assessment</button>
+            </div>
+
+            <div style="text-align: center;">
+              <button class="btn btn-secondary btn-sm" onclick="transitionStage('stageDifficulty')"><i
+                  class="fa-solid fa-arrow-left"></i> Change Difficulty</button>
+            </div>
+          </div>
+
+          <!-- STAGE 5: ACTIVE ASSESSMENT WORKSPACE -->
+          <div id="stageWorkspace" class="stage-pane" style="display: none;">
+            <!-- Header details -->
+            <div class="quiz-header-bar" style="margin-bottom: var(--space-6);">
+              <div>
+                <div class="flex gap-2 align-items-center">
+                  <span id="workspaceSkill"
+                    style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary);">React</span>
+                  <span id="workspaceLevelBadge"
+                    style="font-size: 0.75rem; font-weight: 600; background: rgba(38,101,140,0.12); border: 1px solid rgba(38,101,140,0.25); padding: 2px 8px; border-radius: var(--radius-full); color: var(--primary);">Level
+                    3</span>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Passing score: 80% • No
+                  navigation back is supported.</p>
+              </div>
+
+              <div class="flex gap-4 align-items-center">
+                <div class="quiz-timer" id="timerContainer"
+                  style="padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: #F4F9FF;">
+                  <i class="fa-solid fa-clock text-primary" id="timerClockIcon"></i>
+                  <span id="workspaceTimer"
+                    style="font-family: monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">25:00</span>
+                </div>
+                <button onclick="confirmSubmitTest()" class="btn btn-danger btn-sm"
+                  style="display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-flag-checkered"></i>
+                  Finish Test</button>
+              </div>
+            </div>
+
+            <!-- Layout: Question view & side control dots grid -->
+            <div class="quiz-layout">
+
+              <!-- Left panel: Current question MCQ -->
+              <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <div class="glass-card" style="padding: var(--space-8); min-height: 380px; position: relative;">
+                  <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                    <span id="workspaceQuestionNum"
+                      style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Question
+                      1 of 25</span>
+                    <div
+                      style="font-size: 0.85rem; display: flex; align-items: center; gap: 6px; color: var(--warning);">
+                      <i class="fa-solid fa-triangle-exclamation"></i>
+                      <span id="proctorWarningsCount">Warnings: 0/3</span>
+                    </div>
+                  </div>
+
+                  <div id="workspaceQuestionText"
+                    style="font-size: 1.15rem; font-weight: 500; color: var(--text-primary); line-height: 1.6; margin-bottom: var(--space-6);">
+                    Which of the following describes the difference between class components and functional components?
+                  </div>
+
+                  <!-- Code Block Area (Only shown when code exists) -->
+                  <div id="workspaceCodeSnippet" style="display: none;"></div>
+
+                  <div id="workspaceOptionsGrid" style="margin-top: var(--space-4);">
+                    <!-- Injected options -->
+                  </div>
+                </div>
+
+                <!-- Control actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <button class="btn btn-secondary" onclick="markForReview()"
+                    style="display: flex; align-items: center; gap: 8px;"><i
+                      class="fa-solid fa-thumbtack text-accent"></i> Mark for Review</button>
+                  <button class="btn btn-glow" id="workspaceNextBtn" onclick="nextQuestion()"
+                    style="min-width: 140px; padding: 12px 24px; font-weight: 600;"></button>
+                </div>
+              </div>
+
+              <!-- Right panel: Dot Navigator map -->
+              <div class="glass-card" style="align-self: flex-start; padding: var(--space-5);">
+                <h3
+                  style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-list-check text-primary"></i> Progress Navigator
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                  <div
+                    style="display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-secondary);">
+                    <span
+                      style="width: 10px; height: 10px; border-radius: 50%; background: var(--success); display: inline-block;"></span>
+                    Attempted
+                  </div>
+                  <div
+                    style="display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-secondary);">
+                    <span
+                      style="width: 10px; height: 10px; border-radius: 50%; background: var(--accent); display: inline-block;"></span>
+                    Marked for Review
+                  </div>
+                  <div
+                    style="display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-secondary);">
+                    <span
+                      style="width: 10px; height: 10px; border-radius: 50%; background: rgba(20,184,166,0.15); border: 1px solid var(--accent); display: inline-block;"></span>
+                    Unattempted
+                  </div>
+                </div>
+
+                <div class="dots-grid" id="workspaceDotsGrid">
+                  <!-- 25 dots loaded dynamically -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- STAGE 6: RESULTS DASHBOARD -->
+          <div id="stageResults" class="stage-pane" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-8);">
+              <div class="section-tag" style="margin-bottom: 8px;">Analysis Report</div>
+              <h1
+                style="font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Assessment Result</h1>
+              <p style="color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">Comprehensive review of
+                your skills gap analysis.</p>
+            </div>
+
+            <div
+              style="display: grid; grid-template-columns: 1fr 1.5fr; gap: var(--space-6); max-width: 960px; margin: 0 auto var(--space-8);">
+
+              <!-- Left Card: Radial Score Gauges & Badge -->
+              <div class="glass-card"
+                style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div id="resultsBadgeContainer" class="result-badge badge-pass">PASS</div>
+
+                <!-- Radial Progress Gauge -->
+                <div class="progress-radial-wrapper">
+                  <svg width="140" height="140">
+                    <defs>
+                      <linearGradient id="radialGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="var(--primary)" />
+                        <stop offset="100%" stop-color="var(--accent)" />
+                      </linearGradient>
+                    </defs>
+                    <circle class="progress-radial-bg" cx="70" cy="70" r="60" />
+                    <circle id="resultsRadialFill" class="progress-radial-fill" cx="70" cy="70" r="60"
+                      stroke-dasharray="377" stroke-dashoffset="377" />
+                  </svg>
+                  <div
+                    style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <span id="resultsRadialPercent"
+                      style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">88%</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Score</span>
+                  </div>
+                </div>
+
+                <h2 id="resultsRatingTitle"
+                  style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+                  Proficient Architect
+                </h2>
+                <p id="resultsMotivationalMsg"
+                  style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; max-width: 250px; margin: 0 auto;">
+                  Excellent execution of intermediate concepts. You display strong structural understandings.
+                </p>
+              </div>
+
+              <!-- Right Card: Stats list & topics gap analysis -->
+              <div class="glass-card" style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <h3
+                  style="font-size: 1rem; font-weight: 600; color: var(--text-primary); border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                  <i class="fa-solid fa-chart-column text-primary"></i> Performance Metrics
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+                  <div
+                    style="background: #F4F9FF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px;">
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Score Achieved</div>
+                    <div id="resultsScoreCount"
+                      style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">22 / 25
+                    </div>
+                  </div>
+                  <div
+                    style="background: #F4F9FF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px;">
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Time Consumed</div>
+                    <div id="resultsTimeTaken"
+                      style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">14:32
+                    </div>
+                  </div>
+                  <div
+                    style="display: flex; gap: 8px; grid-column: span 2; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;">
+                    <div style="flex: 1; text-align: center; border-right: 1px solid var(--border);">
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">🟢 CORRECT</div>
+                      <div id="resultsCorrectCount" style="font-size: 1.1rem; font-weight: 700; color: var(--success);">
+                        22</div>
+                    </div>
+                    <div style="flex: 1; text-align: center; border-right: 1px solid var(--border);">
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">🔴 INCORRECT</div>
+                      <div id="resultsIncorrectCount"
+                        style="font-size: 1.1rem; font-weight: 700; color: var(--danger);">3</div>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                      <div style="font-size: 0.7rem; color: var(--text-muted);">⚪ SKIPPED</div>
+                      <div id="resultsSkippedCount"
+                        style="font-size: 1.1rem; font-weight: 700; color: var(--text-secondary);">0</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recommendation Engine outputs -->
+                <div style="margin-top: var(--space-2); display: flex; flex-direction: column; gap: var(--space-3);">
+                  <div>
+                    <h4 style="font-size: 0.85rem; font-weight: 600; color: #059669; margin-bottom: 2px;">💪 Strong
+                      Concepts</h4>
+                    <p id="resultsStrongTopics" style="font-size: 0.8rem; color: var(--text-secondary);">Syntax
+                      variables, Functional definitions, standard components.</p>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--danger); margin-bottom: 2px;">🎯 Gap
+                      Vulnerabilities & Learning Paths</h4>
+                    <p id="resultsWeakTopics" style="font-size: 0.8rem; color: var(--text-secondary);">Closures, Scope
+                      resolution, Async handlers.</p>
+                    <div id="recommendationCourseLink" style="margin-top: 6px;">
+                      <a href="courses.html" class="btn btn-secondary btn-xs"
+                        style="display: inline-flex; align-items: center; gap: 4px;"><i
+                          class="fa-solid fa-graduation-cap"></i> Explore Recommended Courses</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 2px;">
+                      📈 Recommended Next Step</h4>
+                    <p id="resultsNextLevelRecommendation" style="font-size: 0.8rem; color: var(--text-secondary);">
+                      Challenge JavaScript Level 4 to build on standard components.</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Bottom: Action bar & certificate visualization -->
+            <div style="max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6);">
+              <!-- Certificate section if score >= 80% -->
+              <div id="resultsCertificateCard" style="display: none;">
+                <h3 style="text-align: center; color: var(--text-primary); font-size: 1.15rem; margin-bottom: 4px;"><i
+                    class="fa-solid fa-award text-warning"></i> Professional Competency Certificate</h3>
+                <p
+                  style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: var(--space-3);">
+                  You have scored above 80%! Your credentials are generated.</p>
+
+                <div id="certificateCaptureArea" class="certificate-container">
+                  <div style="border: 2px solid #d97706; padding: 20px; border-radius: var(--radius-sm);">
+                    <div
+                      style="font-size: 1rem; color: #d97706; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: var(--space-2);">
+                      Certificate of Skill Attainment</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: var(--space-6);">This
+                      document verifies competency gap alignment achievements</div>
+
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Proudly Presented
+                      to</div>
+                    <div
+                      style="font-size: 1.8rem; font-weight: 800; color: white; font-family: sans-serif; letter-spacing: 1px; margin-bottom: var(--space-5);">
+                      Arjun Kapoor</div>
+
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">For Successfully
+                      Completing the Skill Challenge in</div>
+                    <div id="certificateSkillLabel"
+                      style="font-size: 1.35rem; font-weight: 700; color: #38bdf8; margin-bottom: var(--space-2);">React
+                      (Level 3 - Intermediate)</div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: var(--space-6);">Issued on
+                      July 18, 2026 • Verified Authenticity Hash Identifier</div>
+
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: var(--space-8);">
+                      <div
+                        style="width: 150px; border-top: 1px solid var(--text-muted); padding-top: 4px; font-size: 0.7rem; color: var(--text-secondary);">
+                        Platform proctoring unit</div>
+                      <div class="certificate-seal"><i class="fa-solid fa-stamp"></i></div>
+                      <div
+                        style="width: 150px; border-top: 1px solid var(--text-muted); padding-top: 4px; font-size: 0.7rem; color: var(--text-secondary);">
+                        Principal Review Officer</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="text-align: center; margin-top: var(--space-3);">
+                  <button class="btn btn-secondary btn-sm" onclick="printCertificate()"><i
+                      class="fa-solid fa-print"></i> Print / Download PDF</button>
+                </div>
+              </div>
+
+              <!-- Lower action bar buttons -->
+              <div style="display: flex; gap: var(--space-4); justify-content: center;">
+                <button class="btn btn-glow" onclick="toggleSolutionsPage()"><i class="fa-solid fa-circle-info"></i>
+                  Detailed Solutions</button>
+                <button class="btn btn-secondary" onclick="restartPlatformFlow()">Test Another Skill</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE 7: DETAILED SOLUTION LIST VIEW -->
+          <div id="stageSolutions" class="stage-pane" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-6);">
+              <div class="section-tag" style="margin-bottom: 8px;">Solutions Manual</div>
+              <h1 id="solutionsPageTitle" style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">React
+                Assessment
+                Solutions</h1>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">Review individual question
+                details and explanations.</p>
+            </div>
+
+            <div class="glass-card" style="max-width: 850px; margin: 0 auto var(--space-6);">
+              <div class="solutions-list" id="solutionsListContainer">
+                <!-- Injected elements by JS -->
+              </div>
+            </div>
+
+            <div style="text-align: center;">
+              <button class="btn btn-primary" onclick="exitSolutionsPage()"><i class="fa-solid fa-arrow-left"></i>
+                Return to Result Dashboard</button>
+            </div>
+          </div>
+
+
+
+        </div>
+
       </div>
+    </main>
+  </div>
 
-    </div>
-  </main>
-</div>
+  <!-- DATA AND CORE CODE JS ENGINE -->
+  <script>
+    // ── MOCK SYSTEM DATA ──
+    // Categories, Skills mappings
+    const skillsData = {
+      frontend: [
+        { id: "html", name: "HTML", icon: "fa-brands fa-html5" },
+        { id: "css", name: "CSS", icon: "fa-brands fa-css3-alt" },
+        { id: "js", name: "JavaScript", icon: "fa-brands fa-square-js" },
+        { id: "react", name: "React", icon: "fa-brands fa-react" },
+        { id: "angular", name: "Angular", icon: "fa-brands fa-angular" },
+        { id: "vue", name: "Vue", icon: "fa-brands fa-vuejs" },
+        { id: "bootstrap", name: "Bootstrap", icon: "fa-brands fa-bootstrap" },
+        { id: "tailwind", name: "Tailwind CSS", icon: "fa-solid fa-wind" },
+        { id: "ts", name: "TypeScript", icon: "fa-solid fa-code-commit" },
+        { id: "nextjs", name: "Next.js", icon: "fa-solid fa-n" }
+      ],
+      backend: [
+        { id: "c", name: "C", icon: "fa-solid fa-copyright" },
+        { id: "cpp", name: "C++", icon: "fa-solid fa-terminal" },
+        { id: "java", name: "Java", icon: "fa-brands fa-java" },
+        { id: "python", name: "Python", icon: "fa-brands fa-python" },
+        { id: "php", name: "PHP", icon: "fa-brands fa-php" },
+        { id: "nodejs", name: "Node.js", icon: "fa-brands fa-node-js" },
+        { id: "mysql", name: "MySQL", icon: "fa-solid fa-database" },
+        { id: "mongodb", name: "MongoDB", icon: "fa-solid fa-leaf" },
+        { id: "express", name: "Express.js", icon: "fa-solid fa-arrows-spin" },
+        { id: "csharp", name: "C#", icon: "fa-solid fa-hashtag" }
+      ],
+      soft: [
+        { id: "comm", name: "Communication", icon: "fa-solid fa-comments" },
+        { id: "lead", name: "Leadership", icon: "fa-solid fa-crown" },
+        { id: "team", name: "Teamwork", icon: "fa-solid fa-users" },
+        { id: "problemsolve", name: "Problem Solving", icon: "fa-solid fa-puzzle-piece" },
+        { id: "critical", name: "Critical Thinking", icon: "fa-solid fa-glasses" },
+        { id: "time", name: "Time Management", icon: "fa-solid fa-clock" },
+        { id: "adapt", name: "Adaptability", icon: "fa-solid fa-arrows-rotate" },
+        { id: "decision", name: "Decision Making", icon: "fa-solid fa-scale-balanced" },
+        { id: "creativity", name: "Creativity", icon: "fa-solid fa-lightbulb" },
+        { id: "emotional", name: "Emotional Intelligence", icon: "fa-solid fa-heart" }
+      ]
+    };
 
-<script>
-  const questions = [
-    { q: "What is a neural network?", options: ["A biological brain", "A computational model inspired by the human brain", "A type of database", "A programming language"], correct: 1 },
-    { q: "Which activation function suffers from the 'vanishing gradient' problem?", options: ["ReLU", "Leaky ReLU", "Sigmoid", "ELU"], correct: 2 },
-    { q: "What does 'backpropagation' refer to in neural networks?", options: ["Forward pass of data", "Algorithm to compute gradients", "A regularization technique", "A loss function"], correct: 1 },
-    { q: "Which activation function is commonly used in the output layer for binary classification problems?", options: ["ReLU", "Tanh", "Sigmoid", "Softmax"], correct: 2 },
-    { q: "What is dropout in deep learning?", options: ["Removing neurons from input", "A regularization technique that randomly deactivates neurons during training", "A learning rate scheduler", "A type of activation function"], correct: 1 },
-    { q: "Which optimizer adapts the learning rate for each parameter?", options: ["SGD", "Momentum", "Adam", "Perceptron"], correct: 2 },
-    { q: "What is a Convolutional Neural Network (CNN) primarily used for?", options: ["Time series", "Natural Language Processing", "Image recognition", "Reinforcement learning"], correct: 2 },
-    { q: "What does 'epoch' mean in machine learning training?", options: ["A single forward pass", "One complete pass through the training dataset", "A mini-batch update", "A learning rate step"], correct: 1 },
-    { q: "Which loss function is used for multi-class classification?", options: ["MSE", "Binary Cross-Entropy", "Categorical Cross-Entropy", "Hinge Loss"], correct: 2 },
-    { q: "What is batch normalization used for?", options: ["To reduce the number of parameters", "To normalize inputs across a batch to speed up training", "To augment training data", "To prevent overfitting by dropout"], correct: 1 }
-  ];
+    // Base list of core high quality static questions
+    let staticQuestionDB = [
+      // JS - Level 1
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 1,
+        q: "Which keyword is used to declare a block-scoped variable in modern JavaScript?",
+        options: ["var", "let", "define", "global"],
+        correct: 1,
+        explanation: "'let' is block-scoped. Unlike 'var', which defines variables globally or locally within a function block regardless of block scope, 'let' binds values inside blocks (brackets)."
+      },
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 1,
+        q: "What is the output of 'console.log(typeof null)' in standard JavaScript execution?",
+        options: ["'null'", "'undefined'", "'object'", "'string'"],
+        correct: 2,
+        explanation: "This is a historical bug in JavaScript where 'typeof null' evaluates to 'object'. Changing this now would break existing websites across the web."
+      },
+      // JS - Level 2
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 2,
+        q: "What is the primary operational difference between '==' and '===' comparison operators?",
+        options: ["'==' checks value only, '===' checks value and type", "'===' handles type conversion before comparison", "'==' is faster than '==='", "There is no difference in modern engines"],
+        correct: 0,
+        explanation: "The '===' strict equality operator compares both the values and the types of the operands without coercion. '==' will attempt implicit type conversion before executing the check."
+      },
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 2,
+        q: "Which array method returns a new array with elements that pass a testing callback function?",
+        options: ["forEach()", "map()", "filter()", "reduce()"],
+        correct: 2,
+        explanation: "The filter() method creates a shallow copy of a portion of a given array, filtered down to just the elements from the given array that pass the test implemented by the provided function."
+      },
+      // JS - Level 3
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 3,
+        q: "What is a closures execution model in JavaScript?",
+        options: [
+          "A callback function executing directly inside the DOM",
+          "A function that remembers its outer lexical scope variables even after the outer function has finished executing",
+          "A method to close file streams and HTTP handlers",
+          "An encrypted variable context for secure storage"
+        ],
+        correct: 1,
+        explanation: "A closure is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment). In JavaScript, closures are created every time a function is created, at function creation time."
+      },
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 3,
+        q: "What is the output of the following JavaScript snippet?<div class='code-snippet'>const obj = {\n  num: 42,\n  getNum: () => this.num\n};\nconsole.log(obj.getNum());</div>",
+        options: ["42", "undefined", "ReferenceError", "null"],
+        correct: 1,
+        explanation: "Arrow functions do not bind their own 'this'. Instead, they inherit 'this' lexically from their parent scope. Since the parent scope of the object literal is the window/global scope, 'this.num' evaluates to undefined."
+      },
+      // JS - Level 4
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 4,
+        q: "What does the Event Loop do with macro-tasks and micro-tasks?",
+        options: [
+          "Executes micro-tasks sequentially and skips macro-tasks entirely",
+          "Executes one macro-task, then processes the entire micro-task queue, before rendering changes",
+          "Executes macro-tasks and micro-tasks in parallel workers",
+          "Executes micro-tasks only after every macro-task finishes"
+        ],
+        correct: 1,
+        explanation: "After executing a single macro-task from the task queue, the event loop runs the entire micro-task queue (which includes promises, MutationObserver callbacks, etc.) to completion before layout and paint updates occur."
+      },
+      // JS - Level 5
+      {
+        category: "frontend",
+        skill: "js",
+        difficulty: 5,
+        q: "How does Garbage Collection in modern V8 engines differentiate memory spaces?",
+        options: [
+          "By dividing memory into New (Scavenge) and Old spaces using the Generational Hypothesis",
+          "By counting references on every single declaration and dropping them instantly",
+          "By writing references to temporary swap files in the client system filesystem",
+          "By delegating allocation to worker scripts in separate browsers"
+        ],
+        correct: 0,
+        explanation: "The V8 engine divides heap memory space into Young (Scavenger) space for short-lived objects and Old space for long-lived objects. This takes advantage of the Generational Hypothesis (that most objects die young) to optimize collection routines."
+      },
+      // React - Level 3
+      {
+        category: "frontend",
+        skill: "react",
+        difficulty: 3,
+        q: "What is the primary cause of React infinite rerendering inside a useEffect hook?",
+        options: [
+          "Omitting the dependencies array while modifying a state variable inside the hook",
+          "Using async/await syntax inside the setup callback function",
+          "Calling ReactDOM.render manually in child component scripts",
+          "Declaring constants outside the React component function skeleton"
+        ],
+        correct: 0,
+        explanation: "If you change a state variable inside a useEffect hook and omit the dependencies array (or place the changing state variable inside the dependency array itself), the effect triggers on every render, causing an infinite loop."
+      },
+      // Python - Level 1
+      {
+        category: "backend",
+        skill: "python",
+        difficulty: 1,
+        q: "Which data structure is ordered, mutable, and uses brackets in Python?",
+        options: ["Tuple", "Set", "Dictionary", "List"],
+        correct: 3,
+        explanation: "Lists are ordered, mutable collections defined with square brackets '[]'. Tuples are immutable, sets are unordered, and dictionaries use key-value mappings."
+      },
+      // MySQL - Level 3
+      {
+        category: "backend",
+        skill: "mysql",
+        difficulty: 3,
+        q: "What does index performance optimization look like on JOIN queries?",
+        options: [
+          "Creating indexes on columns specified in foreign key constraints and join expressions",
+          "Converting tables to MyISAM engines to bypass transaction logs",
+          "Indexing every column in the table database, including description TEXT blobs",
+          "Avoiding index declarations entirely on transactional database structures"
+        ],
+        correct: 0,
+        explanation: "Creating indexes on JOIN conditions and foreign keys dramatically speeds up search times as the SQL engine does not need to perform full table scans to align matching records."
+      },
+      // Communication - Level 3
+      {
+        category: "soft",
+        skill: "comm",
+        difficulty: 3,
+        q: "When a team disagreement occurs, what is the best strategy to communicate resolving friction?",
+        options: [
+          "Active listening to establish shared commonalities, then finding collaborative tradeoffs",
+          "Enforcing hierarchical decisions based strictly on seniority levels",
+          "Ignoring the conflict to prevent professional escalation",
+          "Sending long email threads explaining code patterns in detail"
+        ],
+        correct: 0,
+        explanation: "Active listening allows stakeholders to align on underlying problems, establishing a foundation of trust before negotiating mutually beneficial technical tradeoffs."
+      }
+    ];
 
-  let current = 3;
-  let answers = new Array(questions.length).fill(-1);
-  let timerSeconds = 24 * 60 + 35;
-  let timerInterval;
+    // Helper template engine to dynamically construct standard questions to fill up to exactly 25 questions
+    function generateDynamicQuestionPool(category, skillName, difficulty) {
+      const list = [];
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === skillName);
+      const label = skillObj ? skillObj.name : skillName;
 
-  // Build dots
-  function buildDots() {
-    const container = document.getElementById('questionDots');
-    container.innerHTML = '';
-    questions.forEach((_, i) => {
-      const dot = document.createElement('div');
-      dot.className = 'q-dot' + (answers[i] !== -1 ? ' answered' : '') + (i === current ? ' current' : '');
-      dot.title = 'Q' + (i + 1);
-      dot.onclick = () => { current = i; renderQuestion(); };
-      container.appendChild(dot);
+      // We generate 30 template questions depending on difficulty
+      for (let i = 1; i <= 30; i++) {
+        let qText = "";
+        let options = [];
+        let correct = 0;
+        let explanation = "";
+
+        if (difficulty === 1) {
+          // Beginner Definitions
+          const templates = [
+            {
+              q: `Which of the following describes the core purpose of ${label}?`,
+              opts: ["To optimize heavy architectural frameworks", "To handle baseline concepts and structures", "To deploy virtualization clusters", "To enforce compiler constraints"],
+              c: 1,
+              exp: `${label} baseline syntax is designed to handle core specifications and fundamental logic.`
+            },
+            {
+              q: `What is a common syntax pattern seen in ${label} for beginners?`,
+              opts: ["Declaring variables/classes correctly", "Managing system memory registry", "Optimizing hardware threads", "Decoupling microservice modules"],
+              c: 0,
+              exp: "Basic syntax always focuses on simple declarations, data storage, and control flow."
+            },
+            {
+              q: `Which term is most frequently associated with ${label} operations?`,
+              opts: ["Distributed logs", "Standard syntax variables", "Decoupled bindings", "Load Balancers"],
+              c: 1,
+              exp: "Variables are basic building blocks of variables and data storage in coding/execution contexts."
+            }
+          ];
+          const t = templates[i % templates.length];
+          qText = t.q;
+          options = [...t.opts];
+          correct = t.c;
+          explanation = t.exp;
+        }
+        else if (difficulty === 2) {
+          // Basic execution / concepts
+          const templates = [
+            {
+              q: `How are parameters handled inside a ${label} structural block?`,
+              opts: ["By passing values to matching handlers", "By storing them inside swap files", "By compiling to assembly blocks", "By ignoring scopes"],
+              c: 0,
+              exp: "Standard logic requires parameter passing to process arguments inside localized execution scopes."
+            },
+            {
+              q: `Which error is typical when designing ${label} components for the first time?`,
+              opts: ["Thread pool exhaustion", "Variable declaration syntax or scope errors", "Kernel lockups", "Memory segmentation faults"],
+              c: 1,
+              exp: "Level 2 developers typically encounter syntax exceptions, missing symbols, and variable scope access issues."
+            },
+            {
+              q: `What is the correct way to handle iteration or looping in ${label}?`,
+              opts: ["Creating infinite stack recursions", "Declaring clean iterative blocks", "Using heavy load schedulers", "By calling database transactions"],
+              c: 1,
+              exp: "Loop statements process collection elements in sequential workflows."
+            }
+          ];
+          const t = templates[i % templates.length];
+          qText = t.q;
+          options = [...t.opts];
+          correct = t.c;
+          explanation = t.exp;
+        }
+        else if (difficulty === 3) {
+          // Intermediate Scenarios / Debugging
+          const templates = [
+            {
+              q: `Consider a scenario where a ${label} system experiences scope leakage. How do you resolve this?`,
+              opts: ["Bypassing strict compiler settings", "Refactoring declarations to block scopes", "Increasing system RAM attributes", "Using thread-safe mutex wrappers"],
+              c: 1,
+              exp: "Scope leaks are fixed by containing bindings inside functional boundaries."
+            },
+            {
+              q: `What is the expected outcome of the following logic block in ${label} when exceptions occur?`,
+              opts: ["Crash the client immediately", "Catch exceptions with try-catch blocks", "Delete temporary directories", "Bypass error check loops"],
+              c: 1,
+              exp: "Graceful error recovery is accomplished using structured try-catch/exception blocks."
+            },
+            {
+              q: `Why do intermediate developers recommend decoupling components in ${label}?`,
+              opts: ["To increase memory footprint", "To modularize code, simplify debugging, and improve readability", "To secure network packets", "To eliminate the compiler step"],
+              c: 1,
+              exp: "Decoupling separates functionality, enabling isolated unit testing and modular updates."
+            }
+          ];
+          const t = templates[i % templates.length];
+          qText = t.q;
+          options = [...t.opts];
+          correct = t.c;
+          explanation = t.exp;
+        }
+        else if (difficulty === 4) {
+          // Advanced Interview / Optimization
+          const templates = [
+            {
+              q: `Which design practice improves runtime execution performance in ${label} systems?`,
+              opts: ["Declaring variables globally", "Implementing optimization techniques, caching, and debouncing", "Writing code in assembly segments", "Enabling verbose system debug logs"],
+              c: 1,
+              exp: "Caching results, throttling actions, and avoiding duplicate lookups represent excellent performance practices."
+            },
+            {
+              q: `What represents an important edge case when scaling ${label} elements?`,
+              opts: ["Bypassing garbage collector rules", "Race conditions, concurrency issues, and boundary values", "Using short names for variables", "Deploying on local systems only"],
+              c: 1,
+              exp: "Enterprise scale requires handling concurrent execution states, boundary ranges, and thread conditions."
+            },
+            {
+              q: `What is the architectural impact of choosing synchronous vs asynchronous patterns in ${label}?`,
+              opts: ["No difference in resource usage", "Synchronous blocks the call stack while asynchronous utilizes background workers/event-driven loops", "Asynchronous increases CPU heating", "Synchronous speeds up execution dramatically"],
+              c: 1,
+              exp: "Async executions prevent thread-blocking, allowing platforms to handle multiple requests."
+            }
+          ];
+          const t = templates[i % templates.length];
+          qText = t.q;
+          options = [...t.opts];
+          correct = t.c;
+          explanation = t.exp;
+        }
+        else {
+          // Expert / System Design / Memory
+          const templates = [
+            {
+              q: `Under high load, how does the underlying architecture of ${label} scale to prevent memory leaks?`,
+              opts: ["By ignoring scope references", "By managing memory references, profiling allocations, and removing event listeners", "By allocating RAM swap space on client disks", "By compiling output directly to system kernels"],
+              c: 1,
+              exp: "Expert memory management involves deleting references, clearing closures, and profiling heap graphs."
+            },
+            {
+              q: `Which architectural pattern is best suited for building micro-scale decoupling in ${label}?`,
+              opts: ["Monolithic spaghetti structures", "Observer / Publisher-Subscriber pattern", "Global state pollution", "Hardcoding component dependencies"],
+              c: 1,
+              exp: "Pub-Sub decoupling isolates message channels, letting services interact without direct imports."
+            },
+            {
+              q: `How do you profile garbage collection bottlenecks in ${label}?`,
+              opts: ["Checking local file structures", "Taking Heap Snapshots and analyzing generational sweeps in developer consoles", "Rebooting the server frequently", "Writing print commands on every line"],
+              c: 1,
+              exp: "Heap analysis identifies memory allocations that evade generational garbage collection sweeps."
+            }
+          ];
+          const t = templates[i % templates.length];
+          qText = t.q;
+          options = [...t.opts];
+          correct = t.c;
+          explanation = t.exp;
+        }
+
+        list.push({
+          category,
+          skill: skillName,
+          difficulty,
+          q: qText,
+          options,
+          correct,
+          explanation
+        });
+      }
+
+      return list;
+    }
+
+    // ── CORE PLATFORM CONTROLLER STATE ──
+    let activeCategory = null;
+    let activeSkill = null;
+    let activeDifficulty = null;
+
+    let currentQuestions = [];
+    let userAnswers = []; // holds indices of selected options (-1 for unattempted)
+    let markedQuestions = []; // boolean array of review indicators
+    let currentQuestionIndex = 0;
+
+    let timerSeconds = 0;
+    let timerInterval = null;
+
+    let cheatWarnings = 0;
+    let testActive = false;
+
+    // Local storage state keys
+    const ATTEMPTS_STORAGE_KEY = "skillbridge_assessment_history";
+    const RESUME_STORAGE_KEY = "skillbridge_active_test_state";
+
+    // ── INITIALIZATION ──
+    window.addEventListener('DOMContentLoaded', () => {
+      // Read URL params if navigations came from other dashboard elements
+      const urlParams = new URLSearchParams(window.location.search);
+      const directSkill = urlParams.get('skill');
+      const directCategory = urlParams.get('category');
+
+      // Populate notification lists on initialization
+      renderNotifications();
+
+      // Check for unfinished test resume state
+      const savedState = localStorage.getItem(RESUME_STORAGE_KEY);
+      if (savedState) {
+        try {
+          const parsed = JSON.parse(savedState);
+          const confirmResume = confirm(`We detected an unfinished assessment for ${parsed.skill.toUpperCase()} (Level ${parsed.difficulty}). Would you like to resume this test?`);
+          if (confirmResume) {
+            resumeTestFromSaved(parsed);
+            return;
+          } else {
+            localStorage.removeItem(RESUME_STORAGE_KEY);
+          }
+        } catch (e) {
+          localStorage.removeItem(RESUME_STORAGE_KEY);
+        }
+      }
+
+      if (directSkill && directCategory) {
+        activeCategory = directCategory;
+        activeSkill = directSkill;
+        transitionStage('stageDifficulty');
+      } else {
+        transitionStage('stageCategory');
+      }
+
+      // Set up proctor listeners
+      setupAntiCheating();
     });
-  }
 
-  function renderQuestion() {
-    const q = questions[current];
-    document.getElementById('qNum').textContent = current + 1;
-    document.getElementById('questionText').textContent = q.q;
-    document.getElementById('progressText').textContent = `Question ${current + 1} of ${questions.length}`;
-    document.getElementById('quizProgress').style.width = ((current + 1) / questions.length * 100) + '%';
+    // ── SCREEN FLOW NAVIGATION ──
+    function transitionStage(stageId) {
+      // Hide all panes
+      document.querySelectorAll('.stage-pane').forEach(el => el.style.display = 'none');
 
-    const grid = document.getElementById('optionsGrid');
-    grid.innerHTML = '';
-    const letters = ['A', 'B', 'C', 'D'];
-    q.options.forEach((opt, i) => {
-      const div = document.createElement('div');
-      div.className = 'option-item' + (answers[current] === i ? ' selected' : '');
-      div.innerHTML = `<div class="option-letter">${letters[i]}</div><div class="option-text">${opt}</div>`;
-      div.onclick = () => selectOption(i);
-      grid.appendChild(div);
+      // Show active pane
+      document.getElementById(stageId).style.display = 'block';
+
+      // Update Step Dots UI representation
+      const stepMap = {
+        stageCategory: 1,
+        stageSkill: 2,
+        stageDifficulty: 3,
+        stageStart: 4,
+        stageWorkspace: 4
+      };
+
+      const activeStep = stepMap[stageId] || 1;
+      updateStepDotsUI(activeStep);
+
+      // Breadcrumb updates
+      const paths = {
+        stageCategory: "Select Category",
+        stageSkill: "Select Skill",
+        stageDifficulty: "Select Difficulty",
+        stageStart: "Start Test",
+        stageWorkspace: "Active Quiz Assessment",
+        stageResults: "Score Review",
+        stageSolutions: "Solutions Manual"
+      };
+      document.getElementById('breadcrumbPath').textContent = paths[stageId] || "Assessment";
+
+      // Hide or show step indicator bar
+      if (stageId === 'stageResults' || stageId === 'stageSolutions') {
+        document.getElementById('stepIndicatorContainer').style.display = 'none';
+      } else {
+        document.getElementById('stepIndicatorContainer').style.display = 'flex';
+      }
+    }
+
+    function updateStepDotsUI(activeStep) {
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById(`dot${i}`);
+        if (!dot) continue;
+        dot.className = "step-dot";
+        if (i < activeStep) {
+          dot.classList.add("completed");
+          dot.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        } else if (i === activeStep) {
+          dot.classList.add("active");
+          dot.textContent = i;
+        } else {
+          dot.textContent = i;
+        }
+      }
+    }
+
+    // ── STEP 1: CATEGORY ──
+    function selectCategory(cat) {
+      activeCategory = cat;
+
+      // Highlight selection card
+      const cards = document.querySelectorAll('#stageCategory .selection-card');
+      cards[cat === 'frontend' ? 0 : cat === 'backend' ? 1 : 2].classList.add('selected');
+
+      // Deselect others
+      cards.forEach((card, idx) => {
+        const isSelected = (cat === 'frontend' && idx === 0) ||
+          (cat === 'backend' && idx === 1) ||
+          (cat === 'soft' && idx === 2);
+        if (!isSelected) card.classList.remove('selected');
+      });
+
+      document.getElementById('categoryContinue').removeAttribute('disabled');
+
+      // Render step 2 content
+      renderSkillsGrid();
+    }
+
+    // ── STEP 2: SKILLS ──
+    function renderSkillsGrid() {
+      const grid = document.getElementById('skillsGrid');
+      grid.innerHTML = '';
+
+      const skills = skillsData[activeCategory] || [];
+      skills.forEach(skill => {
+        const card = document.createElement('div');
+        card.className = "selection-card";
+        card.setAttribute('onclick', `selectSkill('${skill.id}')`);
+        card.innerHTML = `
+        <div class="card-icon"><i class="${skill.icon}"></i></div>
+        <h4 style="font-size: 1.1rem; color: var(--text-primary);">${skill.name}</h4>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">Measure your gap analysis attributes in ${skill.name}.</p>
+      `;
+        grid.appendChild(card);
+      });
+
+      // Reset skill selections
+      activeSkill = null;
+      document.getElementById('skillContinue').setAttribute('disabled', 'true');
+    }
+
+    function selectSkill(skillId) {
+      activeSkill = skillId;
+
+      const cards = document.querySelectorAll('#skillsGrid .selection-card');
+      const skills = skillsData[activeCategory] || [];
+      const targetIdx = skills.findIndex(s => s.id === skillId);
+
+      cards.forEach((card, idx) => {
+        if (idx === targetIdx) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+
+      document.getElementById('skillContinue').removeAttribute('disabled');
+    }
+
+    function goBackToCategory() {
+      activeCategory = null;
+      document.getElementById('categoryContinue').setAttribute('disabled', 'true');
+      // Clear card selection classes
+      document.querySelectorAll('#stageCategory .selection-card').forEach(c => c.classList.remove('selected'));
+      transitionStage('stageCategory');
+    }
+
+    // ── STEP 3: DIFFICULTY ──
+    function selectDifficulty(level) {
+      activeDifficulty = level;
+
+      const cards = document.querySelectorAll('#stageDifficulty .selection-card');
+      cards.forEach((card, idx) => {
+        if (idx === (level - 1)) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+
+      document.getElementById('difficultyContinue').removeAttribute('disabled');
+
+      // Update Stage 4 Start preview panel details
+      updateStartPreviewDetails();
+    }
+
+    // ── STEP 4: PREVIEW ──
+    function updateStartPreviewDetails() {
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+      const skillName = skillObj ? skillObj.name : activeSkill;
+
+      document.getElementById('previewSkillName').textContent = skillName;
+
+      // Stars representation
+      let starsStr = "";
+      for (let i = 1; i <= 5; i++) {
+        starsStr += i <= activeDifficulty ? "★" : "☆";
+      }
+      document.getElementById('previewDifficultyStars').textContent = starsStr;
+
+      // Difficulty label
+      const labels = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
+      document.getElementById('previewDifficultyName').textContent = `Level ${activeDifficulty} – ${labels[activeDifficulty - 1]}`;
+
+      // Timer label
+      const minutes = [15, 20, 25, 30, 35];
+      document.getElementById('previewTimer').textContent = `${minutes[activeDifficulty - 1]} Minutes`;
+    }
+
+    // ── START TEST LAUNCHER ──
+    function startTestActual() {
+      // Generate questions matching categories & skills
+      generateTestQuestions();
+
+      // Reset statistics counts
+      cheatWarnings = 0;
+      document.getElementById('proctorWarningsCount').textContent = `Warnings: 0/3`;
+
+      // Set timer
+      const minutes = [15, 20, 25, 30, 35];
+      timerSeconds = minutes[activeDifficulty - 1] * 60;
+
+      // Set UI Workspace labels
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+      document.getElementById('workspaceSkill').textContent = skillObj ? skillObj.name : activeSkill;
+      document.getElementById('workspaceLevelBadge').textContent = `Level ${activeDifficulty}`;
+
+      testActive = true;
+      currentQuestionIndex = 0;
+
+      // Run workspace layout transitions
+      transitionStage('stageWorkspace');
+
+      // Render first question MCQ
+      renderWorkspaceQuestion();
+
+      // Start countdown clock
+      startWorkspaceTimer();
+
+      // Push initial browser state to prevent back navigation click exits
+      history.pushState(null, document.title, location.href);
+
+      // Auto save state
+      autoSaveTestStateToLocalStorage();
+    }
+
+    // Generate 25 unique assessment questions
+    function generateTestQuestions() {
+      // 1. Gather all static matching questions
+      let dbMatch = staticQuestionDB.filter(q => q.category === activeCategory && q.skill === activeSkill && q.difficulty === activeDifficulty);
+
+      // 2. Generate procedurals to satisfy gap to reach 25
+      let proceduralPool = generateDynamicQuestionPool(activeCategory, activeSkill, activeDifficulty);
+
+      // Combine and shuffle
+      let combinedPool = [...dbMatch];
+
+      // Add unique procedurals that do not duplicate question texts
+      proceduralPool.forEach(pq => {
+        if (combinedPool.length < 25 && !combinedPool.some(q => q.q === pq.q)) {
+          combinedPool.push(pq);
+        }
+      });
+
+      // Fallback filler in extreme cases
+      while (combinedPool.length < 25) {
+        combinedPool.push({
+          category: activeCategory,
+          skill: activeSkill,
+          difficulty: activeDifficulty,
+          q: `Fallback question validator placeholder schema for Level ${activeDifficulty} skill execution assessment.`,
+          options: ["Correct Option Statement Validation", "Incorrect Option Statement A", "Incorrect Option Statement B", "Incorrect Option Statement C"],
+          correct: 0,
+          explanation: "This is a placeholder fallback question validation explanation."
+        });
+      }
+
+      // Shuffle final 25 items randomly
+      currentQuestions = shuffleArray(combinedPool).slice(0, 25);
+
+      // Scramble option choices for each question to satisfy visual randomized requirements
+      currentQuestions.forEach(q => {
+        // Create options mapping with index details to keep track of correct index
+        const originalOptions = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.correct }));
+        const shuffledOptions = shuffleArray(originalOptions);
+        q.options = shuffledOptions.map(o => o.text);
+        q.correct = shuffledOptions.findIndex(o => o.isCorrect);
+      });
+
+      userAnswers = new Array(25).fill(-1);
+      markedQuestions = new Array(25).fill(false);
+    }
+
+    // ── WORKSPACE QUESTION RENDER ──
+    function renderWorkspaceQuestion() {
+      const q = currentQuestions[currentQuestionIndex];
+
+      // Question number
+      document.getElementById('workspaceQuestionNum').textContent = `Question ${currentQuestionIndex + 1} of 25`;
+
+      // Parse question body (supporting HTML pre elements for coding) and strip any reference ID tags
+      const textEl = document.getElementById('workspaceQuestionText');
+      textEl.innerHTML = q.q.replace(/\s*\(Ref ID:.*?\)/gi, '').replace(/\s*\(QID:.*?\)/gi, '');
+
+      // Render options
+      const grid = document.getElementById('workspaceOptionsGrid');
+      grid.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, idx) => {
+        const panel = document.createElement('div');
+        panel.className = `option-panel ${userAnswers[currentQuestionIndex] === idx ? 'selected' : ''}`;
+        panel.setAttribute('onclick', `selectWorkspaceOption(${idx})`);
+        panel.innerHTML = `
+        <div class="option-check">${letters[idx]}</div>
+        <div style="font-size: 0.95rem; color: #000000; font-weight: 500;">${opt}</div>
+      `;
+        grid.appendChild(panel);
+      });
+
+      // Manage workspace button descriptors
+      const nextBtn = document.getElementById('workspaceNextBtn');
+      if (currentQuestionIndex === 24) {
+        nextBtn.innerHTML = `<i class="fa-solid fa-flag-checkered"></i> Submit Test`;
+        nextBtn.className = "btn btn-glow";
+      } else {
+        nextBtn.innerHTML = `Next <i class="fa-solid fa-arrow-right"></i>`;
+        nextBtn.className = "btn btn-primary";
+      }
+
+      // Rebuild bottom navigation circle indicators
+      renderNavigatorDots();
+    }
+
+    function selectWorkspaceOption(optionIdx) {
+      userAnswers[currentQuestionIndex] = optionIdx;
+
+      // Automatically flag indicator dot
+      renderWorkspaceQuestion();
+      autoSaveTestStateToLocalStorage();
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < 24) {
+        currentQuestionIndex++;
+        renderWorkspaceQuestion();
+        autoSaveTestStateToLocalStorage();
+      } else {
+        confirmSubmitTest();
+      }
+    }
+
+    function markForReview() {
+      markedQuestions[currentQuestionIndex] = !markedQuestions[currentQuestionIndex];
+      renderWorkspaceQuestion();
+      autoSaveTestStateToLocalStorage();
+    }
+
+    function renderNavigatorDots() {
+      const grid = document.getElementById('workspaceDotsGrid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 25; i++) {
+        const dot = document.createElement('div');
+        dot.className = "dot-item";
+        dot.textContent = i + 1;
+
+        // Determine state colors
+        if (i === currentQuestionIndex) {
+          dot.classList.add("current");
+        } else if (markedQuestions[i]) {
+          dot.classList.add("review");
+        } else if (userAnswers[i] !== -1) {
+          dot.classList.add("answered");
+        } else {
+          dot.classList.add("unanswered");
+        }
+
+        // Dot navigations only allowed to current or unanswered questions if review permitted
+        dot.setAttribute('onclick', `navigateToDotIndex(${i})`);
+        grid.appendChild(dot);
+      }
+    }
+
+    function navigateToDotIndex(idx) {
+      currentQuestionIndex = idx;
+      renderWorkspaceQuestion();
+      autoSaveTestStateToLocalStorage();
+    }
+
+    // ── TIMER MECHANICS ──
+    function startWorkspaceTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          alert("Time is up! Your assessment is submitting automatically.");
+          submitAssessmentActual(false); // auto-submit
+          return;
+        }
+
+        // Update timer label
+        const m = Math.floor(timerSeconds / 60);
+        const s = timerSeconds % 60;
+        const displayStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+        const timerDisplay = document.getElementById('workspaceTimer');
+        timerDisplay.textContent = displayStr;
+
+        // Glow red warning color if time is running out (less than 3 minutes)
+        const container = document.getElementById('timerContainer');
+        if (timerSeconds < 180) {
+          container.style.borderColor = "var(--danger)";
+          container.style.background = "rgba(239, 68, 68, 0.1)";
+          document.getElementById('timerClockIcon').className = "fa-solid fa-hourglass-half text-danger";
+          timerDisplay.style.color = "var(--danger)";
+        } else {
+          container.style.borderColor = "var(--border)";
+          container.style.background = "#F4F9FF";
+          document.getElementById('timerClockIcon').className = "fa-solid fa-clock text-primary";
+          timerDisplay.style.color = "var(--text-primary)";
+        }
+
+        // Backup active state to handle refresh timers
+        if (timerSeconds % 5 === 0) {
+          autoSaveTestStateToLocalStorage();
+        }
+
+      }, 1000);
+    }
+
+    // ── AUTO-SAVE AND RESUME STATES ──
+    function autoSaveTestStateToLocalStorage() {
+      if (!testActive) return;
+
+      const state = {
+        category: activeCategory,
+        skill: activeSkill,
+        difficulty: activeDifficulty,
+        currentQuestionIndex,
+        questions: currentQuestions,
+        answers: userAnswers,
+        marked: markedQuestions,
+        remainingSeconds: timerSeconds,
+        violations: cheatWarnings
+      };
+
+      localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resumeTestFromSaved(saved) {
+      activeCategory = saved.category;
+      activeSkill = saved.skill;
+      activeDifficulty = saved.difficulty;
+      currentQuestionIndex = saved.currentQuestionIndex;
+      currentQuestions = saved.questions;
+      userAnswers = saved.answers;
+      markedQuestions = saved.marked;
+      timerSeconds = saved.remainingSeconds;
+      cheatWarnings = saved.violations;
+
+      document.getElementById('proctorWarningsCount').textContent = `Warnings: ${cheatWarnings}/3`;
+
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+      document.getElementById('workspaceSkill').textContent = skillObj ? skillObj.name : activeSkill;
+      document.getElementById('workspaceLevelBadge').textContent = `Level ${activeDifficulty}`;
+
+      testActive = true;
+      transitionStage('stageWorkspace');
+      renderWorkspaceQuestion();
+      startWorkspaceTimer();
+    }
+
+    // ── SUBMISSION LOGIC ──
+    function confirmSubmitTest() {
+      const unansweredCount = userAnswers.filter(a => a === -1).length;
+      let msg = "Are you sure you want to finish and submit your assessment?";
+      if (unansweredCount > 0) {
+        msg = `Warning: You have ${unansweredCount} unanswered questions remaining. Are you sure you want to submit?`;
+      }
+
+      if (confirm(msg)) {
+        submitAssessmentActual(false);
+      }
+    }
+
+    function submitAssessmentActual(cheated = false) {
+      testActive = false;
+      clearInterval(timerInterval);
+      localStorage.removeItem(RESUME_STORAGE_KEY);
+
+      // Calculate score metrics
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let skippedCount = 0;
+
+      currentQuestions.forEach((q, idx) => {
+        const ans = userAnswers[idx];
+        if (ans === -1) {
+          skippedCount++;
+        } else if (ans === q.correct) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+        }
+      });
+
+      const finalPercentage = Math.round((correctCount / 25) * 100);
+      const passStatus = finalPercentage >= 80;
+
+      // Set details on results dashboard
+      document.getElementById('resultsRadialPercent').textContent = `${finalPercentage}%`;
+      document.getElementById('resultsScoreCount').textContent = `${correctCount} / 25`;
+      document.getElementById('resultsCorrectCount').textContent = correctCount;
+      document.getElementById('resultsIncorrectCount').textContent = incorrectCount;
+      document.getElementById('resultsSkippedCount').textContent = skippedCount;
+
+      // Time calculations
+      const minutesLimit = [15, 20, 25, 30, 35];
+      const totalTimeLimitSeconds = minutesLimit[activeDifficulty - 1] * 60;
+      const elapsedSeconds = totalTimeLimitSeconds - timerSeconds;
+      const elapsedM = Math.floor(elapsedSeconds / 60);
+      const elapsedS = elapsedSeconds % 60;
+      document.getElementById('resultsTimeTaken').textContent = `${String(elapsedM).padStart(2, '0')}:${String(elapsedS).padStart(2, '0')}`;
+
+      // Pass / Fail indicators
+      const badgeEl = document.getElementById('resultsBadgeContainer');
+      const msgEl = document.getElementById('resultsMotivationalMsg');
+      const ratingEl = document.getElementById('resultsRatingTitle');
+      const certCard = document.getElementById('resultsCertificateCard');
+
+      if (cheated) {
+        badgeEl.textContent = "DISQUALIFIED";
+        badgeEl.className = "result-badge badge-fail";
+        ratingEl.textContent = "Violation Lockout";
+        msgEl.textContent = "This assessment was automatically submitted due to multiple proctoring tab-switching violations.";
+        certCard.style.display = "none";
+      } else if (passStatus) {
+        badgeEl.textContent = "PASS";
+        badgeEl.className = "result-badge badge-pass";
+        ratingEl.textContent = activeDifficulty === 5 ? "Certified Expert" : activeDifficulty >= 3 ? "Proficient Specialist" : "Certified Professional";
+        msgEl.textContent = "Outstanding work! You have aligned successfully with this difficulty standard.";
+
+        // Render certificate
+        certCard.style.display = "block";
+        const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+        const labels = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
+        document.getElementById('certificateSkillLabel').textContent = `${skillObj ? skillObj.name : activeSkill} (${labels[activeDifficulty - 1]} Level ${activeDifficulty})`;
+      } else {
+        badgeEl.textContent = "FAIL";
+        badgeEl.className = "result-badge badge-fail";
+        ratingEl.textContent = "Development Required";
+        msgEl.textContent = "You did not achieve the 80% threshold required to clear this skill gap tier.";
+        certCard.style.display = "none";
+      }
+
+      // Recommendation Engine: Generate topics gap mapping
+      analyzeTopicGaps(correctCount, finalPercentage);
+
+      // Save record to local storage history list for admin panel metrics
+      saveAttemptRecord(correctCount, finalPercentage, elapsedSeconds, passStatus && !cheated ? 'Pass' : 'Fail');
+
+      // Handle circular progress SVG animation
+      const circle = document.getElementById('resultsRadialFill');
+      const circumference = 377; // 2 * pi * r
+      const offset = circumference - (finalPercentage / 100) * circumference;
+      setTimeout(() => {
+        circle.style.strokeDashoffset = offset;
+      }, 200);
+
+      // Move stage
+      transitionStage('stageResults');
+    }
+
+    // Analyze strong and weak topics
+    function analyzeTopicGaps(correctCount, percent) {
+      const strongEl = document.getElementById('resultsStrongTopics');
+      const weakEl = document.getElementById('resultsWeakTopics');
+      const recEl = document.getElementById('resultsNextLevelRecommendation');
+
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+      const skillName = skillObj ? skillObj.name : activeSkill;
+
+      if (percent >= 80) {
+        strongEl.textContent = `Excellent work in ${skillName}. Core fundamentals, logic structures, and advanced design patterns are highly aligned.`;
+
+        if (activeDifficulty < 5) {
+          weakEl.textContent = "Minimal logic gaps observed. Some edge cases are present.";
+          recEl.textContent = `Challenge the next level (${skillName} Level ${activeDifficulty + 1}) to continue your training matrix.`;
+        } else {
+          weakEl.textContent = "Excellent performance. No visible gaps detected in V8 or architecture metrics.";
+          recEl.textContent = `You have completed the expert matrix! Explore other engineering branches in Frontend or Backend paths.`;
+        }
+      } else {
+        strongEl.textContent = `Baseline syntax variables and initial parameters for ${skillName} show solid foundations.`;
+
+        // Determine weak points depending on level
+        if (activeDifficulty <= 2) {
+          weakEl.textContent = `Struggles identified in functional scopes, loop constructs, or simple logic declarations for ${skillName}.`;
+        } else {
+          weakEl.textContent = `Vulnerabilities found in asynchronous operations, decoupling principles, memory allocations, or advanced optimization strategies.`;
+        }
+        recEl.textContent = `Review recommended documentation tutorials and retake the Level ${activeDifficulty} assessment after 24 hours.`;
+      }
+    }
+
+    // ── SAVE ATTEMPTS RECORDS ──
+    function saveAttemptRecord(score, percentage, seconds, status) {
+      const records = JSON.parse(localStorage.getItem(ATTEMPTS_STORAGE_KEY) || "[]");
+
+      const newRecord = {
+        date: new Date().toLocaleDateString(),
+        skill: activeSkill,
+        difficulty: activeDifficulty,
+        score: `${score} / 25`,
+        percentage: `${percentage}%`,
+        timeTaken: `${Math.floor(seconds / 60)}m ${seconds % 60}s`,
+        status: status
+      };
+
+      records.unshift(newRecord);
+      localStorage.setItem(ATTEMPTS_STORAGE_KEY, JSON.stringify(records));
+    }
+
+    // ── RESULTS ACTIONS: SOLUTIONS PAGE ──
+    function toggleSolutionsPage() {
+      const container = document.getElementById('solutionsListContainer');
+      container.innerHTML = '';
+
+      const skillObj = Object.values(skillsData).flatMap(arr => arr).find(s => s.id === activeSkill);
+      const name = skillObj ? skillObj.name : activeSkill;
+      document.getElementById('solutionsPageTitle').textContent = `${name} Solutions Review`;
+
+      currentQuestions.forEach((q, idx) => {
+        const userAns = userAnswers[idx];
+        const isCorrect = userAns === q.correct;
+        const statusClass = userAns === -1 ? 'skipped' : isCorrect ? 'correct' : 'incorrect';
+        const statusIcon = userAns === -1 ? '<i class="fa-solid fa-circle text-muted"></i>' : isCorrect ? '<i class="fa-solid fa-circle-check text-success"></i>' : '<i class="fa-solid fa-circle-xmark text-danger"></i>';
+        const statusLabel = userAns === -1 ? 'Skipped' : isCorrect ? 'Correct' : 'Incorrect';
+
+        let borderStyle = "border-left: 4px solid var(--border);";
+        if (statusClass === 'correct') borderStyle = "border-left: 4px solid var(--success);";
+        if (statusClass === 'incorrect') borderStyle = "border-left: 4px solid var(--danger);";
+
+        const card = document.createElement('div');
+        card.className = "glass-card";
+        card.style = `margin-bottom: var(--space-4); ${borderStyle} padding: var(--space-5);`;
+
+        const cleanQ = q.q.replace(/\s*\(Ref ID:.*?\)/gi, '').replace(/\s*\(QID:.*?\)/gi, '');
+        card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-weight: 700; color: var(--text-primary);">Question ${idx + 1}</span>
+          <span style="font-size: 0.8rem; display: flex; align-items: center; gap: 6px;">
+            ${statusIcon} ${statusLabel}
+          </span>
+        </div>
+        <div style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.5; margin-bottom: 12px;">${cleanQ}</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; margin-bottom: 12px;">
+          <div style="padding: 8px; border-radius: var(--radius-sm); background: #F4F9FF; border: 1px solid var(--border);">
+            <span style="color: var(--text-muted); display: block; font-size: 0.75rem;">Your Choice:</span>
+            <span style="${userAns === -1 ? 'color: var(--text-muted);' : isCorrect ? 'color: var(--success); font-weight:600;' : 'color: var(--danger); font-weight:600;'}">
+              ${userAns === -1 ? 'None (Skipped)' : q.options[userAns]}
+            </span>
+          </div>
+          <div style="padding: 8px; border-radius: var(--radius-sm); background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25);">
+            <span style="color: var(--success); display: block; font-size: 0.75rem; font-weight: 600;">Correct Answer:</span>
+            <span style="color: #059669; font-weight: 600;">
+              ${q.options[q.correct]}
+            </span>
+          </div>
+        </div>
+        
+        <div style="background: #F4F9FF; padding: var(--space-3); border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; border: 1px solid var(--border);">
+          <strong style="color: var(--text-primary); font-size: 0.8rem; display: block; margin-bottom: 2px;">Explanation:</strong>
+          ${q.explanation}
+        </div>
+      `;
+        container.appendChild(card);
+      });
+
+      transitionStage('stageSolutions');
+    }
+
+    function exitSolutionsPage() {
+      transitionStage('stageResults');
+    }
+
+    function restartPlatformFlow() {
+      activeCategory = null;
+      activeSkill = null;
+      activeDifficulty = null;
+      document.getElementById('categoryContinue').setAttribute('disabled', 'true');
+      document.getElementById('skillContinue').setAttribute('disabled', 'true');
+      document.getElementById('difficultyContinue').setAttribute('disabled', 'true');
+
+      document.querySelectorAll('#stageCategory .selection-card').forEach(c => c.classList.remove('selected'));
+
+      transitionStage('stageCategory');
+    }
+
+    // ── SECURITY & ANTI-CHEATING ──
+    function setupAntiCheating() {
+      // Disable right click context menu
+      document.addEventListener('contextmenu', e => {
+        if (testActive) {
+          e.preventDefault();
+          alert("Right-click context menus are disabled during assessments.");
+        }
+      });
+
+      // Disable text copy/cut/paste commands
+      const copyBlocker = e => {
+        if (testActive) {
+          e.preventDefault();
+          alert("Copying text is restricted during assessments.");
+        }
+      };
+      document.addEventListener('copy', copyBlocker);
+      document.addEventListener('cut', copyBlocker);
+
+      // Tab Switch Detector
+      let visibilityHandlerBusy = false;
+      document.addEventListener('visibilitychange', () => {
+        if (!testActive || document.visibilityState !== 'hidden') return;
+        // Avoid double-counting if warning modal is already visible
+        if (visibilityHandlerBusy) return;
+        visibilityHandlerBusy = true;
+
+        cheatWarnings++;
+        const warningCounter = document.getElementById('proctorWarningsCount');
+        if (warningCounter) warningCounter.textContent = `Warnings: ${cheatWarnings}/3`;
+
+        if (cheatWarnings >= 3) {
+          document.getElementById('cheatWarningModal').style.display = 'none';
+          clearInterval(timerInterval);
+          submitAssessmentActual(true); // Flag proctor violation submission
+          alert("Test submitted automatically due to exceeding proctor tab limits.");
+        } else {
+          const msgEl = document.getElementById('cheatWarningMsg');
+          if (msgEl) msgEl.textContent = `Proctoring alert: You have moved away from the assessment screen. This represents violation ${cheatWarnings}/3. Reaching 3 violations triggers immediate auto-submission.`;
+          document.getElementById('cheatWarningModal').style.display = 'flex';
+          clearInterval(timerInterval); // Pause timer while warning is shown
+        }
+
+        // Re-enable on next visibility change (user came back)
+        document.addEventListener('visibilitychange', function resetBusy() {
+          if (document.visibilityState === 'visible') {
+            visibilityHandlerBusy = false;
+            document.removeEventListener('visibilitychange', resetBusy);
+          }
+        });
+      });
+
+      // Prevent browser back navigation button
+      window.addEventListener('popstate', (e) => {
+        if (testActive) {
+          history.pushState(null, document.title, location.href);
+          alert("Back navigation is disabled while assessment is running.");
+        }
+      });
+    }
+
+    function resumeCheatTest() {
+      document.getElementById('cheatWarningModal').style.display = 'none';
+      if (testActive) {
+        startWorkspaceTimer(); // Resume countdown clock
+      }
+    }
+
+    // ── CERTIFICATE PRINT MECHANICS ──
+    function printCertificate() {
+      const certArea = document.getElementById('certificateCaptureArea').innerHTML;
+      const originalBody = document.body.innerHTML;
+
+      // Simple window printing layout
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print SkillBridge Certificate</title>
+          <style>
+            body { background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
+            .certificate-container { background: #1e293b; border: 12px double #d97706; border-radius: 12px; padding: 40px; text-align: center; color: #fff; max-width: 700px; }
+            .certificate-seal { width: 80px; height: 80px; background: #d97706; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; }
+            button { display: none; }
+          </style>
+        </head>
+        <body onload="window.print();">
+          ${certArea}
+        </body>
+      </html>
+    `);
+      printWindow.document.close();
+    }
+
+    // ── NOTIFICATIONS SYSTEM (copied from student-dashboard) ──
+    let notificationsList = [
+      {
+        id: 1,
+        type: "success",
+        icon: "fa-solid fa-circle-check",
+        title: "Assessment completed",
+        desc: "You scored 88% on the React Intermediate assessment! Dynamic Certificate is now available.",
+        time: "2 hours ago"
+      },
+      {
+        id: 2,
+        type: "primary",
+        icon: "fa-solid fa-graduation-cap",
+        title: "New course recommendation",
+        desc: "Based on your ML skill gaps, we recommend enrolling in 'Machine Learning A-Z'.",
+        time: "5 hours ago"
+      },
+      {
+        id: 3,
+        type: "accent",
+        icon: "fa-solid fa-chart-line",
+        title: "Skill score updated",
+        desc: "Your overall Skill Score has increased by +12 points this week. Keep it up!",
+        time: "1 day ago"
+      },
+      {
+        id: 4,
+        type: "warning",
+        icon: "fa-solid fa-triangle-exclamation",
+        title: "Upcoming assessment reminder",
+        desc: "Your 'Deep Learning Fundamentals' challenge is scheduled for today at 3:00 PM.",
+        time: "3 hours ago"
+      }
+    ];
+
+    function toggleNotifDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notifDropdown');
+      if (dropdown) dropdown.classList.toggle('active');
+    }
+
+    function renderNotifications() {
+      const listContainer = document.getElementById('notifList');
+      const notifDot = document.getElementById('notifDot');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      if (notificationsList.length === 0) {
+        listContainer.innerHTML = `
+        <div class="notif-empty">
+          <i class="fa-regular fa-bell-slash" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+          No new notifications
+        </div>
+      `;
+        if (notifDot) notifDot.style.display = 'none';
+        return;
+      }
+
+      if (notifDot) notifDot.style.display = 'block';
+
+      notificationsList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'notif-item';
+        div.innerHTML = `
+        <div class="notif-item-icon ${item.type}"><i class="${item.icon}"></i></div>
+        <div class="notif-content">
+          <div class="notif-title">${item.title}</div>
+          <div class="notif-desc">${item.desc}</div>
+          <div class="notif-time">${item.time}</div>
+        </div>
+      `;
+        listContainer.appendChild(div);
+      });
+    }
+
+    function clearNotifDot(event) {
+      if (event) event.stopPropagation();
+      notificationsList = [];
+      renderNotifications();
+    }
+
+    function viewAllNotifications(event) {
+      if (event) event.stopPropagation();
+      window.location.href = 'notification.html';
+    }
+
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('profileDropdown');
+      const toggle = document.getElementById('profileToggle');
+      const notifDropdown = document.getElementById('notifDropdown');
+      // Close notification dropdown if open
+      if (notifDropdown) notifDropdown.classList.remove('active');
+      // Toggle profile dropdown
+      dropdown.classList.toggle('active');
+      toggle.classList.toggle('open');
+    }
+
+    // Global window watcher to dismiss active dropdowns on outer clicks
+    window.addEventListener('click', (e) => {
+      const notifDropdown = document.getElementById('notifDropdown');
+      const profileDropdown = document.getElementById('profileDropdown');
+      const profileToggle = document.getElementById('profileToggle');
+
+      if (notifDropdown && notifDropdown.classList.contains('active')) {
+        const toggle = document.getElementById('notifBell');
+        if (toggle && !toggle.contains(e.target)) {
+          notifDropdown.classList.remove('active');
+        }
+      }
+
+      if (profileDropdown && profileDropdown.classList.contains('active')) {
+        if (profileToggle && !profileToggle.contains(e.target)) {
+          profileDropdown.classList.remove('active');
+          profileToggle.classList.remove('open');
+        }
+      }
     });
-    buildDots();
-  }
 
-  function selectOption(i) {
-    answers[current] = i;
-    renderQuestion();
-  }
+    // ── UTILS ──
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
 
-  function navigate(dir) {
-    const next = current + dir;
-    if (next >= 0 && next < questions.length) { current = next; renderQuestion(); }
-    else if (dir === 1 && current === questions.length - 1) submitQuiz();
-  }
-
-  function submitQuiz() {
-    clearInterval(timerInterval);
-    document.getElementById('resultModal').style.display = 'flex';
-  }
-
-  // Timer
-  function startTimer() {
-    timerInterval = setInterval(() => {
-      timerSeconds--;
-      if (timerSeconds <= 0) { clearInterval(timerInterval); submitQuiz(); return; }
-      const m = Math.floor(timerSeconds / 60);
-      const s = timerSeconds % 60;
-      document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      if (timerSeconds < 300) document.querySelector('.quiz-timer').style.borderColor = 'rgba(239,68,68,0.6)';
-    }, 1000);
-  }
-
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('mobile-open');
-    document.getElementById('sidebarOverlay').classList.toggle('active');
-  }
-
-  renderQuestion();
-  startTimer();
-</script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('mobile-open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+  </script>
 </body>
+
 </html>

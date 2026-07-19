@@ -1,404 +1,992 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Dashboard – SkillBridge</title>
-  <meta name="description" content="Your personalized skill gap analysis dashboard with progress tracking and course recommendations." />
+  <meta name="description"
+    content="Your personalized skill gap analysis dashboard with progress tracking and course recommendations." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+
+  <link rel="stylesheet" href="css/dashboard-custom.css" />
+
+  <style>
+    /* ── Student Dashboard: Text Color Accessibility Fixes ──
+       White + Blue + Teal theme — only color/text properties adjusted.
+       No layout, spacing, or structural changes. */
+
+    /* Topnav + Sidebar menu toggle button */
+    .mobile-menu-toggle {
+      background: #F4F9FF !important;
+      color: var(--text-secondary) !important;
+    }
+
+    .mobile-menu-toggle:hover {
+      color: var(--primary) !important;
+    }
+
+    /* Topnav title & breadcrumb */
+    .topnav-title {
+      color: var(--text-primary);
+    }
+
+    .topnav-breadcrumb {
+      color: var(--text-secondary);
+    }
+
+    .topnav-breadcrumb span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Topnav profile name / role */
+    .topnav-profile-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .topnav-profile-role {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    /* Sidebar user info */
+    .sidebar-user-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .sidebar-user-role {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    /* Dash header */
+    .dash-header h1 {
+      color: var(--text-primary);
+    }
+
+    .dash-header p {
+      color: var(--text-secondary);
+    }
+
+    /* Card headings & labels */
+    .card h3 {
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+    }
+
+    /* Card-stat: stat-value uses variable already; fix gradient-text to be visible */
+    .stat-value.gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Activity feed */
+    .activity-text {
+      color: var(--text-primary);
+    }
+
+    .activity-text span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .activity-time {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    /* Activity icon backgrounds — fix dark rgba to light tints */
+    .activity-icon {
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Achievement names & descriptions */
+    .ach-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .ach-desc {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    /* Course item text rows */
+    .course-item .course-title {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Streak badge */
+    .streak-badge {
+      color: var(--warning);
+    }
+
+    /* Search bar kbd shortcut */
+    .search-bar kbd {
+      color: var(--text-muted);
+    }
+
+    /* Skill score modal: donut chart inner text */
+    #skillScoreModal .modal-score-value {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Modal headings */
+    #skillScoreModal h3,
+    #streakModal h3,
+    #streakModal h2 {
+      color: var(--text-primary) !important;
+    }
+
+    #streakModal p {
+      color: var(--text-secondary);
+    }
+
+    /* Streak calendar mini-stat boxes */
+    #streakModal .streak-stat-label {
+      color: var(--text-muted);
+    }
+
+    /* Progress navigator legend text */
+    .progress-nav-legend {
+      color: var(--text-secondary);
+    }
+  </style>
 </head>
+
 <body>
-<div class="dashboard-layout">
-  <!-- Sidebar Overlay -->
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="dashboard-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-  <!-- ══════════ SIDEBAR ══════════ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
-      <span class="sidebar-brand-text">SkillBridge</span>
-    </div>
-
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-label">Main</div>
-      <a href="student-dashboard.html" class="sidebar-nav-item active">
-        <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
-        <span>Dashboard</span>
-      </a>
-      <a href="#" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
-        <span>My Profile</span>
-      </a>
-      <a href="assessment.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div>
-        <span>Assessments</span>
-        <span class="nav-badge">3</span>
-      </a>
-
-      <div class="sidebar-section-label">Learning</div>
-      <a href="skill-gap.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div>
-        <span>Skill Gap</span>
-      </a>
-      <a href="courses.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-        <span>Courses</span>
-      </a>
-      <a href="roadmap.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-road"></i></div>
-        <span>Roadmap</span>
-      </a>
-      <a href="progress.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
-        <span>Progress</span>
-      </a>
-
-      <div class="sidebar-section-label">Other</div>
-      <a href="reports.html" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div>
-        <span>Reports</span>
-      </a>
-      <a href="#" class="sidebar-nav-item">
-        <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
-        <span>Settings</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
-        <div class="sidebar-user-info">
-          <div class="sidebar-user-name">Arjun Kapoor</div>
-          <div class="sidebar-user-role">Student · CSE</div>
-        </div>
-        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ══════════ MAIN ══════════ -->
-  <main class="dashboard-main" id="dashMain">
-    <!-- Top Nav -->
-    <header class="topnav">
-      <div class="topnav-left">
-        <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+    <!-- ══════════ SIDEBAR ══════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <button class="mobile-menu-toggle sidebar-toggle-btn" id="sidebarCloseToggle" onclick="toggleSidebar()"
+          style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"
+          title="Close Sidebar">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <div>
-          <div class="topnav-title">Dashboard</div>
-          <div class="topnav-breadcrumb">Welcome back, <span>Arjun</span> 👋</div>
-        </div>
-      </div>
-      <div class="search-bar" style="display:flex">
-        <i class="fa-solid fa-search"></i>
-        <input type="text" placeholder="Search skills, courses, assessments..." />
-        <kbd style="font-size:0.65rem;color:var(--text-muted);border:1px solid var(--border);padding:2px 6px;border-radius:4px">⌘K</kbd>
-      </div>
-      <div class="topnav-right">
-        <div class="topnav-icon-btn icon-badge" title="Notifications">
-          <i class="fa-solid fa-bell"></i>
-          <span class="notif-dot"></span>
-        </div>
-        <div class="topnav-icon-btn" title="Messages"><i class="fa-solid fa-message"></i></div>
-        <div class="topnav-profile">
-          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
-          <div class="topnav-profile-info">
-            <div class="topnav-profile-name">Arjun Kapoor</div>
-            <div class="topnav-profile-role">Student</div>
-          </div>
-          <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;color:var(--text-muted)"></i>
-        </div>
-      </div>
-    </header>
-
-    <!-- Dashboard Content -->
-    <div class="dash-content">
-      <!-- Header -->
-      <div class="dash-header flex-between">
-        <div>
-          <h1>Good Morning, Arjun! ☀️</h1>
-          <p>Here's your learning overview for today — keep the streak alive!</p>
-        </div>
-        <div class="flex gap-3">
-          <div class="streak-badge"><i class="fa-solid fa-fire"></i> 14 Day Streak</div>
-          <a href="assessment.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-rocket"></i> Take Assessment</a>
-        </div>
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+        <span class="sidebar-brand-text">SkillBridge</span>
       </div>
 
-      <!-- Stats Cards -->
-      <div class="stats-grid stagger">
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon primary"><i class="fa-solid fa-star"></i></div>
-          <div>
-            <div class="stat-value gradient-text">74</div>
-            <div class="stat-label">Overall Skill Score</div>
-            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12 this week</div>
-          </div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon success"><i class="fa-solid fa-clipboard-check"></i></div>
-          <div>
-            <div class="stat-value" style="color:var(--success)">8</div>
-            <div class="stat-label">Completed Assessments</div>
-            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> 2 this month</div>
-          </div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon warning"><i class="fa-solid fa-book-open"></i></div>
-          <div>
-            <div class="stat-value" style="color:var(--warning)">5</div>
-            <div class="stat-label">Courses Completed</div>
-            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> 1 this week</div>
-          </div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon accent"><i class="fa-solid fa-layer-group"></i></div>
-          <div>
-            <div class="stat-value" style="color:var(--accent)">Intermediate</div>
-            <div class="stat-label">Current Level</div>
-            <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> Leveled up!</div>
-          </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a href="student-dashboard.html" class="sidebar-nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
+          <span>My Profile</span>
+        </a>
+        <a href="assessment.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+          <span>Assessments</span>
+          <span class="nav-badge">3</span>
+        </a>
+        <a href="notification.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-bell"></i></div>
+          <span>Notifications</span><span class="nav-badge">4</span>
+        </a>
+
+        <div class="sidebar-section-label">Learning</div>
+        <a href="skill-gap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <span>Skill Gap</span>
+        </a>
+        <a href="courses.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <span>Courses</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-road"></i></div>
+          <span>Roadmap</span>
+        </a>
+        <a href="progress.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <span>Progress</span>
+        </a>
+
+        <div class="sidebar-section-label">Other</div>
+
+        <a href="feedback.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-comments"></i></div>
+          <span>Feedback</span>
+        </a>
+
+        <a href="about.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span>About Us</span>
+        </a>
+
+        <a href="help.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-life-ring"></i></div>
+          <span>Help</span>
+        </a>
+
+        <a href="settings.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <a href="profile.html" class="sidebar-profile-link" title="View Profile">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#26658C,#14B8A6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;color:#fff">
+              AK</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name">Coder</div>
+              <div class="sidebar-user-role">Student · CSE</div>
+            </div>
+          </a>
+          <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i
+              class="fa-solid fa-right-from-bracket"></i></a>
         </div>
       </div>
+    </aside>
 
-      <!-- Main Grid -->
-      <div class="dashboard-grid">
-        <!-- Left: Skills + Gap -->
-        <div style="display:flex;flex-direction:column;gap:var(--space-6)">
-          <!-- Current Skills -->
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="dashboard-main" id="dashMain">
+      <!-- Top Nav -->
+      <header class="topnav">
+        <div class="topnav-left">
+          <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()"
+            style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:#F4F9FF;border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <div class="topnav-title">Dashboard</div>
+            <div class="topnav-breadcrumb">Welcome back, <span>Learner</span> 👋</div>
+          </div>
+        </div>
+        <div class="search-bar" style="display:flex; position:relative;">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="searchInput" oninput="handleSearch(this.value)"
+            placeholder="Search skills, courses, assessments..." />
+          <kbd
+            style="font-size:0.65rem;color:var(--text-muted);border:1px solid var(--border);padding:2px 6px;border-radius:4px">⌘K</kbd>
+
+          <!-- Search Dropdown Palette -->
+          <div class="search-palette-dropdown" id="searchPalette">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <div class="topnav-right">
+          <div class="topnav-icon-btn icon-badge" id="notifBell" onclick="toggleNotifDropdown(event)"
+            title="Notifications" style="position: relative;">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot" id="notifDot"></span>
+
+            <!-- Notifications Dropdown -->
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button class="mark-read-btn" onclick="clearNotifDot(event)">Mark all read</button>
+              </div>
+              <div class="notif-list" id="notifList">
+                <!-- Injected by JS -->
+              </div>
+              <div class="notif-footer">
+                <a href="#" onclick="viewAllNotifications(event)">View All Notifications</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="topnav-profile" id="profileToggle" onclick="toggleProfileDropdown(event)"
+            style="position: relative;">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#26658C,#14B8A6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff">
+              AK</div>
+            <div class="topnav-profile-info">
+              <div class="topnav-profile-name">Coder</div>
+              <div class="topnav-profile-role">Student</div>
+            </div>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;color:var(--text-muted)"></i>
+
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profileDropdown">
+              <a href="profile.html"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+              <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="dash-content">
+        <!-- Header -->
+        <div class="dash-header flex-between">
+          <div>
+            <h1>Good Morning, Learner! ☀️</h1>
+            <p>Here's your learning overview for today — keep the streak alive!</p>
+          </div>
+          <div class="flex gap-3">
+            <div class="streak-badge" style="cursor:pointer;" onclick="openStreakModal()"><i
+                class="fa-solid fa-fire"></i> 14 Day Streak</div>
+            <a href="assessment.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-rocket"></i> Take
+              Assessment</a>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid stagger">
+          <div class="card card-stat animate-slideUp" style="cursor:pointer;" onclick="openSkillScoreModal()">
+            <div class="stat-icon primary"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <div class="stat-value gradient-text">74</div>
+              <div class="stat-label">Overall Skill Score</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12 this week</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp">
+            <div class="stat-icon success"><i class="fa-solid fa-clipboard-check"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--success)">8</div>
+              <div class="stat-label">Completed Assessments</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> 2 this month</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp" style="cursor:pointer;"
+            onclick="window.location.href='courses.html'">
+            <div class="stat-icon warning"><i class="fa-solid fa-book-open"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--warning)">5</div>
+              <div class="stat-label">Courses Completed</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> 1 this week</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp">
+            <div class="stat-icon accent"><i class="fa-solid fa-layer-group"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--accent)">Intermediate</div>
+              <div class="stat-label">Current Level</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> Leveled up!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="dashboard-grid">
+          <!-- Left: Skills + Gap -->
+          <div style="display:flex;flex-direction:column;gap:var(--space-6)">
+            <!-- Current Skills -->
+            <div class="card animate-slideUp">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-bar" style="color:var(--primary);margin-right:8px"></i>Current Skills
+                </h3>
+                <a href="skill-gap.html" class="btn btn-ghost btn-sm">Full Analysis →</a>
+              </div>
+              <div class="skill-bar-group">
+                <div class="skill-bar-item skill-python">
+                  <div class="skill-bar-meta"><span class="skill-name">Python Programming</span><span
+                      class="skill-score">78%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:78%;background:linear-gradient(90deg,#6366F1,#818CF8)">
+                    </div>
+                  </div>
+                </div>
+                <div class="skill-bar-item skill-ml">
+                  <div class="skill-bar-meta"><span class="skill-name">Machine Learning</span><span
+                      class="skill-score">52%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:52%;background:linear-gradient(90deg,#8B5CF6,#A78BFA)">
+                    </div>
+                  </div>
+                </div>
+                <div class="skill-bar-item skill-dl">
+                  <div class="skill-bar-meta"><span class="skill-name">Deep Learning</span><span
+                      class="skill-score">34%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:34%;background:linear-gradient(90deg,#F59E0B,#FCD34D)">
+                    </div>
+                  </div>
+                </div>
+                <div class="skill-bar-item skill-viz">
+                  <div class="skill-bar-meta"><span class="skill-name">Data Visualization</span><span
+                      class="skill-score">65%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:65%;background:linear-gradient(90deg,#10B981,#34D399)">
+                    </div>
+                  </div>
+                </div>
+                <div class="skill-bar-item skill-cloud">
+                  <div class="skill-bar-meta"><span class="skill-name">Cloud Computing</span><span
+                      class="skill-score">28%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:28%;background:linear-gradient(90deg,#EF4444,#F87171)">
+                    </div>
+                  </div>
+                </div>
+                <div class="skill-bar-item skill-sql">
+                  <div class="skill-bar-meta"><span class="skill-name">SQL & Databases</span><span
+                      class="skill-score">71%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width:71%;background:linear-gradient(90deg,#3B82F6,#60A5FA)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommended Courses -->
+            <div class="card animate-slideUp">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-graduation-cap" style="color:var(--warning);margin-right:8px"></i>Recommended
+                  Courses</h3>
+                <a href="courses.html" class="btn btn-ghost btn-sm">View All →</a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+                <div class="course-item"
+                  style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:#F4F9FF;border-radius:var(--radius-md);border:1px solid var(--border)">
+                  <div
+                    style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(38,101,140,0.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">
+                    🤖</div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text-primary)">Machine Learning A-Z</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted)">Udemy · 42h · ⭐ 4.8</div>
+                    <div class="progress-track mt-2">
+                      <div class="progress-fill" style="width:35%"></div>
+                    </div>
+                  </div>
+                  <span class="badge badge-primary">35%</span>
+                </div>
+                <div class="course-item"
+                  style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:#F4F9FF;border-radius:var(--radius-md);border:1px solid var(--border)">
+                  <div
+                    style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(20,184,166,0.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">
+                    ☁️</div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text-primary)">AWS Cloud Practitioner
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--text-muted)">Coursera · 18h · ⭐ 4.7</div>
+                    <div class="progress-track mt-2">
+                      <div class="progress-fill" style="width:0%"></div>
+                    </div>
+                  </div>
+                  <span class="badge badge-warning">New</span>
+                </div>
+                <div class="course-item"
+                  style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:#F4F9FF;border-radius:var(--radius-md);border:1px solid var(--border)">
+                  <div
+                    style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">
+                    🧠</div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text-primary)">Deep Learning
+                      Specialization</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted)">deeplearning.ai · 80h · ⭐ 4.9</div>
+                    <div class="progress-track mt-2">
+                      <div class="progress-fill" style="width:10%"></div>
+                    </div>
+                  </div>
+                  <span class="badge badge-success">10%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Grid: Achievements + Activity -->
+        <div class="dashboard-grid-3">
+          <!-- Achievements -->
           <div class="card animate-slideUp">
             <div class="card-header">
-              <h3><i class="fa-solid fa-chart-bar" style="color:var(--primary);margin-right:8px"></i>Current Skills</h3>
-              <a href="skill-gap.html" class="btn btn-ghost btn-sm">Full Analysis →</a>
+              <h3><i class="fa-solid fa-trophy" style="color:var(--warning);margin-right:8px"></i>Achievements</h3><a
+                href="profile.html" class="btn btn-ghost btn-sm">All →</a>
             </div>
-            <div class="skill-bar-group">
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">Python Programming</span><span class="skill-score">78%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%;background:linear-gradient(90deg,#6366F1,#818CF8)"></div></div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <div class="achievement">
+                <div class="ach-icon">🏆</div>
+                <div>
+                  <div class="ach-name">First Assessment</div>
+                  <div class="ach-desc">Completed your first skill test</div>
+                </div>
               </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">Machine Learning</span><span class="skill-score">52%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:52%;background:linear-gradient(90deg,#8B5CF6,#A78BFA)"></div></div>
+              <div class="achievement">
+                <div class="ach-icon" style="background:linear-gradient(135deg,#10B981,#3B82F6)">🔥</div>
+                <div>
+                  <div class="ach-name">14-Day Streak</div>
+                  <div class="ach-desc">Learning consistency champion</div>
+                </div>
               </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">Deep Learning</span><span class="skill-score">34%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:34%;background:linear-gradient(90deg,#F59E0B,#FCD34D)"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">Data Visualization</span><span class="skill-score">65%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:65%;background:linear-gradient(90deg,#10B981,#34D399)"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">Cloud Computing</span><span class="skill-score">28%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:28%;background:linear-gradient(90deg,#EF4444,#F87171)"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-meta"><span class="skill-name">SQL & Databases</span><span class="skill-score">71%</span></div>
-                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:71%;background:linear-gradient(90deg,#3B82F6,#60A5FA)"></div></div>
+              <div class="achievement">
+                <div class="ach-icon" style="background:linear-gradient(135deg,#6366F1,#8B5CF6)">⭐</div>
+                <div>
+                  <div class="ach-name">Top 30%</div>
+                  <div class="ach-desc">Ranked in top 30% of cohort</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Recommended Courses -->
+          <!-- Recent Activity -->
           <div class="card animate-slideUp">
             <div class="card-header">
-              <h3><i class="fa-solid fa-graduation-cap" style="color:var(--warning);margin-right:8px"></i>Recommended Courses</h3>
-              <a href="courses.html" class="btn btn-ghost btn-sm">View All →</a>
+              <h3>Recent Activity</h3>
             </div>
-            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
-              <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:rgba(255,255,255,0.02);border-radius:var(--radius-md);border:1px solid var(--border)">
-                <div style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(99,102,241,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">🤖</div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:0.875rem">Machine Learning A-Z</div>
-                  <div style="font-size:0.75rem;color:var(--text-muted)">Udemy · 42h · ⭐ 4.8</div>
-                  <div class="progress-track mt-2"><div class="progress-fill" style="width:35%"></div></div>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(16,185,129,0.12);color:var(--success)"><i
+                    class="fa-solid fa-check"></i></div>
+                <div class="activity-content">
+                  <div class="activity-text">Completed <span style="color:var(--primary);font-weight:600">Python
+                      Basics</span> assessment</div>
+                  <div class="activity-time">2 hours ago</div>
                 </div>
-                <span class="badge badge-primary">35%</span>
               </div>
-              <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:rgba(255,255,255,0.02);border-radius:var(--radius-md);border:1px solid var(--border)">
-                <div style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">☁️</div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:0.875rem">AWS Cloud Practitioner</div>
-                  <div style="font-size:0.75rem;color:var(--text-muted)">Coursera · 18h · ⭐ 4.7</div>
-                  <div class="progress-track mt-2"><div class="progress-fill" style="width:0%"></div></div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(38,101,140,0.12);color:var(--primary)"><i
+                    class="fa-solid fa-book"></i></div>
+                <div class="activity-content">
+                  <div class="activity-text">Started <span style="color:var(--primary);font-weight:600">ML A-Z</span>
+                    course · Chapter 4</div>
+                  <div class="activity-time">5 hours ago</div>
                 </div>
-                <span class="badge badge-warning">New</span>
               </div>
-              <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3);background:rgba(255,255,255,0.02);border-radius:var(--radius-md);border:1px solid var(--border)">
-                <div style="width:48px;height:48px;border-radius:var(--radius-md);background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">🧠</div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:0.875rem">Deep Learning Specialization</div>
-                  <div style="font-size:0.75rem;color:var(--text-muted)">deeplearning.ai · 80h · ⭐ 4.9</div>
-                  <div class="progress-track mt-2"><div class="progress-fill" style="width:10%"></div></div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(245,158,11,0.12);color:var(--warning)"><i
+                    class="fa-solid fa-trophy"></i></div>
+                <div class="activity-content">
+                  <div class="activity-text">Earned <span style="color:var(--primary);font-weight:600">Fast
+                      Learner</span> badge</div>
+                  <div class="activity-time">Yesterday</div>
                 </div>
-                <span class="badge badge-success">10%</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(20,184,166,0.12);color:var(--accent)"><i
+                    class="fa-solid fa-chart-bar"></i></div>
+                <div class="activity-content">
+                  <div class="activity-text">Skill score increased by <span
+                      style="color:var(--accent);font-weight:600">+8 points</span></div>
+                  <div class="activity-time">2 days ago</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Right Panel -->
-        <div style="display:flex;flex-direction:column;gap:var(--space-6)">
-          <!-- Skill Score Ring -->
-          <div class="card animate-slideUp" style="text-align:center">
-            <div class="card-header"><h3>Skill Score</h3></div>
-            <div style="position:relative;width:160px;height:160px;margin:0 auto 16px;border-radius:50%;background:conic-gradient(var(--primary) 266deg, rgba(255,255,255,0.06) 0);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(99,102,241,0.3)">
-              <div style="position:absolute;inset:14px;background:var(--bg-card);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                <span style="font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary-light),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">74</span>
-                <span style="font-size:0.7rem;color:var(--text-muted)">/ 100</span>
-              </div>
-            </div>
-            <p style="font-size:0.8rem;color:var(--text-secondary)">You're in the top <strong style="color:var(--primary-light)">28%</strong> of your cohort</p>
-            <div style="display:flex;gap:var(--space-4);justify-content:center;margin-top:var(--space-4)">
-              <div style="text-align:center"><div style="font-weight:700;color:var(--success)">+12</div><div style="font-size:0.7rem;color:var(--text-muted)">This Week</div></div>
-              <div style="width:1px;background:var(--border)"></div>
-              <div style="text-align:center"><div style="font-weight:700;color:var(--warning)">+28</div><div style="font-size:0.7rem;color:var(--text-muted)">This Month</div></div>
-            </div>
-          </div>
+      </div><!-- /dash-content -->
+    </main>
+  </div>
 
-          <!-- Upcoming Assessments -->
-          <div class="card animate-slideUp">
-            <div class="card-header"><h3>Upcoming Assessments</h3></div>
-            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
-              <div style="padding:var(--space-3);border-radius:var(--radius-md);border:1px solid rgba(239,68,68,0.3);background:rgba(239,68,68,0.06)">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-weight:600;font-size:0.85rem">Deep Learning Quiz</span>
-                  <span class="badge badge-danger">Today</span>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px"><i class="fa-solid fa-clock"></i> 3:00 PM · 30 Questions</div>
-              </div>
-              <div style="padding:var(--space-3);border-radius:var(--radius-md);border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06)">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-weight:600;font-size:0.85rem">Cloud Fundamentals</span>
-                  <span class="badge badge-warning">Tomorrow</span>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px"><i class="fa-solid fa-clock"></i> 10:00 AM · 25 Questions</div>
-              </div>
-              <div style="padding:var(--space-3);border-radius:var(--radius-md);border:1px solid var(--border);background:rgba(255,255,255,0.02)">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-weight:600;font-size:0.85rem">Python Advanced</span>
-                  <span class="badge badge-primary">Fri</span>
-                </div>
-                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px"><i class="fa-solid fa-clock"></i> 2:00 PM · 40 Questions</div>
-              </div>
-            </div>
-            <a href="assessment.html" class="btn btn-primary btn-sm mt-4" style="width:100%;justify-content:center"><i class="fa-solid fa-play"></i> Start Next Assessment</a>
-          </div>
+  <!-- Overall Skill Score Modal -->
+  <div id="skillScoreModal" class="dashboard-modal" onclick="closeModalOnOuterClick(event, 'skillScoreModal')">
+    <div class="card modal-content-card"
+      style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border); position: relative; border-radius: var(--radius-lg); text-align:center;">
+      <button class="modal-close-btn" onclick="closeDashboardModal('skillScoreModal')"><i
+          class="fa-solid fa-xmark"></i></button>
+      <div class="card-header" style="justify-content:center;">
+        <h3>Overall Skill Score</h3>
+      </div>
+      <div
+        style="position:relative;width:160px;height:160px;margin:0 auto 16px;border-radius:50%;background:conic-gradient(var(--primary) 266deg, #E5E7EB 0);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(38,101,140,0.20)">
+        <div
+          style="position:absolute;inset:14px;background:var(--bg-card);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span
+            style="font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">74</span>
+          <span style="font-size:0.7rem;color:var(--text-muted)">/ 100</span>
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-secondary)">You're in the top <strong
+          style="color:var(--primary)">28%</strong> of your cohort</p>
+      <div style="display:flex;gap:var(--space-4);justify-content:center;margin-top:var(--space-4)">
+        <div style="text-align:center">
+          <div style="font-weight:700;color:var(--success)">+12</div>
+          <div style="font-size:0.7rem;color:var(--text-muted)">This Week</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div style="text-align:center">
+          <div style="font-weight:700;color:var(--warning)">+28</div>
+          <div style="font-size:0.7rem;color:var(--text-muted)">This Month</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <!-- Learning Streak -->
-          <div class="card animate-slideUp">
-            <div class="card-header"><h3><i class="fa-solid fa-fire" style="color:var(--warning)"></i> Learning Streak</h3></div>
-            <div style="text-align:center;margin-bottom:var(--space-4)">
-              <div style="font-size:3rem;font-weight:800;color:var(--warning)">14</div>
-              <div style="font-size:0.85rem;color:var(--text-muted)">days in a row 🔥</div>
-            </div>
-            <!-- Week grid -->
-            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">
-              <div style="font-size:0.6rem;color:var(--text-muted)">M</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">T</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">W</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">T</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">F</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">S</div>
-              <div style="font-size:0.6rem;color:var(--text-muted)">S</div>
-              <div style="height:24px;border-radius:4px;background:var(--primary)"></div>
-              <div style="height:24px;border-radius:4px;background:var(--primary)"></div>
-              <div style="height:24px;border-radius:4px;background:var(--primary)"></div>
-              <div style="height:24px;border-radius:4px;background:var(--primary)"></div>
-              <div style="height:24px;border-radius:4px;background:var(--primary)"></div>
-              <div style="height:24px;border-radius:4px;background:rgba(99,102,241,0.3)"></div>
-              <div style="height:24px;border-radius:4px;background:rgba(255,255,255,0.06)"></div>
-            </div>
-          </div>
+  <!-- Streak Details Modal -->
+  <div id="streakModal" class="dashboard-modal" onclick="closeModalOnOuterClick(event, 'streakModal')">
+    <div class="card modal-content-card"
+      style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border); position: relative; border-radius: var(--radius-lg);">
+      <button class="modal-close-btn" onclick="closeDashboardModal('streakModal')"><i
+          class="fa-solid fa-xmark"></i></button>
+      <div style="text-align: center; margin-bottom: var(--space-4);">
+        <i class="fa-solid fa-fire text-warning"
+          style="font-size: 3rem; text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);"></i>
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-top: 8px;">14 Day Streak!
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Your dedication is paying off. Keep it up!</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-5);">
+        <div
+          style="background: #F4F9FF; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-md); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Current Streak</span>
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning); margin-top: 2px;">14 Days</div>
+        </div>
+        <div
+          style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-md); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Longest Streak</span>
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--success); margin-top: 2px;">21 Days</div>
         </div>
       </div>
 
-      <!-- Bottom Grid: Achievements + Activity + Quick Actions -->
-      <div class="dashboard-grid-3">
-        <!-- Achievements -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-trophy" style="color:var(--warning);margin-right:8px"></i>Achievements</h3><a href="#" class="btn btn-ghost btn-sm">All →</a></div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
-            <div class="achievement">
-              <div class="ach-icon">🏆</div>
-              <div><div class="ach-name">First Assessment</div><div class="ach-desc">Completed your first skill test</div></div>
-            </div>
-            <div class="achievement">
-              <div class="ach-icon" style="background:linear-gradient(135deg,#10B981,#3B82F6)">🔥</div>
-              <div><div class="ach-name">14-Day Streak</div><div class="ach-desc">Learning consistency champion</div></div>
-            </div>
-            <div class="achievement">
-              <div class="ach-icon" style="background:linear-gradient(135deg,#6366F1,#8B5CF6)">⭐</div>
-              <div><div class="ach-name">Top 30%</div><div class="ach-desc">Ranked in top 30% of cohort</div></div>
-            </div>
-          </div>
-        </div>
+      <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Streak Calendar
+      </h3>
+      <div class="calendar-grid">
+        <!-- Week headers -->
+        <div class="calendar-day-header">M</div>
+        <div class="calendar-day-header">T</div>
+        <div class="calendar-day-header">W</div>
+        <div class="calendar-day-header">T</div>
+        <div class="calendar-day-header">F</div>
+        <div class="calendar-day-header">S</div>
+        <div class="calendar-day-header">S</div>
 
-        <!-- Recent Activity -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3>Recent Activity</h3></div>
-          <div class="activity-feed">
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(16,185,129,0.15);color:var(--success)"><i class="fa-solid fa-check"></i></div>
-              <div class="activity-content">
-                <div class="activity-text">Completed <span>Python Basics</span> assessment</div>
-                <div class="activity-time">2 hours ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(99,102,241,0.15);color:var(--primary)"><i class="fa-solid fa-book"></i></div>
-              <div class="activity-content">
-                <div class="activity-text">Started <span>ML A-Z</span> course · Chapter 4</div>
-                <div class="activity-time">5 hours ago</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(245,158,11,0.15);color:var(--warning)"><i class="fa-solid fa-trophy"></i></div>
-              <div class="activity-content">
-                <div class="activity-text">Earned <span>Fast Learner</span> badge</div>
-                <div class="activity-time">Yesterday</div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(139,92,246,0.15);color:var(--accent)"><i class="fa-solid fa-chart-bar"></i></div>
-              <div class="activity-content">
-                <div class="activity-text">Skill score increased by <span>+8 points</span></div>
-                <div class="activity-time">2 days ago</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3>Quick Actions</h3></div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
-            <a href="assessment.html" class="btn btn-primary" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-clipboard-check"></i> Take Assessment</a>
-            <a href="skill-gap.html" class="btn btn-secondary" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-chart-radar"></i> View Skill Gap</a>
-            <a href="courses.html" class="btn btn-secondary" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-graduation-cap"></i> Browse Courses</a>
-            <a href="roadmap.html" class="btn btn-secondary" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-road"></i> Learning Roadmap</a>
-            <a href="progress.html" class="btn btn-secondary" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-chart-line"></i> Track Progress</a>
-            <a href="reports.html" class="btn btn-ghost" style="justify-content:flex-start;border-radius:var(--radius-md)"><i class="fa-solid fa-file-pdf"></i> Download Report</a>
-          </div>
-        </div>
+        <!-- Month cells (simulating a sequence of streak active days) -->
+        <div class="calendar-day-cell active">5</div>
+        <div class="calendar-day-cell active">6</div>
+        <div class="calendar-day-cell active">7</div>
+        <div class="calendar-day-cell active">8</div>
+        <div class="calendar-day-cell active">9</div>
+        <div class="calendar-day-cell active">10</div>
+        <div class="calendar-day-cell active">11</div>
+        <div class="calendar-day-cell active">12</div>
+        <div class="calendar-day-cell active">13</div>
+        <div class="calendar-day-cell active">14</div>
+        <div class="calendar-day-cell active">15</div>
+        <div class="calendar-day-cell active">16</div>
+        <div class="calendar-day-cell active">17</div>
+        <div class="calendar-day-cell active">18</div>
+        <div class="calendar-day-cell">19</div>
+        <div class="calendar-day-cell">20</div>
+        <div class="calendar-day-cell">21</div>
       </div>
+    </div>
+  </div>
 
-    </div><!-- /dash-content -->
-  </main>
-</div>
+  <script>
+    // ── 1. SIDEBAR NAVIGATION CONTROLS ──
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('active');
+    }
 
-<script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('mobile-open');
-    overlay.classList.toggle('active');
-  }
-</script>
+    // Close sidebar overlay clicks helper
+    document.getElementById('sidebarOverlay').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('mobile-open')) {
+        toggleSidebar();
+      }
+    });
+
+    // ── 2. DROPDOWN TOGGLES ──
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('profileDropdown');
+      const notifDropdown = document.getElementById('notifDropdown');
+
+      // Close other dropdowns
+      if (notifDropdown) notifDropdown.classList.remove('active');
+
+      dropdown.classList.toggle('active');
+    }
+
+    function toggleNotifDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('notifDropdown');
+      const profileDropdown = document.getElementById('profileDropdown');
+
+      // Close other dropdowns
+      if (profileDropdown) profileDropdown.classList.remove('active');
+
+      dropdown.classList.toggle('active');
+    }
+
+    // Global window watcher to dismiss active dropdowns on outer clicks
+    window.addEventListener('click', (e) => {
+      const profileDropdown = document.getElementById('profileDropdown');
+      const notifDropdown = document.getElementById('notifDropdown');
+      const searchPalette = document.getElementById('searchPalette');
+
+      if (profileDropdown && profileDropdown.classList.contains('active')) {
+        const toggle = document.getElementById('profileToggle');
+        if (!toggle.contains(e.target)) {
+          profileDropdown.classList.remove('active');
+        }
+      }
+
+      if (notifDropdown && notifDropdown.classList.contains('active')) {
+        const toggle = document.getElementById('notifBell');
+        if (!toggle.contains(e.target)) {
+          notifDropdown.classList.remove('active');
+        }
+      }
+
+      if (searchPalette && searchPalette.classList.contains('active')) {
+        const searchBar = document.querySelector('.search-bar');
+        if (!searchBar.contains(e.target)) {
+          searchPalette.classList.remove('active');
+        }
+      }
+    });
+
+    // ── 3. NOTIFICATIONS DATA MANAGEMENT ──
+    let notificationsList = [
+      {
+        id: 1,
+        type: "success",
+        icon: "fa-solid fa-circle-check",
+        title: "Assessment completed",
+        desc: "You scored 88% on the React Intermediate assessment! Dynamic Certificate is now available.",
+        time: "2 hours ago"
+      },
+      {
+        id: 2,
+        type: "primary",
+        icon: "fa-solid fa-graduation-cap",
+        title: "New course recommendation",
+        desc: "Based on your ML skill gaps, we recommend enrolling in 'Machine Learning A-Z'.",
+        time: "5 hours ago"
+      },
+      {
+        id: 3,
+        type: "accent",
+        icon: "fa-solid fa-chart-line",
+        title: "Skill score updated",
+        desc: "Your overall Skill Score has increased by +12 points this week. Keep it up!",
+        time: "1 day ago"
+      },
+      {
+        id: 4,
+        type: "warning",
+        icon: "fa-solid fa-triangle-exclamation",
+        title: "Upcoming assessment reminder",
+        desc: "Your 'Deep Learning Fundamentals' challenge is scheduled for today at 3:00 PM.",
+        time: "3 hours ago"
+      }
+    ];
+
+    function renderNotifications() {
+      const listContainer = document.getElementById('notifList');
+      const notifDot = document.getElementById('notifDot');
+      listContainer.innerHTML = '';
+
+      if (notificationsList.length === 0) {
+        listContainer.innerHTML = `
+        <div class="notif-empty">
+          <i class="fa-regular fa-bell-slash" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+          No new notifications
+        </div>
+      `;
+        if (notifDot) notifDot.style.display = 'none';
+        return;
+      }
+
+      if (notifDot) notifDot.style.display = 'block';
+
+      notificationsList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'notif-item';
+        div.innerHTML = `
+        <div class="notif-item-icon ${item.type}"><i class="${item.icon}"></i></div>
+        <div class="notif-content">
+          <div class="notif-title">${item.title}</div>
+          <div class="notif-desc">${item.desc}</div>
+          <div class="notif-time">${item.time}</div>
+        </div>
+      `;
+        listContainer.appendChild(div);
+      });
+    }
+
+    function clearNotifDot(event) {
+      if (event) event.stopPropagation();
+      notificationsList = [];
+      renderNotifications();
+    }
+
+    function viewAllNotifications(event) {
+      if (event) event.stopPropagation();
+      window.location.href = 'notification.html';
+    }
+
+    // Populate notifications on initialization
+    renderNotifications();
+
+    // ── 4. SEARCH BOX SYSTEM (SPOTLIGHT AUTO-FILTER) ──
+    function handleSearch(query) {
+      const q = query.toLowerCase().trim();
+      const palette = document.getElementById('searchPalette');
+
+      // Reset all highlights, fades and sizes
+      document.querySelectorAll('.skill-bar-item, .course-item, .achievement, .activity-item, .card').forEach(el => {
+        el.classList.remove('search-highlight');
+        el.style.opacity = '';
+      });
+
+      if (!q) {
+        palette.classList.remove('active');
+        return;
+      }
+
+      palette.innerHTML = '';
+      palette.classList.add('active');
+
+      // Index structures for Spotlight quick navigation
+      const indexes = [
+        { name: "My Profile", url: "profile.html", type: "Page", icon: "fa-solid fa-user-circle" },
+        { name: "Skill Gap Analysis", url: "skill-gap.html", type: "Page", icon: "fa-solid fa-magnifying-glass-chart" },
+        { name: "Assessments", url: "assessment.html", type: "Page", icon: "fa-solid fa-clipboard-check" },
+        { name: "Courses Recommendations", url: "courses.html", type: "Page", icon: "fa-solid fa-graduation-cap" },
+        { name: "Learning Roadmap", url: "roadmap.html", type: "Page", icon: "fa-solid fa-road" },
+        { name: "Progress Tracking", url: "progress.html", type: "Page", icon: "fa-solid fa-chart-line" },
+
+        // Skills
+        { name: "Python Programming", targetClass: "skill-python", type: "Skill", score: "78%", icon: "fa-brands fa-python" },
+        { name: "Machine Learning", targetClass: "skill-ml", type: "Skill", score: "52%", icon: "fa-solid fa-brain" },
+        { name: "Deep Learning", targetClass: "skill-dl", type: "Skill", score: "34%", icon: "fa-solid fa-network-wired" },
+        { name: "Data Visualization", targetClass: "skill-viz", type: "Skill", score: "65%", icon: "fa-solid fa-chart-pie" },
+        { name: "Cloud Computing", targetClass: "skill-cloud", type: "Skill", score: "28%", icon: "fa-solid fa-cloud" },
+        { name: "SQL & Databases", targetClass: "skill-sql", type: "Skill", score: "71%", icon: "fa-solid fa-database" },
+
+        // Courses
+        { name: "Machine Learning A-Z", url: "courses.html", type: "Course", icon: "fa-solid fa-book" },
+        { name: "AWS Cloud Practitioner", url: "courses.html", type: "Course", icon: "fa-solid fa-cloud" },
+        { name: "Deep Learning Specialization", url: "courses.html", type: "Course", icon: "fa-solid fa-graduation-cap" }
+      ];
+
+      const matches = indexes.filter(item => item.name.toLowerCase().includes(q));
+
+      if (matches.length === 0) {
+        palette.innerHTML = `<div style="padding: 10px; text-align: center; color: var(--text-muted); font-size: 0.8rem;">No results found for "${query}"</div>`;
+      } else {
+        let currentType = '';
+        matches.slice(0, 5).forEach(match => {
+          if (match.type !== currentType) {
+            currentType = match.type;
+            const header = document.createElement('div');
+            header.className = 'search-palette-category';
+            header.textContent = currentType;
+            palette.appendChild(header);
+          }
+
+          const div = document.createElement('div');
+          div.className = 'search-palette-item';
+          div.innerHTML = `
+          <span><i class="${match.icon}"></i> ${match.name}</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">${match.type} ${match.score ? '(' + match.score + ')' : ''}</span>
+        `;
+          div.onclick = () => {
+            if (match.url) {
+              window.location.href = match.url;
+            } else if (match.targetClass) {
+              const target = document.querySelector('.' + match.targetClass);
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.classList.add('search-highlight');
+                palette.classList.remove('active');
+              }
+            }
+          };
+          palette.appendChild(div);
+        });
+      }
+
+      // Filter/Highlight elements matching text
+      document.querySelectorAll('.skill-bar-item').forEach(el => {
+        const text = el.querySelector('.skill-name').textContent.toLowerCase();
+        if (text.includes(q)) {
+          el.classList.add('search-highlight');
+        } else {
+          el.style.opacity = '0.25';
+        }
+      });
+
+      document.querySelectorAll('.course-item').forEach(el => {
+        const text = el.querySelector('div > div:first-child').textContent.toLowerCase();
+        if (text.includes(q)) {
+          el.classList.add('search-highlight');
+        } else {
+          el.style.opacity = '0.25';
+        }
+      });
+
+      document.querySelectorAll('.achievement').forEach(el => {
+        const text = el.querySelector('.ach-name').textContent.toLowerCase();
+        if (text.includes(q)) {
+          el.classList.add('search-highlight');
+        } else {
+          el.style.opacity = '0.25';
+        }
+      });
+
+      document.querySelectorAll('.activity-item').forEach(el => {
+        const text = el.querySelector('.activity-text').textContent.toLowerCase();
+        if (text.includes(q)) {
+          el.classList.add('search-highlight');
+        } else {
+          el.style.opacity = '0.25';
+        }
+      });
+    }
+
+    // ── 5. MODAL SYSTEM CONTROLS ──
+    function openStreakModal() {
+      document.getElementById('streakModal').classList.add('active');
+    }
+
+    function openSkillScoreModal() {
+      document.getElementById('skillScoreModal').classList.add('active');
+    }
+
+    function closeDashboardModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function closeModalOnOuterClick(event, modalId) {
+      if (event.target.id === modalId) {
+        closeDashboardModal(modalId);
+      }
+    }
+
+    // Intercept ⌘K trigger to focus search input
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+      }
+    });
+  </script>
 </body>
+
 </html>

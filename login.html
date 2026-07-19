@@ -12,146 +12,292 @@
   <link rel="stylesheet" href="css/login.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
-<body>
-<div class="auth-layout">
+<body class="login-page">
 
-  <!-- ── Left Panel ── -->
-  <div class="auth-left">
-    <!-- Decorative dots -->
-    <div class="auth-dots auth-dots-tl">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
+  <!-- ── Floating Technology Background (Official Brand Colors & Hover Glow) ── -->
+  <div class="tech-bg-container" aria-hidden="true">
+    
+    <!-- Top Left Quad -->
+    <div class="tech-icon-wrap" style="top: 6%; left: 4%; animation-duration: 18s;">
+      <i class="tech-icon fa-brands fa-html5" style="--brand-color: #E34F26; font-size: 3.2rem;" title="HTML5"></i>
     </div>
-    <div class="auth-dots auth-dots-br">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span><span></span>
+    <div class="tech-icon-wrap" style="top: 22%; left: 12%; animation-duration: 24s; animation-delay: -3s;">
+      <i class="tech-icon fa-brands fa-python" style="--brand-color: #3776AB; font-size: 3.5rem;" title="Python"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 8%; left: 22%; animation-duration: 20s; animation-delay: -7s;">
+      <i class="tech-icon fa-brands fa-react" style="--brand-color: #61DAFB; font-size: 3.4rem;" title="React"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 35%; left: 5%; animation-duration: 22s; animation-delay: -2s;">
+      <i class="tech-icon fa-brands fa-node-js" style="--brand-color: #339933; font-size: 2.9rem;" title="Node.js"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 48%; left: 14%; animation-duration: 19s; animation-delay: -11s;">
+      <i class="tech-icon fa-brands fa-docker" style="--brand-color: #2496ED; font-size: 3.1rem;" title="Docker"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 15%; left: 32%; animation-duration: 26s; animation-delay: -5s;">
+      <i class="tech-icon fa-brands fa-angular" style="--brand-color: #DD0031; font-size: 3.0rem;" title="Angular"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 38%; left: 25%; animation-duration: 21s; animation-delay: -8s;">
+      <i class="tech-icon fa-solid fa-code-branch" style="--brand-color: #3178C6; font-size: 2.7rem;" title="TypeScript"></i>
     </div>
 
-    <div class="auth-left-content">
-      <!-- Animated illustration placeholder (SVG) -->
-      <div class="auth-illustration">
-        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-          <!-- Background circle -->
-          <circle cx="200" cy="200" r="180" fill="rgba(99,102,241,0.08)" />
-          <circle cx="200" cy="200" r="140" fill="rgba(139,92,246,0.08)" />
-          <!-- Radar chart lines -->
-          <g stroke="rgba(99,102,241,0.4)" stroke-width="1" fill="none">
-            <polygon points="200,60 320,140 300,280 100,280 80,140" />
-            <polygon points="200,100 290,165 272,260 128,260 110,165" />
-            <polygon points="200,140 260,190 244,240 156,240 140,190" />
-            <line x1="200" y1="60" x2="200" y2="280" />
-            <line x1="80" y1="140" x2="320" y2="140" />
-            <line x1="100" y1="280" x2="300" y2="60" />
-            <line x1="300" y1="280" x2="100" y2="60" />
-          </g>
-          <!-- Filled skill area -->
-          <polygon points="200,80 305,155 280,262 120,262 95,155" fill="rgba(99,102,241,0.25)" stroke="#6366F1" stroke-width="2"/>
-          <!-- Dots at vertices -->
-          <circle cx="200" cy="80"  r="6" fill="#6366F1"/>
-          <circle cx="305" cy="155" r="6" fill="#8B5CF6"/>
-          <circle cx="280" cy="262" r="6" fill="#10B981"/>
-          <circle cx="120" cy="262" r="6" fill="#F59E0B"/>
-          <circle cx="95"  cy="155" r="6" fill="#3B82F6"/>
-          <!-- Labels -->
-          <text x="200" y="52" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="Poppins">Python</text>
-          <text x="330" y="158" text-anchor="start"  fill="#94A3B8" font-size="12" font-family="Poppins">ML</text>
-          <text x="295" y="282" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="Poppins">DL</text>
-          <text x="102" y="282" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="Poppins">Data</text>
-          <text x="52"  y="158" text-anchor="end"    fill="#94A3B8" font-size="12" font-family="Poppins">Cloud</text>
-          <!-- Center score -->
-          <circle cx="200" cy="200" r="32" fill="rgba(30,41,59,0.9)" stroke="rgba(99,102,241,0.5)" stroke-width="2"/>
-          <text x="200" y="196" text-anchor="middle" fill="white" font-size="18" font-weight="700" font-family="Poppins">74</text>
-          <text x="200" y="212" text-anchor="middle" fill="#94A3B8" font-size="9" font-family="Poppins">Score</text>
-        </svg>
-      </div>
-
-      <h2>Welcome Back to <span class="gradient-text">SkillBridge</span></h2>
-      <p>Continue your journey to close skill gaps and build the career you deserve.</p>
-
-      <div class="auth-feature-pills mt-6">
-        <div class="auth-pill"><i class="fa-solid fa-brain"></i> AI Analysis</div>
-        <div class="auth-pill"><i class="fa-solid fa-chart-line"></i> Progress Tracking</div>
-        <div class="auth-pill"><i class="fa-solid fa-road"></i> Smart Roadmaps</div>
-        <div class="auth-pill"><i class="fa-solid fa-trophy"></i> Achievements</div>
-      </div>
+    <!-- Bottom Left Quad -->
+    <div class="tech-icon-wrap" style="top: 64%; left: 6%; animation-duration: 23s; animation-delay: -4s;">
+      <i class="tech-icon fa-brands fa-square-js" style="--brand-color: #F7DF1E; font-size: 3.2rem;" title="JavaScript"></i>
     </div>
+    <div class="tech-icon-wrap" style="top: 78%; left: 16%; animation-duration: 17s; animation-delay: -1s;">
+      <i class="tech-icon fa-brands fa-linux" style="--brand-color: #FCC624; font-size: 2.8rem;" title="Linux"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 88%; left: 5%; animation-duration: 25s; animation-delay: -10s;">
+      <i class="tech-icon fa-solid fa-terminal" style="--brand-color: #10A37F; font-size: 2.6rem;" title="Terminal"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 60%; left: 24%; animation-duration: 20s; animation-delay: -6s;">
+      <i class="tech-icon fa-solid fa-brain" style="--brand-color: #8E75FF; font-size: 3.4rem;" title="Artificial Intelligence"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 75%; left: 32%; animation-duration: 22s; animation-delay: -14s;">
+      <i class="tech-icon fa-solid fa-leaf" style="--brand-color: #47A248; font-size: 2.7rem;" title="MongoDB"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 90%; left: 22%; animation-duration: 19s; animation-delay: -3s;">
+      <i class="tech-icon fa-brands fa-rust" style="--brand-color: #DEA584; font-size: 2.6rem;" title="Rust"></i>
+    </div>
+
+    <!-- Top Right Quad -->
+    <div class="tech-icon-wrap" style="top: 5%; left: 68%; animation-duration: 21s; animation-delay: -2s;">
+      <i class="tech-icon fa-brands fa-css3-alt" style="--brand-color: #1572B6; font-size: 3.3rem;" title="CSS3"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 18%; left: 82%; animation-duration: 25s; animation-delay: -9s;">
+      <i class="tech-icon fa-brands fa-java" style="--brand-color: #ED8B00; font-size: 3.1rem;" title="Java"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 8%; left: 90%; animation-duration: 18s; animation-delay: -4s;">
+      <i class="tech-icon fa-brands fa-git-alt" style="--brand-color: #F05032; font-size: 3.0rem;" title="Git"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 32%; left: 72%; animation-duration: 23s; animation-delay: -12s;">
+      <i class="tech-icon fa-brands fa-vuejs" style="--brand-color: #4FC08D; font-size: 2.9rem;" title="Vue.js"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 28%; left: 88%; animation-duration: 20s; animation-delay: -6s;">
+      <i class="tech-icon fa-brands fa-php" style="--brand-color: #777BB4; font-size: 3.0rem;" title="PHP"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 45%; left: 80%; animation-duration: 27s; animation-delay: -15s;">
+      <i class="tech-icon fa-solid fa-cubes" style="--brand-color: #326CE5; font-size: 2.8rem;" title="Kubernetes"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 42%; left: 93%; animation-duration: 19s; animation-delay: -1s;">
+      <i class="tech-icon fa-solid fa-code" style="--brand-color: #007ACC; font-size: 2.6rem;" title="VS Code"></i>
+    </div>
+
+    <!-- Bottom Right Quad -->
+    <div class="tech-icon-wrap" style="top: 62%; left: 75%; animation-duration: 22s; animation-delay: -8s;">
+      <i class="tech-icon fa-brands fa-laravel" style="--brand-color: #FF2D20; font-size: 3.1rem;" title="Laravel"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 76%; left: 86%; animation-duration: 18s; animation-delay: -3s;">
+      <i class="tech-icon fa-brands fa-aws" style="--brand-color: #FF9900; font-size: 3.3rem;" title="AWS"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 88%; left: 72%; animation-duration: 24s; animation-delay: -11s;">
+      <i class="tech-icon fa-solid fa-cloud" style="--brand-color: #00A4EF; font-size: 2.9rem;" title="Cloud"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 60%; left: 90%; animation-duration: 20s; animation-delay: -5s;">
+      <i class="tech-icon fa-solid fa-fire" style="--brand-color: #FFCA28; font-size: 2.8rem;" title="Firebase"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 85%; left: 93%; animation-duration: 26s; animation-delay: -13s;">
+      <i class="tech-icon fa-brands fa-swift" style="--brand-color: #F05138; font-size: 2.7rem;" title="Swift"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 72%; left: 66%; animation-duration: 19s; animation-delay: -7s;">
+      <i class="tech-icon fa-solid fa-bolt" style="--brand-color: #DC382D; font-size: 2.6rem;" title="Redis"></i>
+    </div>
+
+    <!-- Top & Bottom Middle Accents -->
+    <div class="tech-icon-wrap" style="top: 3%; left: 45%; animation-duration: 25s; animation-delay: -10s;">
+      <i class="tech-icon fa-brands fa-github" style="--brand-color: #6e7681; font-size: 3.0rem;" title="GitHub"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 92%; left: 48%; animation-duration: 21s; animation-delay: -2s;">
+      <i class="tech-icon fa-solid fa-database" style="--brand-color: #4479A1; font-size: 2.8rem;" title="MySQL / Database"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 90%; left: 36%; animation-duration: 23s; animation-delay: -9s;">
+      <i class="tech-icon fa-brands fa-bootstrap" style="--brand-color: #7952B3; font-size: 2.7rem;" title="Bootstrap"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 88%; left: 60%; animation-duration: 17s; animation-delay: -4s;">
+      <i class="tech-icon fa-solid fa-layer-group" style="--brand-color: #06B6D4; font-size: 2.6rem;" title="Tailwind CSS"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 4%; left: 56%; animation-duration: 22s; animation-delay: -6s;">
+      <i class="tech-icon fa-solid fa-network-wired" style="--brand-color: #E10098; font-size: 2.7rem;" title="GraphQL"></i>
+    </div>
+
+    <!-- Additional Specialized Icons -->
+    <div class="tech-icon-wrap" style="top: 50%; left: 4%; animation-duration: 28s; animation-delay: -16s;">
+      <i class="tech-icon fa-solid fa-hashtag" style="--brand-color: #9B4993; font-size: 2.5rem;" title="C#"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 52%; left: 95%; animation-duration: 24s; animation-delay: -13s;">
+      <i class="tech-icon fa-solid fa-file-code" style="--brand-color: #00599C; font-size: 2.5rem;" title="C++"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 28%; left: 3%; animation-duration: 19s; animation-delay: -7s;">
+      <i class="tech-icon fa-brands fa-npm" style="--brand-color: #CB3837; font-size: 3.1rem;" title="npm"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 25%; left: 96%; animation-duration: 21s; animation-delay: -11s;">
+      <i class="tech-icon fa-brands fa-yarn" style="--brand-color: #2C8EBB; font-size: 2.8rem;" title="Yarn"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 80%; left: 56%; animation-duration: 26s; animation-delay: -15s;">
+      <i class="tech-icon fa-solid fa-robot" style="--brand-color: #FF6F00; font-size: 2.7rem;" title="TensorFlow"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 12%; left: 40%; animation-duration: 23s; animation-delay: -8s;">
+      <i class="tech-icon fa-solid fa-gears" style="--brand-color: #10A37F; font-size: 2.6rem;" title="OpenAI / API"></i>
+    </div>
+    <div class="tech-icon-wrap" style="top: 84%; left: 80%; animation-duration: 20s; animation-delay: -5s;">
+      <i class="tech-icon fa-solid fa-server" style="--brand-color: #4169E1; font-size: 2.6rem;" title="PostgreSQL"></i>
+    </div>
+
   </div>
 
-  <!-- ── Right Panel ── -->
-  <div class="auth-right">
-    <div class="auth-form-box">
-      <div class="auth-logo">
-        <div class="auth-logo-icon"><i class="fa-solid fa-brain"></i></div>
-        <span class="auth-logo-text">SkillBridge</span>
-      </div>
-
-      <h1 class="auth-heading">Sign In</h1>
-      <p class="auth-subheading">Enter your credentials to access your dashboard</p>
-
-      <div class="auth-card">
-        <form class="auth-form" id="loginForm" action="student-dashboard.html">
-          <!-- Email -->
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <div class="input-icon-wrapper">
-              <i class="fa-solid fa-envelope icon"></i>
-              <input type="email" id="email" class="form-control" placeholder="you@example.com" required />
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div class="form-group">
-            <label for="password">Password</label>
-            <div class="input-icon-wrapper">
-              <i class="fa-solid fa-lock icon"></i>
-              <input type="password" id="password" class="form-control" placeholder="Enter your password" required style="padding-right:44px" />
-              <button type="button" id="togglePw" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;">
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Remember + Forgot -->
-          <div class="auth-meta">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" id="remember" />
-              <span>Remember me</span>
-            </label>
-            <a href="#" class="auth-forgot">Forgot password?</a>
-          </div>
-
-          <!-- Submit -->
-          <button type="submit" class="btn-auth">
-            <i class="fa-solid fa-sign-in-alt"></i> Sign In
-          </button>
-
-          <!-- Divider -->
-          <div class="auth-divider">or continue with</div>
-
-          <!-- Google -->
-          <button type="button" class="btn-social">
-            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.2l-6.3-5.3C29.5 35.5 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.6l6.3 5.3C40.7 36.3 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-            Continue with Google
-          </button>
-        </form>
-
-        <div class="auth-footer">
-          Don't have an account? <a href="register.html">Create Account</a>
+  <!-- ── Main Centered Card Container (UNTOUCHED) ── -->
+  <div class="auth-center-wrapper">
+    <div class="auth-card-modern">
+      
+      <!-- Welcome Header -->
+      <div class="auth-header">
+        <div class="auth-logo-center">
+          <div class="auth-logo-icon"><i class="fa-solid fa-brain"></i></div>
+          <span class="auth-logo-text">SkillBridge</span>
         </div>
+        <h1 class="auth-title">Welcome Back to SkillBridge</h1>
+        <p class="auth-subtitle">Choose your role and sign in to continue your learning journey.</p>
       </div>
+
+      <!-- Role Selection Tabs -->
+      <div class="role-selector" id="roleSelector">
+        <button type="button" class="role-tab active" data-role="student" onclick="selectRole('student', this)">
+          <span class="role-emoji">👨‍🎓</span>
+          <span class="role-label">Student</span>
+        </button>
+        <button type="button" class="role-tab" data-role="faculty" onclick="selectRole('faculty', this)">
+          <span class="role-emoji">👨‍🏫</span>
+          <span class="role-label">Faculty</span>
+        </button>
+        <button type="button" class="role-tab" data-role="admin" onclick="selectRole('admin', this)">
+          <span class="role-emoji">👨‍💼</span>
+          <span class="role-label">Admin</span>
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+        
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-envelope icon"></i>
+            <input type="email" id="email" class="form-control" placeholder="you@example.com" required />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-lock icon"></i>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required style="padding-right:44px" />
+            <button type="button" id="togglePw" class="pw-toggle-btn" title="Toggle password visibility">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="auth-meta">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="remember" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="auth-forgot">Forgot password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-auth">
+          <i class="fa-solid fa-sign-in-alt"></i> Sign In as <span id="roleButtonLabel">Student</span>
+        </button>
+
+        <!-- Divider -->
+        <div class="auth-divider">or continue with</div>
+
+        <!-- Social Login -->
+        <button type="button" class="btn-social">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 12.9 4 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.1 19 12 24 12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.3 29.4 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.2l-6.3-5.3C29.5 35.5 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.5 16.3 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.6l6.3 5.3C40.7 36.3 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
+          </svg>
+          Continue with Google
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        Don't have an account? <a href="register.html">Create Account</a>
+      </div>
+
     </div>
   </div>
-</div>
 
-<script>
-  // Toggle password visibility
-  document.getElementById('togglePw').addEventListener('click', function() {
-    const pw = document.getElementById('password');
-    const icon = this.querySelector('i');
-    if (pw.type === 'password') { pw.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
-    else { pw.type = 'password'; icon.className = 'fa-solid fa-eye'; }
-  });
-</script>
+  <script>
+    // Selected Role state management
+    let selectedRole = 'student';
+
+    function selectRole(role, btnElement) {
+      selectedRole = role;
+      
+      // Update UI active tab
+      document.querySelectorAll('.role-tab').forEach(tab => tab.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      // Update button label dynamically
+      const roleCapitalized = role.charAt(0).toUpperCase() + role.slice(1);
+      document.getElementById('roleButtonLabel').textContent = roleCapitalized;
+    }
+
+    // Toggle password visibility
+    document.getElementById('togglePw').addEventListener('click', function() {
+      const pw = document.getElementById('password');
+      const icon = this.querySelector('i');
+      if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        pw.type = 'password';
+        icon.className = 'fa-solid fa-eye';
+      }
+    });
+
+    // Handle Form Login Navigation based on role
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      // Redirect based on selected role
+      if (selectedRole === 'faculty') {
+        window.location.href = 'faculty-dashboard.html';
+      } else if (selectedRole === 'admin') {
+        window.location.href = 'faculty-dashboard.html';
+      } else {
+        window.location.href = 'student-dashboard.html';
+      }
+    }
+
+    // Smooth Cursor Parallax Effect for Background Icons
+    let mouseX = 0, mouseY = 0;
+    let currentX = 0, currentY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX - window.innerWidth / 2) * 0.025;
+      mouseY = (e.clientY - window.innerHeight / 2) * 0.025;
+    });
+
+    function animateParallax() {
+      currentX += (mouseX - currentX) * 0.05;
+      currentY += (mouseY - currentY) * 0.05;
+      const bg = document.querySelector('.tech-bg-container');
+      if (bg) {
+        bg.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      }
+      requestAnimationFrame(animateParallax);
+    }
+    requestAnimationFrame(animateParallax);
+  </script>
 </body>
 </html>
