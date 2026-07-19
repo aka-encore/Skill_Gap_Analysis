@@ -1,299 +1,3216 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Progress Tracking – SkillBridge</title>
   <meta name="description" content="Track your learning progress, achievements, badges, and leaderboard ranking." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <style>
+    /* ── Clickable Stat Cards ── */
+    .card-stat {
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .card-stat:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: rgba(99, 102, 241, 0.4) !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .card-stat:active {
+      transform: scale(0.97);
+      transition: transform 0.1s ease;
+    }
+
+    /* ── Layout & Card Alignment ── */
+    @media (min-width: 1025px) {
+      .dashboard-grid {
+        align-items: stretch;
+      }
+
+      .dashboard-grid>.card,
+      .dashboard-grid>div,
+      .dashboard-grid>div>.card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dashboard-grid>div>.card>.skill-bar-group {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .dashboard-grid-3 {
+        align-items: stretch;
+      }
+
+      .dashboard-grid-3>.card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dashboard-grid-3>.card> :last-child {
+        flex-grow: 1;
+      }
+    }
+
+    /* ── Leaderboard Revamp ── */
+    .leaderboard-list {
+      max-height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding-right: var(--space-2);
+      flex-grow: 1;
+    }
+
+    /* Premium Custom Scrollbars */
+    .leaderboard-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .leaderboard-list::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-full);
+    }
+
+    .leaderboard-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-full);
+      transition: background var(--transition-fast);
+    }
+
+    .leaderboard-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .leaderboard-item {
+      display: grid;
+      grid-template-columns: 24px 32px 1fr auto auto auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      transition: all var(--transition-base);
+    }
+
+    .leaderboard-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border-hover);
+      transform: translateX(2px);
+    }
+
+    .leaderboard-item.top-1 {
+      background: rgba(245, 158, 11, 0.06);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .leaderboard-item.top-1:hover {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .leaderboard-item.top-2 {
+      background: rgba(148, 163, 184, 0.04);
+      border-color: rgba(148, 163, 184, 0.15);
+    }
+
+    .leaderboard-item.top-2:hover {
+      background: rgba(148, 163, 184, 0.08);
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .leaderboard-item.top-3 {
+      background: rgba(234, 88, 12, 0.04);
+      border-color: rgba(234, 88, 12, 0.15);
+    }
+
+    .leaderboard-item.top-3:hover {
+      background: rgba(234, 88, 12, 0.08);
+      border-color: rgba(234, 88, 12, 0.3);
+    }
+
+    .leaderboard-item.logged-in-user {
+      background: rgba(99, 102, 241, 0.08) !important;
+      border: 2px solid rgba(99, 102, 241, 0.3) !important;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+
+    .leaderboard-item.logged-in-user:hover {
+      background: rgba(99, 102, 241, 0.12) !important;
+      border-color: rgba(99, 102, 241, 0.5) !important;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .lb-rank {
+      font-weight: 700;
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .top-1 .lb-rank {
+      color: var(--warning);
+    }
+
+    .top-2 .lb-rank {
+      color: #94A3B8;
+    }
+
+    .top-3 .lb-rank {
+      color: #EA580C;
+    }
+
+    .lb-user-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .lb-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lb-dept {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .lb-trend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      width: 20px;
+    }
+
+    .lb-trend.up {
+      color: var(--success);
+    }
+
+    .lb-trend.down {
+      color: var(--danger);
+    }
+
+    .lb-trend.stable {
+      color: var(--text-muted);
+    }
+
+    .lb-streak {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+    }
+
+    .lb-streak i {
+      color: #EF4444;
+    }
+
+    .lb-score {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--primary-light);
+      text-align: right;
+    }
+
+    /* ── Badges Section ── */
+    .badges-card {
+      overflow: visible !important;
+    }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      flex-grow: 1;
+    }
+
+    .badge-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-4) var(--space-2);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-base);
+      position: relative;
+    }
+
+    .badge-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .badge-icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: var(--space-2);
+      position: relative;
+      transition: transform var(--transition-base);
+      color: white;
+    }
+
+    .badge-item:hover .badge-icon-wrapper {
+      transform: scale(1.12) rotate(8deg);
+    }
+
+    .badge-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: color var(--transition-fast);
+    }
+
+    .badge-item:hover .badge-title {
+      color: var(--text-primary);
+    }
+
+    /* Gradients for badge icons */
+    .cyan-grad {
+      background: linear-gradient(135deg, #06B6D4, #0891B2);
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+    }
+
+    .indigo-grad {
+      background: linear-gradient(135deg, #6366F1, #4F46E5);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .orange-grad {
+      background: linear-gradient(135deg, #F97316, #EA580C);
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+    }
+
+    .pink-grad {
+      background: linear-gradient(135deg, #EC4899, #DB2777);
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+    }
+
+    .amber-grad {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+    }
+
+    .blue-grad {
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .emerald-grad {
+      background: linear-gradient(135deg, #10B981, #059669);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .violet-grad {
+      background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    }
+
+    /* Locked states */
+    .badge-item.locked {
+      opacity: 0.55;
+      border-style: dashed;
+    }
+
+    .badge-item.locked:hover {
+      opacity: 0.85;
+      border-color: var(--text-muted);
+    }
+
+    .locked-grad {
+      background: linear-gradient(135deg, #475569, #334155);
+      box-shadow: none;
+      color: #94A3B8 !important;
+    }
+
+    .badge-lock-overlay {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      background: #1E293B;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .badge-item.locked:hover .badge-lock-overlay {
+      color: var(--warning);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    /* ── CSS Tooltip Component ── */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::before,
+    [data-tooltip]::after {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 100;
+    }
+
+    [data-tooltip]::before {
+      content: "";
+      border-width: 6px 6px 0 6px;
+      border-style: solid;
+      border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
+      bottom: 100%;
+      margin-bottom: -4px;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      bottom: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 6px 10px;
+      font-size: 0.7rem;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-weight: 500;
+      text-align: center;
+      min-width: 140px;
+      max-width: 180px;
+      white-space: normal;
+      line-height: 1.3;
+    }
+
+    [data-tooltip]:hover::before,
+    [data-tooltip]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Certificates Redesign ── */
+    .certificates-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      flex-grow: 1;
+    }
+
+    .certificate-item {
+      padding: var(--space-4);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .certificate-item:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .certificate-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+
+    .certificate-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .certificate-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    /* ── Responsiveness overrides ── */
+    @media (max-width: 768px) {
+      .leaderboard-list {
+        max-height: 320px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .badges-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .leaderboard-item {
+        grid-template-columns: 20px 32px 1fr auto;
+        gap: var(--space-2);
+        padding: 8px 10px;
+      }
+
+      .lb-streak {
+        display: none;
+      }
+
+      .lb-trend {
+        font-size: 0.65rem;
+      }
+    }
+
+    /* ── Modal Popup Styles ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: rgba(30, 41, 59, 0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6) var(--space-8);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 2.5rem;
+      color: var(--warning);
+      margin-bottom: var(--space-4);
+      animation: modal-icon-pulse 2s infinite;
+    }
+
+    .modal-title {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+      background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .modal-message {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--space-6);
+    }
+
+    .modal-close-btn {
+      min-width: 120px;
+      justify-content: center;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+    }
+
+    @keyframes modal-icon-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.4));
+      }
+
+      50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8));
+      }
+    }
+
+    /* ── Interactive Detail Modal Custom Styles ── */
+    .modal-content.interactive-modal-content {
+      max-width: 550px;
+      text-align: left;
+      position: relative;
+      padding: var(--space-6) var(--space-6);
+    }
+
+    .modal-close-x {
+      position: absolute;
+      top: var(--space-4);
+      right: var(--space-4);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+      z-index: 10;
+    }
+
+    .modal-close-x:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+    }
+
+    .modal-header-container {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--space-4);
+      padding-right: var(--space-8);
+      /* leave space for the X button */
+    }
+
+    .modal-header-icon {
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+      flex-shrink: 0;
+    }
+
+    .modal-header-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header-titles h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .modal-header-titles p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .modal-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+    }
+
+    @media (max-width: 480px) {
+      .modal-stats-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+      }
+    }
+
+    .modal-stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-stat-box .box-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .modal-stat-box .box-label {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-list {
+      margin-bottom: var(--space-5);
+    }
+
+    .modal-list-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--space-2);
+    }
+
+    .modal-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2) 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+    }
+
+    .modal-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .modal-list-item .item-main {
+      font-weight: 500;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-list-item .item-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .modal-tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: var(--space-2);
+    }
+
+    .modal-tag {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .modal-tag.completed {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .modal-tag.remaining {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .modal-insight-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.04));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.05);
+    }
+
+    .modal-insight-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: var(--space-1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-insight-text {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Clickable Skill progress rows ── */
+    #skills-progress-card .progress-row {
+      cursor: pointer;
+      padding: var(--space-2);
+      margin-left: calc(-1 * var(--space-2));
+      margin-right: calc(-1 * var(--space-2));
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      border: 1px solid transparent;
+    }
+
+    #skills-progress-card .progress-row:hover {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(99, 102, 241, 0.2);
+      transform: translateX(4px);
+    }
+
+    #skills-progress-card .progress-row:active {
+      transform: scale(0.98) translateX(4px);
+    }
+
+    /* ── Clickable Badges and Leaderboard Rows ── */
+    .badge-item {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .leaderboard-item {
+      cursor: pointer;
+    }
+
+    .leaderboard-controls {
+      margin-bottom: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: 0 var(--space-1);
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-wrapper i {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .leaderboard-search-input {
+      width: 100%;
+      padding: 10px 14px 10px 36px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      outline: none;
+      transition: all var(--transition-fast);
+    }
+
+    .leaderboard-search-input:focus {
+      border-color: rgba(99, 102, 241, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.1);
+    }
+
+    .filter-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .filter-selects {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .leaderboard-select {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      outline: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .leaderboard-select:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .leaderboard-select:focus {
+      border-color: var(--primary);
+    }
+
+    /* ── Graph Interactivity & Tooltips ── */
+    .chart-container-wrapper {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .chart-bar-rect {
+      cursor: pointer;
+      transition: fill-opacity 0.2s ease, filter 0.2s ease;
+    }
+
+    .chart-bar-rect:hover {
+      fill-opacity: 1 !important;
+      filter: brightness(1.15) drop-shadow(0 2px 8px rgba(99, 102, 241, 0.4));
+    }
+
+    .chart-line-dot {
+      cursor: pointer;
+      transition: r 0.2s ease, fill 0.2s ease;
+    }
+
+    .chart-line-dot:hover {
+      r: 7px !important;
+      fill: #FFFFFF !important;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      color: var(--text-primary);
+      font-size: 0.72rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(99, 102, 241, 0.2);
+      line-height: 1.4;
+      min-width: 140px;
+      display: none;
+    }
+
+    .chart-tooltip .tooltip-header {
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 2px;
+    }
+
+    /* ── Graph Action Controls Row ── */
+    .graph-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border);
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .control-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* ── Performance Summary Box ── */
+    .perf-summary-box {
+      margin-top: var(--space-4);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.005));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .perf-summary-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .perf-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+
+    @media (min-width: 576px) {
+      .perf-metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .perf-metric-tile {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      text-align: center;
+    }
+
+    .perf-metric-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .perf-metric-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .perf-insight-card {
+      background: rgba(99, 102, 241, 0.04);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .perf-insight-icon {
+      color: var(--primary-light);
+      font-size: 1.1rem;
+      margin-top: 2px;
+    }
+
+    .perf-insight-text {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .perf-rating-badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .perf-rating-badge.excellent {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .perf-rating-badge.good {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .perf-rating-badge.average {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+  </style>
 </head>
+
 <body>
-<div class="dashboard-layout">
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand"><div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span class="sidebar-brand-text">SkillBridge</span></div>
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-label">Main</div>
-      <a href="student-dashboard.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span></a>
-      <a href="assessment.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span></a>
-      <div class="sidebar-section-label">Learning</div>
-      <a href="skill-gap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span></a>
-      <a href="courses.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span></a>
-      <a href="roadmap.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span></a>
-      <a href="progress.html" class="sidebar-nav-item active"><div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span></a>
-      <div class="sidebar-section-label">Other</div>
-      <a href="reports.html" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span></a>
-      <a href="#" class="sidebar-nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
-        <div class="sidebar-user-info"><div class="sidebar-user-name">Arjun Kapoor</div><div class="sidebar-user-role">Student · CSE</div></div>
-        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i class="fa-solid fa-right-from-bracket"></i></a>
+  <div class="dashboard-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div><span
+          class="sidebar-brand-text">SkillBridge</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        <a href="student-dashboard.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div><span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div><span>My Profile</span>
+        </a>
+        <a href="assessment.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div><span>Assessments</span>
+        </a>
+        <div class="sidebar-section-label">Learning</div>
+        <a href="skill-gap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div><span>Skill Gap</span>
+        </a>
+        <a href="courses.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div><span>Courses</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-road"></i></div><span>Roadmap</span>
+        </a>
+        <a href="progress.html" class="sidebar-nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div><span>Progress</span>
+        </a>
+        <div class="sidebar-section-label">Other</div>
+        <a href="reports.html" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div><span>Reports</span>
+        </a>
+        <a href="#" class="sidebar-nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar avatar-sm avatar-placeholder"
+            style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">
+            AK</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Arjun Kapoor</div>
+            <div class="sidebar-user-role">Student · CSE</div>
+          </div>
+          <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem"><i
+              class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="topnav">
+        <div class="topnav-left">
+          <button onclick="toggleSidebar()"
+            style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i
+              class="fa-solid fa-bars"></i></button>
+          <div>
+            <div class="topnav-title">Progress Tracking</div>
+            <div class="topnav-breadcrumb">Dashboard / <span>Progress</span></div>
+          </div>
+        </div>
+        <div class="topnav-right">
+          <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
+          <div class="topnav-profile">
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">
+              AK</div>
+            <div class="topnav-profile-info">
+              <div class="topnav-profile-name">Arjun Kapoor</div>
+              <div class="topnav-profile-role">Student</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="dash-content">
+        <div class="dash-header flex-between">
+          <div>
+            <h1>Progress Tracking</h1>
+            <p>Your complete learning journey — skills, time, achievements, and rankings.</p>
+          </div>
+          <div class="flex gap-3">
+            <div class="streak-badge"><i class="fa-solid fa-fire"></i> 14 Day Streak</div>
+            <select class="report-select">
+              <option>This Month</option>
+              <option>Last 3 Months</option>
+              <option>All Time</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- KPI Stats -->
+        <div class="stats-grid stagger">
+          <div class="card card-stat animate-slideUp" onclick="openInteractiveModal('skill-score')">
+            <div class="stat-icon primary"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <div class="stat-value gradient-text">74</div>
+              <div class="stat-label">Skill Score</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +28 total</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp" onclick="openInteractiveModal('learning-hours')">
+            <div class="stat-icon success"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--success)">147h</div>
+              <div class="stat-label">Learning Hours</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12h this week</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp" onclick="openInteractiveModal('courses-done')">
+            <div class="stat-icon warning"><i class="fa-solid fa-book-open"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--warning)">5</div>
+              <div class="stat-label">Courses Done</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +1 this week</div>
+            </div>
+          </div>
+          <div class="card card-stat animate-slideUp" onclick="openInteractiveModal('leaderboard-rank')">
+            <div class="stat-icon accent"><i class="fa-solid fa-medal"></i></div>
+            <div>
+              <div class="stat-value" style="color:var(--accent)">#12</div>
+              <div class="stat-label">Leaderboard Rank</div>
+              <div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +5 positions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dashboard-grid mb-6">
+          <!-- Monthly Progress Chart -->
+          <div class="card animate-slideUp" id="monthly-progress-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-line" style="color:var(--primary);margin-right:8px"></i>Monthly Progress
+              </h3>
+              <div class="flex gap-2">
+                <button class="btn btn-primary btn-sm" id="viewM" onclick="toggleView('month')">Monthly</button>
+                <button class="btn btn-ghost btn-sm" id="viewW" onclick="toggleView('week')">Weekly</button>
+              </div>
+            </div>
+
+            <!-- SVG Bar Chart Wrapper -->
+            <div class="chart-container-wrapper" id="chartContainerWrapper" onclick="openOverallAnalytics()"
+              style="position:relative;height:200px;margin-top:var(--space-4)">
+              <svg id="progressSvgChart" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
+                style="width:100%;height:100%">
+                <!-- Dynamic SVG content will be injected by JavaScript -->
+              </svg>
+              <!-- Legend -->
+              <div style="position:absolute;top:0;right:0;display:flex;gap:16px;pointer-events:none;">
+                <span style="font-size:0.7rem;display:flex;align-items:center;gap:6px"><span
+                    style="width:12px;height:12px;border-radius:3px;background:var(--primary);display:inline-block"></span>Hours</span>
+                <span style="font-size:0.7rem;display:flex;align-items:center;gap:6px"><span
+                    style="width:12px;height:3px;background:var(--success);display:inline-block;border-radius:2px"></span>Score</span>
+              </div>
+
+              <!-- Floating Tooltip Box -->
+              <div class="chart-tooltip" id="chart-tooltip"></div>
+            </div>
+
+            <!-- Graph Actions Row -->
+            <div class="graph-controls-row">
+              <button class="control-btn" onclick="event.stopPropagation(); downloadPDFReport();">
+                <i class="fa-solid fa-file-pdf" style="color:#EF4444"></i> Download Report (PDF)
+              </button>
+              <button class="control-btn" onclick="event.stopPropagation(); openOverallAnalytics();">
+                <i class="fa-solid fa-square-poll-vertical" style="color:var(--primary-light)"></i> View Full Analytics
+              </button>
+              <button class="control-btn" onclick="event.stopPropagation(); comparePreviousMonth();">
+                <i class="fa-solid fa-arrow-up-right-dots" style="color:var(--success)"></i> Compare Previous Month
+              </button>
+              <button class="control-btn" onclick="event.stopPropagation(); exportCSVData();">
+                <i class="fa-solid fa-file-csv" style="color:#10B981"></i> Export Data (CSV)
+              </button>
+            </div>
+
+            <!-- Performance Summary Container -->
+            <div class="perf-summary-box" id="perfSummaryContainer">
+              <!-- Will be dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Right: Skills Summary + Hours Breakdown -->
+          <div style="display:flex;flex-direction:column;gap:var(--space-6)">
+            <!-- Skills progress -->
+            <div class="card animate-slideUp" id="skills-progress-card">
+              <div class="card-header">
+                <h3>Skills Progress</h3>
+              </div>
+              <div class="skill-bar-group">
+                <div class="progress-row" onclick="openInteractiveModal('python')">
+                  <div class="progress-header"><span>Python</span><span>78%</span></div>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width:78%"></div>
+                  </div>
+                </div>
+                <div class="progress-row" onclick="openInteractiveModal('machine-learning')">
+                  <div class="progress-header"><span>Machine Learning</span><span>52%</span></div>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width:52%"></div>
+                  </div>
+                </div>
+                <div class="progress-row" onclick="openInteractiveModal('data-visualization')">
+                  <div class="progress-header"><span>Data Visualization</span><span>65%</span></div>
+                  <div class="progress-track">
+                    <div class="progress-fill success" style="width:65%"></div>
+                  </div>
+                </div>
+                <div class="progress-row" onclick="openInteractiveModal('sql')">
+                  <div class="progress-header"><span>SQL</span><span>71%</span></div>
+                  <div class="progress-track">
+                    <div class="progress-fill success" style="width:71%"></div>
+                  </div>
+                </div>
+                <div class="progress-row" onclick="openInteractiveModal('deep-learning')">
+                  <div class="progress-header"><span>Deep Learning</span><span>34%</span></div>
+                  <div class="progress-track">
+                    <div class="progress-fill warning" style="width:34%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges + Leaderboard -->
+        <div class="dashboard-grid-3">
+          <!-- Badges -->
+          <div class="card badges-card animate-slideUp">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-medal" style="color:var(--warning);margin-right:8px"></i>Badges Earned</h3><span
+                class="badge badge-warning">8 / 12</span>
+            </div>
+            <div class="badges-grid">
+              <!-- 1. First Login -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('first-login')"
+                data-tooltip="Logged into SkillBridge for the first time!">
+                <div class="badge-icon-wrapper cyan-grad">
+                  <i class="fa-solid fa-door-open"></i>
+                </div>
+                <div class="badge-title">First Login</div>
+              </div>
+              <!-- 2. First Course Completed -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('first-course')"
+                data-tooltip="Completed your very first course.">
+                <div class="badge-icon-wrapper indigo-grad">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="badge-title">First Course</div>
+              </div>
+              <!-- 3. 7-Day Streak -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('7-day-streak')"
+                data-tooltip="Maintained a study streak for 7 consecutive days.">
+                <div class="badge-icon-wrapper orange-grad">
+                  <i class="fa-solid fa-fire"></i>
+                </div>
+                <div class="badge-title">7-Day Streak</div>
+              </div>
+              <!-- 4. Fast Learner -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('fast-learner')"
+                data-tooltip="Finished a course ahead of the recommended timeline.">
+                <div class="badge-icon-wrapper pink-grad">
+                  <i class="fa-solid fa-rocket"></i>
+                </div>
+                <div class="badge-title">Fast Learner</div>
+              </div>
+              <!-- 5. Quiz Master -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('quiz-master')"
+                data-tooltip="Scored 100% on three or more course quizzes.">
+                <div class="badge-icon-wrapper amber-grad">
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="badge-title">Quiz Master</div>
+              </div>
+              <!-- 6. Problem Solver -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('problem-solver')"
+                data-tooltip="Solved 15+ coding challenges and practice exercises.">
+                <div class="badge-icon-wrapper blue-grad">
+                  <i class="fa-solid fa-puzzle-piece"></i>
+                </div>
+                <div class="badge-title">Problem Solver</div>
+              </div>
+              <!-- 7. SQL Expert -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('sql-expert')"
+                data-tooltip="Mastered relational databases and complex query performance.">
+                <div class="badge-icon-wrapper emerald-grad">
+                  <i class="fa-solid fa-database"></i>
+                </div>
+                <div class="badge-title">SQL Expert</div>
+              </div>
+              <!-- 8. Data Analyst -->
+              <div class="badge-item unlocked" onclick="openBadgeModal('data-analyst')"
+                data-tooltip="Completed the Data Visualization and Interpretation pathway.">
+                <div class="badge-icon-wrapper violet-grad">
+                  <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div class="badge-title">Data Analyst</div>
+              </div>
+              <!-- 9. 30-Day Streak (Locked) -->
+              <div class="badge-item locked" onclick="openBadgeModal('30-day-streak')"
+                data-tooltip="Keep your learning streak active for 30 consecutive days.">
+                <div class="badge-icon-wrapper locked-grad">
+                  <i class="fa-solid fa-crown"></i>
+                  <div class="badge-lock-overlay"><i class="fa-solid fa-lock"></i></div>
+                </div>
+                <div class="badge-title">30-Day Streak</div>
+              </div>
+              <!-- 10. Top Performer (Locked) -->
+              <div class="badge-item locked" onclick="openBadgeModal('top-performer')"
+                data-tooltip="Reach Rank #5 or higher on the batch leaderboard.">
+                <div class="badge-icon-wrapper locked-grad">
+                  <i class="fa-solid fa-trophy"></i>
+                  <div class="badge-lock-overlay"><i class="fa-solid fa-lock"></i></div>
+                </div>
+                <div class="badge-title">Top Performer</div>
+              </div>
+              <!-- 11. Python Expert (Locked) -->
+              <div class="badge-item locked" onclick="openBadgeModal('python-expert')"
+                data-tooltip="Unlock by completing all advanced Python modules and projects.">
+                <div class="badge-icon-wrapper locked-grad">
+                  <i class="fa-brands fa-python"></i>
+                  <div class="badge-lock-overlay"><i class="fa-solid fa-lock"></i></div>
+                </div>
+                <div class="badge-title">Python Expert</div>
+              </div>
+              <!-- 12. AI Explorer (Locked) -->
+              <div class="badge-item locked" onclick="openBadgeModal('ai-explorer')"
+                data-tooltip="Complete the Machine Learning & Neural Network pipelines.">
+                <div class="badge-icon-wrapper locked-grad">
+                  <i class="fa-solid fa-robot"></i>
+                  <div class="badge-lock-overlay"><i class="fa-solid fa-lock"></i></div>
+                </div>
+                <div class="badge-title">AI Explorer</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certificates -->
+          <div class="card animate-slideUp" id="certificates-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-certificate" style="color:var(--warning);margin-right:8px"></i>Certificates</h3>
+              <span class="badge badge-success">2 Earned</span>
+            </div>
+            <div class="certificates-list">
+              <div class="certificate-item">
+                <div>
+                  <div class="certificate-header">
+                    <span class="certificate-title">🏅 Python for Data Science</span>
+                    <span class="badge badge-success">Verified</span>
+                  </div>
+                  <div class="certificate-meta">Issued: January 2025 · ID: SB-2025-001</div>
+                </div>
+                <button class="btn btn-ghost btn-sm mt-3" style="width:100%;justify-content:center"
+                  onclick="openModal()"><i class="fa-solid fa-download"></i> Download PDF</button>
+              </div>
+              <div class="certificate-item">
+                <div>
+                  <div class="certificate-header">
+                    <span class="certificate-title">🏅 SQL Fundamentals</span>
+                    <span class="badge badge-success">Verified</span>
+                  </div>
+                  <div class="certificate-meta">Issued: February 2025 · ID: SB-2025-002</div>
+                </div>
+                <button class="btn btn-ghost btn-sm mt-3" style="width:100%;justify-content:center"
+                  onclick="openModal()"><i class="fa-solid fa-download"></i> Download PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leaderboard -->
+          <div class="card animate-slideUp" id="leaderboard-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-ranking-star" style="color:var(--warning);margin-right:8px"></i>Leaderboard</h3>
+              <span class="badge badge-primary">Class Rank</span>
+            </div>
+
+            <!-- Search & Filters Row -->
+            <div class="leaderboard-controls">
+              <!-- Search box -->
+              <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="leaderboardSearch" oninput="filterLeaderboard()"
+                  placeholder="Search students by name..." class="leaderboard-search-input" />
+              </div>
+
+              <!-- Filters and View My Rank button row -->
+              <div class="filter-actions-row">
+                <!-- Select Filters -->
+                <div class="filter-selects">
+                  <select id="leaderboardFilterOverall" onchange="filterLeaderboard()" class="leaderboard-select">
+                    <option value="all">Overall Ranking</option>
+                    <option value="top10">Top 10</option>
+                    <option value="top50">Top 50</option>
+                  </select>
+                  <select id="leaderboardFilterCollege" onchange="filterLeaderboard()" class="leaderboard-select">
+                    <option value="all">All Colleges</option>
+                    <option value="COA">Engineering College A</option>
+                    <option value="COB">Engineering College B</option>
+                    <option value="IOT">Technology Institute</option>
+                  </select>
+                  <select id="leaderboardFilterBranch" onchange="filterLeaderboard()" class="leaderboard-select">
+                    <option value="all">All Branches</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                    <option value="ME">ME</option>
+                    <option value="EE">EE</option>
+                  </select>
+                </div>
+
+                <!-- View My Rank Button -->
+                <button onclick="scrollToMyRank()" class="btn btn-primary btn-sm"
+                  style="font-size: 0.75rem; padding: 6px 12px; display: flex; align-items: center; gap: 6px; border-radius: var(--radius-sm);">
+                  <i class="fa-solid fa-location-crosshairs"></i> View My Rank
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Leaderboard Scroll List -->
+            <div class="leaderboard-list" id="leaderboardListContainer" style="max-height: 420px; overflow-y: auto;">
+              <!-- Dynamic rows will be loaded here via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modern Modal Popup for Certificate Download -->
+  <div id="certificateModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content glass">
+      <div class="modal-icon"><i class="fa-solid fa-circle-info"></i></div>
+      <h3 class="modal-title">Certificate Not Available</h3>
+      <p class="modal-message">Your certificate will be generated and available for download after you successfully
+        complete the course.</p>
+      <button class="btn btn-primary modal-close-btn" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <!-- Reusable Interactive Modal Popup for Detailed Progress -->
+  <div id="interactiveDetailModal" class="modal-overlay" onclick="closeInteractiveModalOnOverlay(event)">
+    <div class="modal-content glass interactive-modal-content">
+      <button class="modal-close-x" onclick="closeInteractiveModal()">&times;</button>
+      <div class="modal-header-container">
+        <div id="interactiveModalIcon" class="modal-header-icon">
+          <i class="fa-solid fa-star"></i>
+        </div>
+        <div class="modal-header-titles">
+          <h3 id="interactiveModalTitle">Title</h3>
+          <p id="interactiveModalSubtitle">Subtitle</p>
+        </div>
+      </div>
+      <div id="interactiveModalBody">
+        <!-- Injected dynamic HTML content goes here -->
       </div>
     </div>
-  </aside>
+  </div>
 
-  <main class="dashboard-main">
-    <header class="topnav">
-      <div class="topnav-left">
-        <button onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer"><i class="fa-solid fa-bars"></i></button>
-        <div><div class="topnav-title">Progress Tracking</div><div class="topnav-breadcrumb">Dashboard / <span>Progress</span></div></div>
-      </div>
-      <div class="topnav-right">
-        <div class="topnav-icon-btn icon-badge"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></div>
-        <div class="topnav-profile">
-          <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
-          <div class="topnav-profile-info"><div class="topnav-profile-name">Arjun Kapoor</div><div class="topnav-profile-role">Student</div></div>
-        </div>
-      </div>
-    </header>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('mobile-open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+    function toggleView(v) {
+      document.getElementById('viewM').className = v === 'month' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
+      document.getElementById('viewW').className = v === 'week' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
+      drawProgressChart(v);
+      updatePerformanceSummary(v);
+    }
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+    function openModal() {
+      document.getElementById('certificateModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('certificateModal').classList.remove('active');
+    }
+    function closeModalOnOverlay(event) {
+      if (event.target === document.getElementById('certificateModal')) {
+        closeModal();
+      }
+    }
 
-    <div class="dash-content">
-      <div class="dash-header flex-between">
-        <div><h1>Progress Tracking</h1><p>Your complete learning journey — skills, time, achievements, and rankings.</p></div>
-        <div class="flex gap-3">
-          <div class="streak-badge"><i class="fa-solid fa-fire"></i> 14 Day Streak</div>
-          <select class="report-select"><option>This Month</option><option>Last 3 Months</option><option>All Time</option></select>
-        </div>
-      </div>
+    /* ── Interactive Detail Modal Setup ── */
+    const interactiveModalData = {
+      'skill-score': {
+        title: 'Skill Score Breakdown',
+        subtitle: 'Overall metrics and performance tracking',
+        iconClass: 'fa-solid fa-star',
+        iconColor: 'linear-gradient(135deg, #F59E0B, #D97706)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Current Score</span>
+                <span class="box-value gradient-text">74</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Previous Score</span>
+                <span class="box-value" style="color: var(--text-secondary)">46</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Total Improvement</span>
+                <span class="box-value" style="color: var(--success)">+28 pts</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Performance Level</span>
+                <span class="box-value" style="color: var(--primary-light)">Good</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Skill-Wise Performance</div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-brands fa-python" style="color:#3776AB;width:16px"></i> Python</span>
+                <span class="badge badge-success">Excellent (78%)</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-database" style="color:#00758F;width:16px"></i> SQL</span>
+                <span class="badge badge-success">Good (71%)</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-chart-pie" style="color:#8B5CF6;width:16px"></i> Data Visualization</span>
+                <span class="badge badge-primary">Good (65%)</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-robot" style="color:#10B981;width:16px"></i> Machine Learning</span>
+                <span class="badge badge-accent">Average (52%)</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-brain" style="color:#EF4444;width:16px"></i> Deep Learning</span>
+                <span class="badge badge-warning" style="background:rgba(239,68,68,0.15);color:#F87171">Weak (34%)</span>
+              </div>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-lightbulb"></i> Personalized Recommendation</div>
+              <div class="modal-insight-text">Your Python and SQL skills are strong! Prioritize Deep Learning concepts (like CNNs and TensorFlow) to boost your overall Skill Score above 80.</div>
+            </div>
+          `;
+        }
+      },
+      'learning-hours': {
+        title: 'Learning Hours Analysis',
+        subtitle: 'Activity tracker and work trends',
+        iconClass: 'fa-solid fa-clock',
+        iconColor: 'linear-gradient(135deg, #10B981, #059669)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Total Learning Hours</span>
+                <span class="box-value" style="color: var(--success)">147h</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Weekly Hours</span>
+                <span class="box-value" style="color: var(--primary-light)">12h</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Daily Average</span>
+                <span class="box-value" style="color: var(--text-primary)">2.1h / day</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Longest Streak</span>
+                <span class="box-value" style="color: var(--warning)">14 days</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Productivity Metrics</div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-graduation-cap" style="color:var(--primary-light)"></i> Active Courses</span>
+                <span class="item-meta">3 Courses in Progress</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-calendar-check" style="color:var(--success)"></i> Active Days (Month)</span>
+                <span class="item-meta">24 / 30 Days</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-fire" style="color:#EF4444"></i> Current Streak</span>
+                <span class="item-meta">14 Days Active</span>
+              </div>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-brain"></i> Productivity Insight</div>
+              <div class="modal-insight-text">Your peak productivity occurs between 8 PM - 10 PM. Plan your deep learning sessions during this window to optimize retention.</div>
+            </div>
+          `;
+        }
+      },
+      'courses-done': {
+        title: 'Completed Courses',
+        subtitle: 'Certifications and educational path',
+        iconClass: 'fa-solid fa-book-open',
+        iconColor: 'linear-gradient(135deg, #F97316, #EA580C)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Courses</span>
+                <span class="box-value" style="color: var(--warning)">5</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Certificates Earned</span>
+                <span class="box-value" style="color: var(--success)">2 Verified</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Next Recommended</span>
+                <span class="box-value" style="font-size:0.92rem;color: var(--primary-light);font-weight:600;margin-top:10px">Machine Learning Basics</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Path Completion</span>
+                <span class="box-value" style="color: var(--text-primary)">62%</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Course Completion History</div>
+              <div class="modal-list-item">
+                <span class="item-main">🏅 Python for Data Science</span>
+                <span class="item-meta">Completed Jan 15, 2025</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">🏅 SQL Fundamentals</span>
+                <span class="item-meta">Completed Feb 10, 2025</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">📖 Introduction to Data Science</span>
+                <span class="item-meta">Completed Dec 12, 2024</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">📖 Data Visualization Basics</span>
+                <span class="item-meta">Completed Nov 04, 2024</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">📖 Business Intelligence Basics</span>
+                <span class="item-meta">Completed Oct 18, 2024</span>
+              </div>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-rocket"></i> Career Acceleration Tip</div>
+              <div class="modal-insight-text">You have completed all foundation data modules. We recommend taking the <b>Machine Learning Basics</b> course next to unlock advanced AI modules.</div>
+            </div>
+          `;
+        }
+      },
+      'leaderboard-rank': {
+        title: 'Leaderboard Ranking Info',
+        subtitle: 'Peer progress analysis',
+        iconClass: 'fa-solid fa-ranking-star',
+        iconColor: 'linear-gradient(135deg, #8B5CF6, #7C3AED)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Current Rank</span>
+                <span class="box-value" style="color: var(--accent-light)">#12</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Previous Rank</span>
+                <span class="box-value" style="color: var(--text-secondary)">#17</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Rank Improvement</span>
+                <span class="box-value" style="color: var(--success)">+5 positions</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Total Points</span>
+                <span class="box-value" style="color: var(--text-primary)">74 pts</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Ranking Details</div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-trophy" style="color:#F59E0B"></i> Top Scorer</span>
+                <span class="item-meta">Priya Rajan (96 pts)</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-stairs" style="color:var(--info)"></i> Next Milestone</span>
+                <span class="item-meta">Reach 75 pts to tie for #10</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main"><i class="fa-solid fa-circle-arrow-up" style="color:var(--success)"></i> Enter Top 10</span>
+                <span class="item-meta">Need 2 pts (76 pts total)</span>
+              </div>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-bullseye"></i> Motivational Target</div>
+              <div class="modal-insight-text">You are just 2 points away from the Top 10! Complete one more quiz or solve a practice database problem to secure your spot. You've got this!</div>
+            </div>
+          `;
+        }
+      },
+      'python': {
+        title: 'Python Progress Details',
+        subtitle: 'Core programming language stats',
+        iconClass: 'fa-brands fa-python',
+        iconColor: 'linear-gradient(135deg, #3776AB, #1E415E)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Progress</span>
+                <span class="box-value" style="color:#3776AB">78%</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Level</span>
+                <span class="box-value" style="color:var(--success)">Advanced</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Est. Time to Complete</span>
+                <span class="box-value" style="color:var(--text-secondary)">8 Hours</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Projects</span>
+                <span class="box-value" style="color:var(--text-primary)">3 Projects</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Topics Status</div>
+              <div class="modal-tag-group">
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Variables</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Loops</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Functions</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> OOP</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> File Handling</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Data Structures</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Decorators</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Generators</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Multithreading</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> AsyncIO</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Industry Importance</div>
+              <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">
+                Python is the dominant language for Machine Learning, Artificial Intelligence, and Big Data scripting. Over 80% of data science teams rely on Python libraries like Pandas, NumPy, and Scikit-Learn.
+              </p>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-star"></i> Excellent Progress!</div>
+              <div class="modal-insight-text">You've mastered all essential programming models. Focus on AsyncIO and decorator design patterns to attain professional developer proficiency.</div>
+            </div>
+          `;
+        }
+      },
+      'machine-learning': {
+        title: 'Machine Learning Progress',
+        subtitle: 'Predictive modeling and algorithms',
+        iconClass: 'fa-solid fa-robot',
+        iconColor: 'linear-gradient(135deg, #10B981, #059669)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Progress</span>
+                <span class="box-value" style="color:var(--success)">52%</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Level</span>
+                <span class="box-value" style="color:var(--primary-light)">Intermediate</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Est. Time to Complete</span>
+                <span class="box-value" style="color:var(--text-secondary)">18 Hours</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Projects</span>
+                <span class="box-value" style="color:var(--text-primary)">2 Projects</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Topics Status</div>
+              <div class="modal-tag-group">
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Linear Regression</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Logistic Regression</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Decision Trees</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Data Preprocessing</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Random Forests</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Support Vector Machines</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> K-Means Clustering</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Dimensionality Reduction (PCA)</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Cross-Validation</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Industry Importance</div>
+              <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">
+                Machine Learning underpins recommendation engines, algorithmic finance, analytics predictions, and image recognition software in modern tech companies.
+              </p>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-bolt"></i> Keep Experimenting!</div>
+              <div class="modal-insight-text">Over halfway there! We recommend working on a house price predictor and customer clustering project to consolidate your hands-on algorithm experience.</div>
+            </div>
+          `;
+        }
+      },
+      'data-visualization': {
+        title: 'Data Visualization Progress',
+        subtitle: 'Reporting and interactive charts',
+        iconClass: 'fa-solid fa-chart-pie',
+        iconColor: 'linear-gradient(135deg, #8B5CF6, #7C3AED)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Progress</span>
+                <span class="box-value" style="color:var(--accent-light)">65%</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Level</span>
+                <span class="box-value" style="color:var(--primary-light)">Intermediate</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Est. Time to Complete</span>
+                <span class="box-value" style="color:var(--text-secondary)">10 Hours</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Projects</span>
+                <span class="box-value" style="color:var(--text-primary)">2 Projects</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Topics Status</div>
+              <div class="modal-tag-group">
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Matplotlib</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Seaborn</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Basic Charting</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Dashboard Layouts</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Power BI</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Tableau Integration</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Plotly / Dash</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Live Feed Analytics</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Industry Importance</div>
+              <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">
+                Visual storytelling is the key interface between raw data and executive business decisions. Mastering modern tools like Power BI and Plotly is essential for professional analysts.
+              </p>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-image"></i> Dynamic Dashboards Target</div>
+              <div class="modal-insight-text">Great job! Your visual storytelling is coming along well. Challenge yourself by creating an interactive, live dashboard utilizing Plotly and WebSockets.</div>
+            </div>
+          `;
+        }
+      },
+      'sql': {
+        title: 'SQL Database Mastery',
+        subtitle: 'Relational databases and queries',
+        iconClass: 'fa-solid fa-database',
+        iconColor: 'linear-gradient(135deg, #06B6D4, #0891B2)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Progress</span>
+                <span class="box-value" style="color:var(--success)">71%</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Level</span>
+                <span class="box-value" style="color:var(--primary-light)">Intermediate</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Est. Time to Complete</span>
+                <span class="box-value" style="color:var(--text-secondary)">6 Hours</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Projects</span>
+                <span class="box-value" style="color:var(--text-primary)">2 Projects</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Topics Status</div>
+              <div class="modal-tag-group">
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Database Basics</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> CRUD Operations</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Complex Joins</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Subqueries</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Aggregate Functions</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Window Functions</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Common Table Expressions (CTEs)</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Indexing & Optimization</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Stored Procedures</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Industry Importance</div>
+              <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">
+                SQL is the universal language for database queries. Full-stack developers, data scientists, and business intelligence engineers use it daily to extract information from backend storages.
+              </p>
+            </div>
+            <div class="modal-insight-box">
+              <div class="modal-insight-title"><i class="fa-solid fa-lightbulb"></i> Optimization Next</div>
+              <div class="modal-insight-text">Almost there! Mastering database indexing and query optimization will instantly set you apart and put you in the top 10% of SQL users.</div>
+            </div>
+          `;
+        }
+      },
+      'deep-learning': {
+        title: 'Deep Learning Progress',
+        subtitle: 'Neural networks and cognitive models',
+        iconClass: 'fa-solid fa-brain',
+        iconColor: 'linear-gradient(135deg, #EF4444, #DB2777)',
+        render: function () {
+          return `
+            <div class="modal-stats-grid">
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Progress</span>
+                <span class="box-value" style="color:var(--danger)">34%</span>
+              </div>
+              <div class="modal-stat-box" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.02)">
+                <span class="box-label">Skill Level</span>
+                <span class="box-value" style="color:var(--danger)">Beginner</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Est. Time to Complete</span>
+                <span class="box-value" style="color:var(--text-secondary)">25 Hours</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Completed Projects</span>
+                <span class="box-value" style="color:var(--text-primary)">1 Project</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Topics Status</div>
+              <div class="modal-tag-group">
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Intro to Neural Networks</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Activation Functions</span>
+                <span class="modal-tag completed"><i class="fa-solid fa-check"></i> Perceptron Model</span>
+                <span class="modal-tag remaining" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);color:#F87171"><i class="fa-solid fa-circle-exclamation"></i> CNNs</span>
+                <span class="modal-tag remaining" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);color:#F87171"><i class="fa-solid fa-circle-exclamation"></i> RNNs</span>
+                <span class="modal-tag remaining" style="border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);color:#F87171"><i class="fa-solid fa-circle-exclamation"></i> TensorFlow / PyTorch</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Natural Language Processing</span>
+                <span class="modal-tag remaining"><i class="fa-solid fa-clock"></i> Transformers & LLMs</span>
+              </div>
+            </div>
+            <div class="modal-list">
+              <div class="modal-list-title">Industry Importance</div>
+              <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5">
+                Deep Learning is the core engine behind Generative AI, GPT models, Computer Vision, Speech Synthesis, and modern automation. AI engineering is currently the highest-paying segment in tech.
+              </p>
+            </div>
+            <div class="modal-insight-box" style="border-color:rgba(239,68,68,0.3);background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(139,92,246,0.02))">
+              <div class="modal-insight-title" style="color:#F87171"><i class="fa-solid fa-circle-exclamation"></i> Prioritize Deep Learning</div>
+              <div class="modal-insight-text"><b>Attention:</b> This is currently your weakest skill. Focus on convolutional and recurrent architectures in TensorFlow or PyTorch to raise this to match the rest of your profile.</div>
+            </div>
+          `;
+        }
+      }
+    };
 
-      <!-- KPI Stats -->
-      <div class="stats-grid stagger">
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon primary"><i class="fa-solid fa-star"></i></div>
-          <div><div class="stat-value gradient-text">74</div><div class="stat-label">Skill Score</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +28 total</div></div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon success"><i class="fa-solid fa-clock"></i></div>
-          <div><div class="stat-value" style="color:var(--success)">147h</div><div class="stat-label">Learning Hours</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +12h this week</div></div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon warning"><i class="fa-solid fa-book-open"></i></div>
-          <div><div class="stat-value" style="color:var(--warning)">5</div><div class="stat-label">Courses Done</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +1 this week</div></div>
-        </div>
-        <div class="card card-stat animate-slideUp">
-          <div class="stat-icon accent"><i class="fa-solid fa-medal"></i></div>
-          <div><div class="stat-value" style="color:var(--accent)">#12</div><div class="stat-label">Leaderboard Rank</div><div class="stat-change up"><i class="fa-solid fa-arrow-up"></i> +5 positions</div></div>
-        </div>
-      </div>
+    function openInteractiveModal(key) {
+      const data = interactiveModalData[key];
+      if (!data) return;
 
-      <!-- Charts Row -->
-      <div class="dashboard-grid mb-6">
-        <!-- Monthly Progress Chart -->
-        <div class="card animate-slideUp">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-chart-line" style="color:var(--primary);margin-right:8px"></i>Monthly Progress</h3>
-            <div class="flex gap-2">
-              <button class="btn btn-primary btn-sm" id="viewM" onclick="toggleView('month')">Monthly</button>
-              <button class="btn btn-ghost btn-sm" id="viewW" onclick="toggleView('week')">Weekly</button>
+      document.getElementById('interactiveModalTitle').textContent = data.title;
+      document.getElementById('interactiveModalSubtitle').textContent = data.subtitle;
+
+      const iconContainer = document.getElementById('interactiveModalIcon');
+      iconContainer.innerHTML = `<i class="${data.iconClass}"></i>`;
+      iconContainer.style.background = data.iconColor;
+      iconContainer.style.color = '#FFFFFF';
+
+      document.getElementById('interactiveModalBody').innerHTML = data.render();
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    function closeInteractiveModal() {
+      document.getElementById('interactiveDetailModal').classList.remove('active');
+    }
+
+    function closeInteractiveModalOnOverlay(event) {
+      if (event.target === document.getElementById('interactiveDetailModal')) {
+        closeInteractiveModal();
+      }
+    }
+
+    /* ── Badges Modal Setup ── */
+    const badgesModalData = {
+      'first-login': {
+        name: 'First Login',
+        iconClass: 'fa-solid fa-door-open',
+        gradClass: 'cyan-grad',
+        unlocked: true,
+        earnedDate: 'Jan 01, 2025',
+        description: 'Logged into SkillBridge for the first time.',
+        reward: '+5 Skill Score',
+        motivation: 'Welcome aboard! Your learning adventure has officially begun.'
+      },
+      'first-course': {
+        name: 'First Course',
+        iconClass: 'fa-solid fa-graduation-cap',
+        gradClass: 'indigo-grad',
+        unlocked: true,
+        earnedDate: 'Jan 15, 2025',
+        description: 'Successfully completed your very first course on the platform.',
+        reward: '+10 Skill Score',
+        motivation: 'First milestone reached! The first step is always the hardest.'
+      },
+      '7-day-streak': {
+        name: '7-Day Streak',
+        iconClass: 'fa-solid fa-fire',
+        gradClass: 'orange-grad',
+        unlocked: true,
+        earnedDate: 'Jan 22, 2025',
+        description: 'Maintained a study streak for 7 consecutive days.',
+        reward: '+15 Skill Score',
+        motivation: 'Incredible consistency! Habits are the building blocks of success.'
+      },
+      'fast-learner': {
+        name: 'Fast Learner',
+        iconClass: 'fa-solid fa-rocket',
+        gradClass: 'pink-grad',
+        unlocked: true,
+        earnedDate: 'Feb 02, 2025',
+        description: 'Finished multiple courses ahead of the recommended timeline.',
+        reward: '+10 Skill Score',
+        motivation: 'Speedy and smart! You are cruising through the concepts.'
+      },
+      'quiz-master': {
+        name: 'Quiz Master',
+        iconClass: 'fa-solid fa-lightbulb',
+        gradClass: 'amber-grad',
+        unlocked: true,
+        earnedDate: 'Feb 05, 2025',
+        description: 'Achieved 100% scores on three or more course quizzes.',
+        reward: '+10 Skill Score',
+        motivation: 'Perfect scores! Your understanding of fundamentals is flawless.'
+      },
+      'problem-solver': {
+        name: 'Problem Solver',
+        iconClass: 'fa-solid fa-puzzle-piece',
+        gradClass: 'blue-grad',
+        unlocked: true,
+        earnedDate: 'Feb 12, 2025',
+        description: 'Solved 15+ coding challenges and practice exercises.',
+        reward: '+15 Skill Score',
+        motivation: 'No bug is safe from you! Excellent debugging skills.'
+      },
+      'sql-expert': {
+        name: 'SQL Expert',
+        iconClass: 'fa-solid fa-database',
+        gradClass: 'emerald-grad',
+        unlocked: true,
+        earnedDate: 'Feb 18, 2025',
+        description: 'Mastered relational databases and complex query performance.',
+        reward: '+20 Skill Score',
+        motivation: 'Relational wizard! You can query anything now.'
+      },
+      'data-analyst': {
+        name: 'Data Analyst',
+        iconClass: 'fa-solid fa-chart-pie',
+        gradClass: 'violet-grad',
+        unlocked: true,
+        earnedDate: 'Feb 25, 2025',
+        description: 'Completed the Data Visualization and Interpretation pathway.',
+        reward: '+20 Skill Score',
+        motivation: 'Data whisperer! You find insights where others see noise.'
+      },
+      '30-day-streak': {
+        name: '30-Day Streak',
+        iconClass: 'fa-solid fa-crown',
+        gradClass: 'locked-grad',
+        unlocked: false,
+        requirements: 'Keep your learning streak active for 30 consecutive days.',
+        progress: '14 / 30 days',
+        percentage: 46,
+        encouragement: 'You are nearly halfway! Keep the fire burning.'
+      },
+      'top-performer': {
+        name: 'Top Performer',
+        iconClass: 'fa-solid fa-trophy',
+        gradClass: 'locked-grad',
+        unlocked: false,
+        requirements: 'Reach Rank #5 or higher on the batch leaderboard.',
+        progress: 'Current Rank: #12',
+        percentage: 41,
+        encouragement: 'You are just 7 ranks away from this legendary badge!'
+      },
+      'python-expert': {
+        name: 'Python Expert',
+        iconClass: 'fa-brands fa-python',
+        gradClass: 'locked-grad',
+        unlocked: false,
+        requirements: 'Unlock by completing all advanced Python modules and projects.',
+        progress: '3 / 5 projects',
+        percentage: 60,
+        encouragement: 'Only 2 more projects to master advanced Python!'
+      },
+      'ai-explorer': {
+        name: 'AI Explorer',
+        iconClass: 'fa-solid fa-robot',
+        gradClass: 'locked-grad',
+        unlocked: false,
+        requirements: 'Complete both the Machine Learning & Neural Network pipelines.',
+        progress: '1 / 2 pipelines',
+        percentage: 50,
+        encouragement: 'Just the Neural Network pipeline left to conquer!'
+      }
+    };
+
+    function openBadgeModal(key) {
+      const data = badgesModalData[key];
+      if (!data) return;
+
+      document.getElementById('interactiveModalTitle').textContent = data.name;
+      document.getElementById('interactiveModalSubtitle').textContent = data.unlocked ? 'Awarded Badge Details' : 'Locked Badge Details';
+
+      const iconContainer = document.getElementById('interactiveModalIcon');
+      iconContainer.className = 'modal-header-icon';
+      iconContainer.innerHTML = `<i class="${data.iconClass}"></i>`;
+
+      iconContainer.style.background = '';
+      if (data.gradClass === 'locked-grad') {
+        iconContainer.style.background = 'linear-gradient(135deg, #475569, #334155)';
+        iconContainer.style.color = '#94A3B8';
+      } else {
+        iconContainer.style.color = '#FFFFFF';
+        const gradMap = {
+          'cyan-grad': 'linear-gradient(135deg, #06B6D4, #0891B2)',
+          'indigo-grad': 'linear-gradient(135deg, #6366F1, #4F46E5)',
+          'orange-grad': 'linear-gradient(135deg, #F97316, #EA580C)',
+          'pink-grad': 'linear-gradient(135deg, #EC4899, #DB2777)',
+          'amber-grad': 'linear-gradient(135deg, #F59E0B, #D97706)',
+          'blue-grad': 'linear-gradient(135deg, #3B82F6, #2563EB)',
+          'emerald-grad': 'linear-gradient(135deg, #10B981, #059669)',
+          'violet-grad': 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+        };
+        iconContainer.style.background = gradMap[data.gradClass] || 'var(--primary)';
+      }
+
+      document.getElementById('interactiveModalBody').innerHTML = renderBadgeModalHTML(data);
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    function renderBadgeModalHTML(data) {
+      if (data.unlocked) {
+        return `
+          <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: var(--space-2) 0;">
+            <div class="badge badge-success" style="margin-bottom: var(--space-4); font-size: 0.85rem; padding: 4px 12px;"><i class="fa-solid fa-circle-check"></i> Earned ✅</div>
+            <div class="modal-list" style="width: 100%; margin-top: var(--space-2);">
+              <div class="modal-list-item">
+                <span class="item-main">Date Earned</span>
+                <span class="item-meta" style="color: var(--text-primary); font-weight: 500;">${data.earnedDate}</span>
+              </div>
+              <div class="modal-list-item" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 0;">
+                <span class="item-main">Description</span>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: left; margin: 0; line-height: 1.4;">${data.description}</p>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Reward Value</span>
+                <span class="item-meta" style="color: var(--success); font-weight: 700; font-size: 0.95rem;">${data.reward}</span>
+              </div>
+            </div>
+            <div class="modal-insight-box" style="width: 100%; text-align: left;">
+              <div class="modal-insight-title"><i class="fa-solid fa-face-smile"></i> Motivation</div>
+              <div class="modal-insight-text">"${data.motivation}"</div>
             </div>
           </div>
-          <!-- SVG Bar Chart -->
-          <div style="position:relative;height:200px;margin-top:var(--space-4)">
-            <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <defs>
-                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#6366F1"/>
-                  <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.6"/>
-                </linearGradient>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#10B981"/>
-                  <stop offset="100%" stop-color="#6366F1"/>
-                </linearGradient>
-              </defs>
-              <!-- Grid lines -->
-              <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
-                <line x1="0" y1="40" x2="600" y2="40"/><line x1="0" y1="80" x2="600" y2="80"/>
-                <line x1="0" y1="120" x2="600" y2="120"/><line x1="0" y1="160" x2="600" y2="160"/>
-              </g>
-              <!-- Bars (monthly hours) -->
-              <rect x="30"  y="140" width="50" height="55"  rx="6" fill="url(#barGrad)" opacity="0.8"/>
-              <rect x="110" y="120" width="50" height="75"  rx="6" fill="url(#barGrad)" opacity="0.8"/>
-              <rect x="190" y="100" width="50" height="95"  rx="6" fill="url(#barGrad)" opacity="0.8"/>
-              <rect x="270" y="80"  width="50" height="115" rx="6" fill="url(#barGrad)" opacity="0.8"/>
-              <rect x="350" y="60"  width="50" height="135" rx="6" fill="url(#barGrad)"/>
-              <rect x="430" y="40"  width="50" height="155" rx="6" fill="url(#barGrad)"/>
-              <rect x="510" y="55"  width="50" height="140" rx="6" fill="url(#barGrad)" opacity="0.7"/>
-              <!-- Skill score line -->
-              <polyline points="55,160 135,140 215,120 295,100 375,75 455,52 535,65" fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Dots on line -->
-              <circle cx="55"  cy="160" r="5" fill="#10B981"/>
-              <circle cx="135" cy="140" r="5" fill="#10B981"/>
-              <circle cx="215" cy="120" r="5" fill="#10B981"/>
-              <circle cx="295" cy="100" r="5" fill="#10B981"/>
-              <circle cx="375" cy="75"  r="5" fill="#6366F1"/>
-              <circle cx="455" cy="52"  r="5" fill="#6366F1"/>
-              <circle cx="535" cy="65"  r="5" fill="#6366F1" stroke="white" stroke-width="2"/>
-              <!-- Labels -->
-              <text x="55"  y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">Jan</text>
-              <text x="135" y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">Feb</text>
-              <text x="215" y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">Mar</text>
-              <text x="295" y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">Apr</text>
-              <text x="375" y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">May</text>
-              <text x="455" y="195" text-anchor="middle" fill="#64748B" font-size="11" font-family="Poppins">Jun</text>
-              <text x="535" y="195" text-anchor="middle" fill="#94A3B8" font-size="11" font-weight="600" font-family="Poppins">Jul</text>
-            </svg>
-            <!-- Legend -->
-            <div style="position:absolute;top:0;right:0;display:flex;gap:16px">
-              <span style="font-size:0.7rem;display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:var(--primary);display:inline-block"></span>Hours</span>
-              <span style="font-size:0.7rem;display:flex;align-items:center;gap:6px"><span style="width:12px;height:3px;background:var(--success);display:inline-block;border-radius:2px"></span>Score</span>
+        `;
+      } else {
+        return `
+          <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: var(--space-2) 0;">
+            <div class="badge badge-warning" style="margin-bottom: var(--space-4); font-size: 0.85rem; padding: 4px 12px; background: rgba(245,158,11,0.15); color: var(--warning);"><i class="fa-solid fa-lock"></i> Locked 🔒</div>
+            <div class="modal-list" style="width: 100%; margin-top: var(--space-2);">
+              <div class="modal-list-item" style="flex-direction: column; align-items: flex-start; gap: 4px; padding-bottom: 12px;">
+                <span class="item-main">Unlock Requirements</span>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: left; margin: 0; line-height: 1.4;">${data.requirements}</p>
+              </div>
+              <div class="modal-list-item" style="flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                  <span class="item-main">Current Progress</span>
+                  <span style="color: var(--warning); font-weight: 700;">${data.progress}</span>
+                </div>
+                <div class="progress-track" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 4px;">
+                  <div class="progress-fill warning" style="width: ${data.percentage}%; height: 100%; background: var(--warning); border-radius: 3px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-insight-box" style="width: 100%; text-align: left; border-color: rgba(245, 158, 11, 0.2); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(249, 115, 22, 0.03));">
+              <div class="modal-insight-title" style="color: var(--warning);"><i class="fa-solid fa-circle-info"></i> Encouragement</div>
+              <div class="modal-insight-text">"${data.encouragement}"</div>
             </div>
           </div>
-        </div>
+        `;
+      }
+    }
 
-        <!-- Right: Skills Summary + Hours Breakdown -->
-        <div style="display:flex;flex-direction:column;gap:var(--space-6)">
-          <!-- Skills progress -->
-          <div class="card animate-slideUp">
-            <div class="card-header"><h3>Skills Progress</h3></div>
-            <div class="skill-bar-group">
-              <div class="progress-row">
-                <div class="progress-header"><span>Python</span><span>78%</span></div>
-                <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
-              </div>
-              <div class="progress-row">
-                <div class="progress-header"><span>Machine Learning</span><span>52%</span></div>
-                <div class="progress-track"><div class="progress-fill" style="width:52%"></div></div>
-              </div>
-              <div class="progress-row">
-                <div class="progress-header"><span>Data Visualization</span><span>65%</span></div>
-                <div class="progress-track"><div class="progress-fill success" style="width:65%"></div></div>
-              </div>
-              <div class="progress-row">
-                <div class="progress-header"><span>SQL</span><span>71%</span></div>
-                <div class="progress-track"><div class="progress-fill success" style="width:71%"></div></div>
-              </div>
-              <div class="progress-row">
-                <div class="progress-header"><span>Deep Learning</span><span>34%</span></div>
-                <div class="progress-track"><div class="progress-fill warning" style="width:34%"></div></div>
-              </div>
+    /* ── Leaderboard Seeding and Setup ── */
+    window.leaderboardStudents = [];
+
+    function initLeaderboard() {
+      function createRandom(seed) {
+        let s = seed;
+        return function () {
+          s = (s * 9301 + 49297) % 233280;
+          return s / 233280;
+        };
+      }
+
+      const rand = createRandom(42);
+      const firstNames = ['Aarav', 'Vihaan', 'Aditya', 'Sai', 'Reyansh', 'Ishaan', 'Krish', 'Shaurya', 'Atharva', 'Dev', 'Avani', 'Diya', 'Ira', 'Myra', 'Ananya', 'Riya', 'Aanya', 'Pari', 'Saanvi', 'Kavya', 'Rohan', 'Nehal', 'Tanmay', 'Rahul', 'Vikram', 'Prakash', 'Amit', 'Sanjay', 'Kiran', 'Nisha', 'Sunita', 'Preeti', 'Pooja', 'Abhishek', 'Akash', 'Sameer', 'Vijay', 'Deepak', 'Yash', 'Varun'];
+      const lastNames = ['Sharma', 'Verma', 'Gupta', 'Kumar', 'Singh', 'Patel', 'Reddy', 'Rao', 'Iyer', 'Nair', 'Joshi', 'Mehra', 'Kapoor', 'Das', 'Sen', 'Goel', 'Rajan', 'Shah', 'Jha', 'Roy', 'Choudhury', 'Bose', 'Pillai', 'Deshmukh'];
+      const branches = ['CSE', 'ECE', 'IT', 'ME', 'EE'];
+      const colleges = [
+        { code: 'COA', name: 'Engineering College A' },
+        { code: 'COB', name: 'Engineering College B' },
+        { code: 'IOT', name: 'Technology Institute' }
+      ];
+
+      const coreStudents = [
+        { name: 'Priya Rajan', dept: 'CSE', score: 96, hours: 182, courses: 6, trend: 'stable', streak: 15, college: 'COA' },
+        { name: 'Mihir Shah', dept: 'CSE', score: 91, hours: 165, courses: 5, trend: 'down', streak: 12, college: 'COA' },
+        { name: 'Rohit Kumar', dept: 'CSE', score: 88, hours: 154, courses: 5, trend: 'up', streak: 8, college: 'COB' },
+        { name: 'Sneha Sharma', dept: 'ECE', score: 86, hours: 172, courses: 6, trend: 'up', streak: 21, college: 'COA' },
+        { name: 'Ananya Rao', dept: 'CSE', score: 84, hours: 138, courses: 4, trend: 'stable', streak: 10, college: 'COA' },
+        { name: 'Kartik Iyer', dept: 'IT', score: 82, hours: 129, courses: 4, trend: 'down', streak: 5, college: 'COA' },
+        { name: 'Aditi Goel', dept: 'CSE', score: 80, hours: 145, courses: 5, trend: 'up', streak: 14, college: 'COA' },
+        { name: 'Rohan Das', dept: 'ME', score: 78, hours: 110, courses: 3, trend: 'stable', streak: 7, college: 'COB' },
+        { name: 'Sameer Sen', dept: 'EE', score: 76, hours: 124, courses: 4, trend: 'down', streak: 11, college: 'COA' },
+        { name: 'Kabir Singh', dept: 'CSE', score: 75, hours: 130, courses: 4, trend: 'up', streak: 9, college: 'COB' },
+        { name: 'Divya Joshi', dept: 'ECE', score: 74, hours: 150, courses: 4, trend: 'stable', streak: 6, college: 'COB' },
+        { name: 'Arjun Kapoor', dept: 'CSE', score: 74, hours: 147, courses: 5, trend: 'up', streak: 14, college: 'COA', isCurrentUser: true }
+      ];
+
+      const studentsList = [...coreStudents];
+
+      for (let rank = 13; rank <= 100; rank++) {
+        const fName = firstNames[Math.floor(rand() * firstNames.length)];
+        const lName = lastNames[Math.floor(rand() * lastNames.length)];
+        const name = `${fName} ${lName}`;
+
+        let nameIsTaken = studentsList.some(s => s.name === name);
+        let finalName = name;
+        let attempt = 1;
+        while (nameIsTaken) {
+          const alternateFName = firstNames[Math.floor(rand() * firstNames.length)];
+          finalName = `${alternateFName} ${lName}`;
+          nameIsTaken = studentsList.some(s => s.name === finalName);
+          attempt++;
+          if (attempt > 10) break;
+        }
+
+        const score = Math.max(12, Math.round(74 - (rank - 12) * 0.65 - rand() * 0.5));
+        const hours = Math.round(score * 1.6 + rand() * 20);
+        const courses = Math.max(1, Math.floor(score / 15 + rand() * 1.5));
+
+        const trendVal = rand();
+        const trend = trendVal < 0.25 ? 'down' : (trendVal < 0.5 ? 'up' : 'stable');
+
+        const streak = Math.floor(rand() * 18);
+        const dept = branches[Math.floor(rand() * branches.length)];
+        const collegeObj = colleges[Math.floor(rand() * colleges.length)];
+
+        studentsList.push({
+          name: finalName,
+          dept: dept,
+          score: score,
+          hours: hours,
+          courses: courses,
+          trend: trend,
+          streak: streak,
+          college: collegeObj.code
+        });
+      }
+
+      studentsList.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (b.hours !== a.hours) return b.hours - a.hours;
+        return b.courses - a.courses;
+      });
+
+      studentsList.forEach((s, idx) => {
+        s.rank = idx + 1;
+        if (s.name === 'Arjun Kapoor') {
+          s.isCurrentUser = true;
+        }
+      });
+
+      window.leaderboardStudents = studentsList;
+      renderLeaderboard(window.leaderboardStudents);
+    }
+
+    function renderLeaderboard(list) {
+      const container = document.getElementById('leaderboardListContainer');
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: var(--space-8) 0; font-size: 0.85rem;"><i class="fa-solid fa-circle-exclamation" style="margin-bottom:8px; font-size: 1.2rem;"></i><br/>No students match your criteria.</div>`;
+        return;
+      }
+
+      let html = '';
+      list.forEach(s => {
+        let topClass = '';
+        let rankDisplay = s.rank;
+        if (s.rank === 1) {
+          topClass = 'top-1';
+          rankDisplay = '🥇';
+        } else if (s.rank === 2) {
+          topClass = 'top-2';
+          rankDisplay = '🥈';
+        } else if (s.rank === 3) {
+          topClass = 'top-3';
+          rankDisplay = '🥉';
+        }
+
+        const userClass = s.isCurrentUser ? 'logged-in-user' : '';
+        const initials = s.name.split(' ').map(n => n[0]).join('');
+
+        let trendIcon = '<i class="fa-solid fa-minus"></i>';
+        let trendClass = 'stable';
+        if (s.trend === 'up') {
+          trendIcon = '<i class="fa-solid fa-caret-up"></i>';
+          trendClass = 'up';
+        } else if (s.trend === 'down') {
+          trendIcon = '<i class="fa-solid fa-caret-down"></i>';
+          trendClass = 'down';
+        }
+
+        html += `
+          <div class="leaderboard-item ${topClass} ${userClass}" onclick="openStudentModal(${s.rank})">
+            <div class="lb-rank">${rankDisplay}</div>
+            <div class="avatar avatar-sm avatar-placeholder"
+              style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0">
+              ${initials}</div>
+            <div class="lb-user-details">
+              <div class="lb-name">${s.name} ${s.isCurrentUser ? '<span class="badge badge-primary" style="font-size:0.55rem;padding:2px 6px;margin-left:4px">You</span>' : ''}</div>
+              <div class="lb-dept">${s.dept} · ${s.college === 'COA' ? 'College A' : s.college === 'COB' ? 'College B' : 'IOT'}</div>
+            </div>
+            <div class="lb-trend ${trendClass}">${trendIcon}</div>
+            <div class="lb-streak" style="font-size: 0.72rem; padding: 2px 8px; border-radius: var(--radius-full); border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-secondary); display:flex; align-items:center; gap: 4px;">
+              <i class="fa-solid fa-clock" style="color: var(--success); font-size: 0.7rem;"></i> ${s.hours}h · <i class="fa-solid fa-book" style="color: var(--warning); font-size: 0.7rem;"></i> ${s.courses}
+            </div>
+            <div class="lb-score" style="font-weight: 700; color: var(--primary-light);">${s.score} pts</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function filterLeaderboard() {
+      const searchQuery = document.getElementById('leaderboardSearch').value.toLowerCase().trim();
+      const overallFilter = document.getElementById('leaderboardFilterOverall').value;
+      const collegeFilter = document.getElementById('leaderboardFilterCollege').value;
+      const branchFilter = document.getElementById('leaderboardFilterBranch').value;
+
+      const filtered = window.leaderboardStudents.filter(student => {
+        if (searchQuery && !student.name.toLowerCase().includes(searchQuery)) {
+          return false;
+        }
+        if (collegeFilter !== 'all' && student.college !== collegeFilter) {
+          return false;
+        }
+        if (branchFilter !== 'all' && student.dept !== branchFilter) {
+          return false;
+        }
+        if (overallFilter === 'top10' && student.rank > 10) {
+          return false;
+        }
+        if (overallFilter === 'top50' && student.rank > 50) {
+          return false;
+        }
+        return true;
+      });
+
+      renderLeaderboard(filtered);
+    }
+
+    function scrollToMyRank() {
+      document.getElementById('leaderboardSearch').value = '';
+      document.getElementById('leaderboardFilterOverall').value = 'all';
+      document.getElementById('leaderboardFilterCollege').value = 'all';
+      document.getElementById('leaderboardFilterBranch').value = 'all';
+      renderLeaderboard(window.leaderboardStudents);
+
+      setTimeout(() => {
+        const myRow = document.querySelector('#leaderboardListContainer .leaderboard-item.logged-in-user');
+        if (myRow) {
+          myRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          myRow.style.boxShadow = '0 0 25px rgba(99, 102, 241, 0.4)';
+          setTimeout(() => {
+            myRow.style.boxShadow = '';
+          }, 1500);
+        }
+      }, 50);
+    }
+
+    function openStudentModal(rank) {
+      const s = window.leaderboardStudents.find(student => student.rank === rank);
+      if (!s) return;
+
+      document.getElementById('interactiveModalTitle').textContent = s.name;
+      document.getElementById('interactiveModalSubtitle').textContent = `Rank #${s.rank} · Performance Profile`;
+
+      const iconContainer = document.getElementById('interactiveModalIcon');
+      iconContainer.className = 'modal-header-icon';
+      iconContainer.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
+      iconContainer.style.color = '#FFFFFF';
+
+      const initials = s.name.split(' ').map(n => n[0]).join('');
+      iconContainer.innerHTML = `<span style="font-size: 1.1rem; font-weight: 800;">${initials}</span>`;
+
+      document.getElementById('interactiveModalBody').innerHTML = renderStudentModalHTML(s);
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    function renderStudentModalHTML(s) {
+      const initials = s.name.split(' ').map(n => n[0]).join('');
+      const badgeCount = Math.min(8, Math.max(2, Math.floor(s.score / 10)));
+      const completionPercent = Math.min(99, Math.round(s.score * 0.95));
+
+      const skillOptions = ['Python', 'SQL', 'Data Visualization', 'Machine Learning', 'Deep Learning'];
+      const strongestSkill = skillOptions[s.name.length % 4];
+      const weakestSkill = s.score < 50 ? 'Deep Learning' : skillOptions[(s.name.length + 2) % 5];
+
+      const badgeIcons = [
+        { name: 'First Login', icon: 'fa-door-open', bg: 'cyan-grad' },
+        { name: 'First Course', icon: 'fa-graduation-cap', bg: 'indigo-grad' },
+        { name: '7-Day Streak', icon: 'fa-fire', bg: 'orange-grad' },
+        { name: 'Fast Learner', icon: 'fa-rocket', bg: 'pink-grad' },
+        { name: 'Quiz Master', icon: 'fa-lightbulb', bg: 'amber-grad' },
+        { name: 'Problem Solver', icon: 'fa-puzzle-piece', bg: 'blue-grad' },
+        { name: 'SQL Expert', icon: 'fa-database', bg: 'emerald-grad' },
+        { name: 'Data Analyst', icon: 'fa-chart-pie', bg: 'violet-grad' }
+      ];
+
+      let badgesHTML = '';
+      for (let i = 0; i < badgeCount; i++) {
+        const b = badgeIcons[i % badgeIcons.length];
+        const colorGrad = {
+          'cyan-grad': 'linear-gradient(135deg, #06B6D4, #0891B2)',
+          'indigo-grad': 'linear-gradient(135deg, #6366F1, #4F46E5)',
+          'orange-grad': 'linear-gradient(135deg, #F97316, #EA580C)',
+          'pink-grad': 'linear-gradient(135deg, #EC4899, #DB2777)',
+          'amber-grad': 'linear-gradient(135deg, #F59E0B, #D97706)',
+          'blue-grad': 'linear-gradient(135deg, #3B82F6, #2563EB)',
+          'emerald-grad': 'linear-gradient(135deg, #10B981, #059669)',
+          'violet-grad': 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+        };
+        badgesHTML += `
+          <div style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 4px 10px; border-radius: var(--radius-sm); font-size: 0.72rem; color: var(--text-secondary);">
+            <span style="background:${colorGrad[b.bg]}; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: white;"><i class="fa-solid ${b.icon}"></i></span>
+            ${b.name}
+          </div>
+        `;
+      }
+
+      let motivation = '';
+      if (s.rank <= 3) {
+        motivation = "Outstanding work! You are leading the batch. Keep up the phenomenal pace.";
+      } else if (s.rank <= 10) {
+        motivation = "Incredible effort! You are in the Top 10. Stay focused to scale higher.";
+      } else if (s.isCurrentUser) {
+        motivation = "You are just 2 points away from the Top 10! Complete one more quiz or database challenge to rise!";
+      } else if (s.rank <= 20) {
+        motivation = "You are doing exceptionally well! Keep pushing to break into the Top 10.";
+      } else {
+        motivation = "Consistency is the key to mastery. Keep going, every session brings you closer to your goal!";
+      }
+
+      return `
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: var(--space-2) 0;">
+          <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">${s.name}</h4>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: var(--space-4);">${s.dept} · ${s.college === 'COA' ? 'Engineering College A' : s.college === 'COB' ? 'Engineering College B' : 'Technology Institute'}</p>
+
+          <div class="modal-stats-grid" style="width: 100%;">
+            <div class="modal-stat-box">
+              <span class="box-label">Current Rank</span>
+              <span class="box-value" style="color: ${s.rank <= 3 ? 'var(--warning)' : 'var(--text-primary)'}">
+                ${s.rank <= 3 ? '🥇 Rank ' + s.rank : '#' + s.rank}
+              </span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Skill Score</span>
+              <span class="box-value gradient-text">${s.score} pts</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Learning Hours</span>
+              <span class="box-value" style="color: var(--success)">${s.hours}h</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Courses Completed</span>
+              <span class="box-value" style="color: var(--warning)">${s.courses} done</span>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Badges + Leaderboard -->
-      <div class="dashboard-grid-3">
-        <!-- Badges -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-medal" style="color:var(--warning);margin-right:8px"></i>Badges Earned</h3><span class="badge badge-warning">8 / 25</span></div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3)">
-            <div style="text-align:center;padding:var(--space-3);background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">🏆</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">First Win</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">🔥</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">14 Streak</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">⭐</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">Top 30%</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">📚</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">5 Courses</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">⚡</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">Fast Learner</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius-md)">
-              <div style="font-size:1.8rem">🎯</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px">Goal Setter</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-md);opacity:0.4">
-              <div style="font-size:1.8rem">🥇</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px;color:var(--text-muted)">Locked</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-md);opacity:0.4">
-              <div style="font-size:1.8rem">🚀</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px;color:var(--text-muted)">Locked</div>
-            </div>
-            <div style="text-align:center;padding:var(--space-3);background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:var(--radius-md);opacity:0.4">
-              <div style="font-size:1.8rem">💎</div>
-              <div style="font-size:0.65rem;font-weight:600;margin-top:4px;color:var(--text-muted)">Locked</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Certificates -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-certificate" style="color:var(--warning);margin-right:8px"></i>Certificates</h3><span class="badge badge-success">2 Earned</span></div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
-            <div style="padding:var(--space-4);background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.05));border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-md)">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2)">
-                <span style="font-weight:700;font-size:0.9rem">🏅 Python for Data Science</span>
-                <span class="badge badge-success">Verified</span>
+          <div class="modal-list" style="width: 100%;">
+            <div class="modal-list-title">Detailed Metrics</div>
+            
+            <div class="modal-list-item" style="flex-direction: column; align-items: stretch; gap: 6px; padding: 10px 0;">
+              <div style="display: flex; justify-content: space-between;">
+                <span class="item-main">Syllabus Completion</span>
+                <span style="color: var(--text-primary); font-weight: 600;">${completionPercent}%</span>
               </div>
-              <div style="font-size:0.75rem;color:var(--text-muted)">Issued: January 2025 · ID: SB-2025-001</div>
-              <button class="btn btn-ghost btn-sm mt-3" style="width:100%;justify-content:center"><i class="fa-solid fa-download"></i> Download PDF</button>
-            </div>
-            <div style="padding:var(--space-4);background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.05));border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-md)">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2)">
-                <span style="font-weight:700;font-size:0.9rem">🏅 SQL Fundamentals</span>
-                <span class="badge badge-success">Verified</span>
+              <div class="progress-track" style="height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; margin-top: 4px;">
+                <div class="progress-fill" style="width: ${completionPercent}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); border-radius: 3px;"></div>
               </div>
-              <div style="font-size:0.75rem;color:var(--text-muted)">Issued: February 2025 · ID: SB-2025-002</div>
-              <button class="btn btn-ghost btn-sm mt-3" style="width:100%;justify-content:center"><i class="fa-solid fa-download"></i> Download PDF</button>
+            </div>
+
+            <div class="modal-list-item">
+              <span class="item-main"><i class="fa-solid fa-bolt" style="color:var(--success);width:14px"></i> Strongest Skill</span>
+              <span style="color:var(--success); font-weight: 600;">${strongestSkill}</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main"><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);width:14px"></i> Weakest Skill</span>
+              <span style="color:${weakestSkill === 'Deep Learning' ? 'var(--danger)' : 'var(--warning)'}; font-weight: 600;">${weakestSkill}</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main"><i class="fa-solid fa-fire" style="color:#EF4444;width:14px"></i> Active Streak</span>
+              <span style="color:var(--text-primary); font-weight: 600;"><i class="fa-solid fa-fire" style="color:#EF4444"></i> ${s.streak} Days</span>
             </div>
           </div>
-        </div>
 
-        <!-- Leaderboard -->
-        <div class="card animate-slideUp">
-          <div class="card-header"><h3><i class="fa-solid fa-ranking-star" style="color:var(--warning);margin-right:8px"></i>Leaderboard</h3><span class="badge badge-primary">Class Rank</span></div>
-          <div style="display:flex;flex-direction:column;gap:var(--space-2)">
-            <div class="leaderboard-item top-1">
-              <div class="lb-rank">1</div>
-              <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#10B981,#3B82F6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0">PR</div>
-              <div><div style="font-weight:600;font-size:0.85rem">Priya Rajan</div><div style="font-size:0.7rem;color:var(--text-muted)">CSE · A Batch</div></div>
-              <div class="lb-score">96 pts</div>
-            </div>
-            <div class="leaderboard-item top-2">
-              <div class="lb-rank">2</div>
-              <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0">MS</div>
-              <div><div style="font-weight:600;font-size:0.85rem">Mihir Shah</div><div style="font-size:0.7rem;color:var(--text-muted)">CSE · A Batch</div></div>
-              <div class="lb-score">91 pts</div>
-            </div>
-            <div class="leaderboard-item top-3">
-              <div class="lb-rank">3</div>
-              <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#F59E0B,#EF4444);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0">RK</div>
-              <div><div style="font-weight:600;font-size:0.85rem">Rohit Kumar</div><div style="font-size:0.7rem;color:var(--text-muted)">CSE · B Batch</div></div>
-              <div class="lb-score">88 pts</div>
-            </div>
-            <!-- Ellipsis -->
-            <div style="text-align:center;padding:var(--space-2);color:var(--text-muted);font-size:0.75rem">· · ·</div>
-            <!-- You -->
-            <div class="leaderboard-item" style="background:rgba(99,102,241,0.08);border:2px solid rgba(99,102,241,0.3);border-radius:var(--radius-md)">
-              <div class="lb-rank" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white">12</div>
-              <div class="avatar avatar-sm avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0">AK</div>
-              <div><div style="font-weight:700;font-size:0.85rem;color:var(--primary-light)">You — Arjun</div><div style="font-size:0.7rem;color:var(--text-muted)">CSE · A Batch</div></div>
-              <div class="lb-score">74 pts</div>
+          <div class="modal-list" style="width: 100%;">
+            <div class="modal-list-title">Badges Earned (${badgeCount})</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-2); justify-content: center;">
+              ${badgesHTML}
             </div>
           </div>
-        </div>
-      </div>
 
-    </div>
-  </main>
-</div>
-<script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('mobile-open');
-    document.getElementById('sidebarOverlay').classList.toggle('active');
-  }
-  function toggleView(v) {
-    document.getElementById('viewM').className = v === 'month' ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
-    document.getElementById('viewW').className = v === 'week'  ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm';
-  }
-</script>
+          <div class="modal-insight-box" style="width: 100%; text-align: left;">
+            <div class="modal-insight-title"><i class="fa-solid fa-quote-left"></i> Motivation</div>
+            <div class="modal-insight-text">"${motivation}"</div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── Progress Graph Mock Datasets ── */
+    const monthlyChartData = [
+      { name: 'January', hours: 12, score: 46, courses: 0, assessments: 1, dailyAverage: '0.4h', badges: 'First Login', strengths: 'Consistent logins', weaknesses: 'Short study sessions', recommendation: 'Try to increase study sessions to 45 minutes.' },
+      { name: 'February', hours: 16, score: 52, courses: 1, assessments: 1, dailyAverage: '0.6h', badges: 'First Course completed', strengths: 'Course completed on time', weaknesses: 'Low quiz retention rate', recommendation: 'Review quiz feedback before retrying.' },
+      { name: 'March', hours: 22, score: 58, courses: 1, assessments: 2, dailyAverage: '0.7h', badges: '7-Day Streak', strengths: 'Consistent habit building', weaknesses: 'Relational logic in SQL', recommendation: 'Practice database querying exercises.' },
+      { name: 'April', hours: 18, score: 60, courses: 0, assessments: 1, dailyAverage: '0.6h', badges: 'None', strengths: 'High assessment frequency', weaknesses: 'Module completion rate', recommendation: 'Complete standard OOP principles first.' },
+      { name: 'May', hours: 25, score: 65, courses: 1, assessments: 2, dailyAverage: '0.8h', badges: 'Fast Learner', strengths: 'Quick concept visualization', weaknesses: 'Math in ML algorithms', recommendation: 'Read graphical ML math breakdowns.' },
+      { name: 'June', hours: 30, score: 71, courses: 1, assessments: 3, dailyAverage: '1.0h', badges: 'Quiz Master, Problem Solver', strengths: 'Perfect quiz scores', weaknesses: 'Advanced subquery optimization', recommendation: 'Solve 10 complex relational challenges.' },
+      { name: 'July', hours: 24, score: 74, courses: 1, assessments: 2, dailyAverage: '1.1h', badges: 'SQL Expert, Data Analyst', strengths: 'Subqueries & visualization tools', weaknesses: 'Neural network weight vectors', recommendation: 'Focus on neural model weights configurations.' },
+      { name: 'August', hours: 0, score: 74, courses: 0, assessments: 0, dailyAverage: '0.0h', badges: 'None', strengths: 'N/A', weaknesses: 'N/A', recommendation: 'Review planned syllabus roadmap.' },
+      { name: 'September', hours: 0, score: 74, courses: 0, assessments: 0, dailyAverage: '0.0h', badges: 'None', strengths: 'N/A', weaknesses: 'N/A', recommendation: 'Block weekend hours for ML.' },
+      { name: 'October', hours: 0, score: 74, courses: 0, assessments: 0, dailyAverage: '0.0h', badges: 'None', strengths: 'N/A', weaknesses: 'N/A', recommendation: 'Prepare for quiz certifications.' },
+      { name: 'November', hours: 0, score: 74, courses: 0, assessments: 0, dailyAverage: '0.0h', badges: 'None', strengths: 'N/A', weaknesses: 'N/A', recommendation: 'Review data structures options.' },
+      { name: 'December', hours: 0, score: 74, courses: 0, assessments: 0, dailyAverage: '0.0h', badges: 'None', strengths: 'N/A', weaknesses: 'N/A', recommendation: 'Compare final metrics.' }
+    ];
+
+    const weeklyChartData = [
+      { name: 'Week 1', hours: 5, scoreGained: 1, score: 72, courses: 0, assessments: 0, achievements: 'None', streak: '4 Days', dailyAverage: '0.7h' },
+      { name: 'Week 2', hours: 6, scoreGained: 1, score: 73, courses: 1, assessments: 1, achievements: 'SQL Expert Badge Unlocked', streak: '7 Days', dailyAverage: '0.9h' },
+      { name: 'Week 3', hours: 8, scoreGained: 1, score: 74, courses: 0, assessments: 1, achievements: 'Data Analyst Badge Unlocked', streak: '14 Days', dailyAverage: '1.1h' },
+      { name: 'Week 4', hours: 5, scoreGained: 0, score: 74, courses: 0, assessments: 0, achievements: 'Deep Learning Module Started', streak: '14 Days', dailyAverage: '0.8h' }
+    ];
+
+    /* ── SVG Chart Drawing Methods ── */
+    function drawProgressChart(viewType) {
+      const svg = document.getElementById('progressSvgChart');
+      if (!svg) return;
+
+      const data = viewType === 'month' ? monthlyChartData : weeklyChartData;
+      const length = data.length;
+
+      // Clear layout and set linear gradients
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6366F1" />
+            <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.6" />
+          </linearGradient>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#10B981" />
+            <stop offset="100%" stop-color="#6366F1" />
+          </linearGradient>
+        </defs>
+        <!-- Grid lines -->
+        <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+          <line x1="0" y1="40" x2="600" y2="40" />
+          <line x1="0" y1="80" x2="600" y2="80" />
+          <line x1="0" y1="120" x2="600" y2="120" />
+          <line x1="0" y1="160" x2="600" y2="160" />
+        </g>
+      `;
+
+      const baseline = 170;
+      const maxHours = viewType === 'month' ? 45 : 10;
+      const barWidth = viewType === 'month' ? 22 : 45;
+      const startX = viewType === 'month' ? 30 : 60;
+      const spacing = viewType === 'month' ? (540 - startX) / (length - 1) : 140;
+
+      let rectsHTML = '';
+      let textHTML = '';
+      let points = [];
+      let dotsHTML = '';
+
+      data.forEach((item, i) => {
+        const x = startX + i * spacing;
+        const hours = item.hours;
+        const score = item.score;
+
+        // Calculate Bar Height
+        const barHeight = Math.max(2, (hours / maxHours) * 120);
+        const barY = baseline - barHeight;
+
+        // Draw rect element
+        rectsHTML += `
+          <rect class="chart-bar-rect" x="${x}" y="${barY}" width="${barWidth}" height="${barHeight}" rx="4" 
+            fill="url(#barGrad)" opacity="${hours === 0 ? '0.12' : '0.85'}"
+            onmouseover="showChartBarTooltip(event, ${i})"
+            onmouseout="hideChartTooltip()"
+            onclick="event.stopPropagation(); openPeriodDetails('${viewType}', ${i})" />
+        `;
+
+        // Calculate line point
+        const cx = x + barWidth / 2;
+        const lineY = baseline - (score / 100) * 120;
+        points.push(`${cx},${lineY}`);
+
+        // Add line dots
+        dotsHTML += `
+          <circle class="chart-line-dot" cx="${cx}" cy="${lineY}" r="4" 
+            fill="${hours === 0 ? 'rgba(16, 185, 129, 0.2)' : '#10B981'}" 
+            stroke="${i === length - 1 && hours > 0 ? 'white' : 'none'}" 
+            stroke-width="1.5"
+            onmouseover="showChartDotTooltip(event, ${i}, ${score})"
+            onmouseout="hideChartTooltip()" />
+        `;
+
+        // Label
+        const labelText = viewType === 'month' ? item.name.substring(0, 3) : item.name;
+        textHTML += `
+          <text x="${cx}" y="190" text-anchor="middle" fill="#64748B" font-size="10" font-family="Poppins">${labelText}</text>
+        `;
+      });
+
+      // Draw Polyline for score progression
+      const polylineHTML = `
+        <polyline points="${points.join(' ')}" fill="none"
+          stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      `;
+
+      svg.innerHTML += rectsHTML + polylineHTML + dotsHTML + textHTML;
+    }
+
+    /* ── Chart Tooltip Methods ── */
+    function showChartBarTooltip(event, index) {
+      const tooltip = document.getElementById('chart-tooltip');
+      if (!tooltip) return;
+
+      const viewType = document.getElementById('viewM').classList.contains('btn-primary') ? 'month' : 'week';
+      const item = viewType === 'month' ? monthlyChartData[index] : weeklyChartData[index];
+
+      let content = `
+        <div class="tooltip-header">${item.name} Stats</div>
+        <div><i class="fa-solid fa-clock" style="color:var(--success)"></i> <strong>Hours:</strong> ${item.hours}h</div>
+        <div><i class="fa-solid fa-star" style="color:var(--warning)"></i> <strong>Skill Score:</strong> ${item.score} pts</div>
+        <div><i class="fa-solid fa-book" style="color:var(--primary-light)"></i> <strong>Courses:</strong> ${item.courses} done</div>
+        <div><i class="fa-solid fa-clipboard-check" style="color:var(--accent)"></i> <strong>Assessments:</strong> ${item.assessments}</div>
+      `;
+
+      tooltip.innerHTML = content;
+      tooltip.style.display = 'block';
+
+      const rect = event.target.getBoundingClientRect();
+      const parentRect = event.target.parentElement.getBoundingClientRect();
+
+      const top = rect.top - parentRect.top - 95;
+      const left = rect.left - parentRect.left + (rect.width / 2) - 70;
+
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+      tooltip.style.opacity = '1';
+    }
+
+    function showChartDotTooltip(event, index, score) {
+      const tooltip = document.getElementById('chart-tooltip');
+      if (!tooltip) return;
+
+      const viewType = document.getElementById('viewM').classList.contains('btn-primary') ? 'month' : 'week';
+      const item = viewType === 'month' ? monthlyChartData[index] : weeklyChartData[index];
+
+      let content = `
+        <div class="tooltip-header">${item.name}</div>
+        <div><i class="fa-solid fa-arrow-trend-up" style="color:var(--success)"></i> <strong>Skill Score:</strong> ${score} pts</div>
+      `;
+
+      tooltip.innerHTML = content;
+      tooltip.style.display = 'block';
+
+      const rect = event.target.getBoundingClientRect();
+      const parentRect = event.target.parentElement.getBoundingClientRect();
+
+      const top = rect.top - parentRect.top - 60;
+      const left = rect.left - parentRect.left + (rect.width / 2) - 70;
+
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+      tooltip.style.opacity = '1';
+    }
+
+    function hideChartTooltip() {
+      const tooltip = document.getElementById('chart-tooltip');
+      if (tooltip) {
+        tooltip.style.opacity = '0';
+        tooltip.style.display = 'none';
+      }
+    }
+
+    /* ── Performance Summary Box Handlers ── */
+    function updatePerformanceSummary(viewType) {
+      const container = document.getElementById('perfSummaryContainer');
+      if (!container) return;
+
+      if (viewType === 'month') {
+        container.innerHTML = `
+          <div class="perf-summary-title">
+            <i class="fa-solid fa-chart-pie" style="color:var(--primary-light)"></i> Monthly Performance Summary
+          </div>
+          <div class="perf-metrics-grid">
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value" style="color:var(--success)">147h</div>
+              <div class="perf-metric-label">Learning Hours</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value gradient-text">+28 pts</div>
+              <div class="perf-metric-label">Score Gained</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value" style="color:var(--warning)">5</div>
+              <div class="perf-metric-label">Courses Done</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value">
+                <span class="perf-rating-badge good"><i class="fa-solid fa-face-smile"></i> Good</span>
+              </div>
+              <div class="perf-metric-label">Overall Rating</div>
+            </div>
+          </div>
+          <div class="perf-insight-card">
+            <i class="fa-solid fa-robot perf-insight-icon"></i>
+            <div class="perf-insight-text">
+              <strong>Personalized Recommendation:</strong> Your learning consistency peaked in June (30h study, +6 score boost). With your current 14-day streak, you are on track! Prioritize the final quiz in SQL and the Deep Learning neural pipeline to maintain your positive momentum.
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="perf-summary-title">
+            <i class="fa-solid fa-chart-pie" style="color:var(--primary-light)"></i> Weekly Performance Summary
+          </div>
+          <div class="perf-metrics-grid">
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value" style="color:var(--success)">24h</div>
+              <div class="perf-metric-label">Hours This Month</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value gradient-text">+3 pts</div>
+              <div class="perf-metric-label">Score Increase</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value" style="color:var(--warning)">1 Completed</div>
+              <div class="perf-metric-label">Courses Done</div>
+            </div>
+            <div class="perf-metric-tile">
+              <div class="perf-metric-value">
+                <span class="perf-rating-badge excellent"><i class="fa-solid fa-circle-check"></i> Excellent</span>
+              </div>
+              <div class="perf-metric-label">Overall Rating</div>
+            </div>
+          </div>
+          <div class="perf-insight-card">
+            <i class="fa-solid fa-robot perf-insight-icon"></i>
+            <div class="perf-insight-text">
+              <strong>Weekly AI Recommendation:</strong> Week 3 was highly productive (8h learning hours). Maintain this level of focus! Focus Week 4's remaining hours on Python OOP paradigms and SQL query performance analysis.
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    /* ── Overall Performance Analytics Modal ── */
+    function openOverallAnalytics() {
+      document.getElementById('interactiveModalTitle').textContent = 'Overall Performance Analytics';
+      document.getElementById('interactiveModalSubtitle').textContent = 'Skill Score Growth & Learning Performance';
+
+      const iconContainer = document.getElementById('interactiveModalIcon');
+      iconContainer.className = 'modal-header-icon';
+      iconContainer.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
+      iconContainer.style.color = '#FFFFFF';
+      iconContainer.innerHTML = `<i class="fa-solid fa-circle-nodes"></i>`;
+
+      document.getElementById('interactiveModalBody').innerHTML = `
+        <div style="display:flex; flex-direction:column; gap: var(--space-4); padding: var(--space-2) 0;">
+          <div class="modal-stats-grid" style="width: 100%;">
+            <div class="modal-stat-box">
+              <span class="box-label">Total Learning Hours</span>
+              <span class="box-value" style="color: var(--success)">147h</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Skill Score Growth</span>
+              <span class="box-value gradient-text">+28 pts</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Courses Completed</span>
+              <span class="box-value" style="color: var(--warning)">5 Completed</span>
+            </div>
+            <div class="modal-stat-box">
+              <span class="box-label">Assessments Done</span>
+              <span class="box-value" style="color: var(--primary-light)">12 Completed</span>
+            </div>
+          </div>
+
+          <div class="modal-list" style="width: 100%;">
+            <div class="modal-list-title">Overall Analytical Insights</div>
+            <div class="modal-list-item">
+              <span class="item-main">Average Study Time / Day</span>
+              <span class="item-meta" style="color: var(--text-primary); font-weight: 600;">1.4h / day</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main">Best Performing Month</span>
+              <span class="item-meta" style="color: var(--success); font-weight: 600;">June (30h, +6 pts)</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main">Lowest Performing Month</span>
+              <span class="item-meta" style="color: var(--warning); font-weight: 600;">January (12h, 46 baseline)</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main">Overall Improvement %</span>
+              <span class="item-meta" style="color: var(--success); font-weight: 600;">+60.8% Increase</span>
+            </div>
+            <div class="modal-list-item">
+              <span class="item-main">Current Streak</span>
+              <span class="item-meta" style="color: #EF4444; font-weight: 600;"><i class="fa-solid fa-fire"></i> 14 Days</span>
+            </div>
+          </div>
+
+          <div class="modal-insight-box" style="width: 100%; text-align: left;">
+            <div class="modal-insight-title"><i class="fa-solid fa-quote-left"></i> Performance Summary</div>
+            <div class="modal-insight-text">"You are demonstrating consistent skill acquisition across technical branches. Your learning velocity has increased steadily since March. Strong coding challenge submissions have significantly raised your core skill score."</div>
+          </div>
+
+          <div class="modal-insight-box" style="width: 100%; text-align: left; border-color: rgba(99, 102, 241, 0.2); background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.04));">
+            <div class="modal-insight-title" style="color: var(--primary-light);"><i class="fa-solid fa-robot"></i> AI Recommendation</div>
+            <div class="modal-insight-text">Maintain your active streak by spending at least 15 minutes daily. Prioritize completing the remaining Machine Learning neural modules to trigger the next score boost.</div>
+          </div>
+        </div>
+      `;
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    /* ── Period Details Modal (Month vs Week) ── */
+    function openPeriodDetails(viewType, index) {
+      if (viewType === 'month') {
+        const item = monthlyChartData[index];
+
+        document.getElementById('interactiveModalTitle').textContent = `${item.name} Progress`;
+        document.getElementById('interactiveModalSubtitle').textContent = 'Monthly Performance Analysis';
+
+        const iconContainer = document.getElementById('interactiveModalIcon');
+        iconContainer.className = 'modal-header-icon';
+        iconContainer.style.background = 'linear-gradient(135deg, var(--primary), var(--success))';
+        iconContainer.style.color = '#FFFFFF';
+        iconContainer.innerHTML = `<i class="fa-solid fa-calendar-days"></i>`;
+
+        document.getElementById('interactiveModalBody').innerHTML = `
+          <div style="display:flex; flex-direction:column; gap: var(--space-4); padding: var(--space-2) 0;">
+            <div class="modal-stats-grid" style="width: 100%;">
+              <div class="modal-stat-box">
+                <span class="box-label">Learning Hours</span>
+                <span class="box-value" style="color: var(--success)">${item.hours}h</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Skill Score</span>
+                <span class="box-value gradient-text">${item.score} pts</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Courses Completed</span>
+                <span class="box-value" style="color: var(--warning)">${item.courses} done</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Assessments Done</span>
+                <span class="box-value" style="color: var(--primary-light)">${item.assessments}</span>
+              </div>
+            </div>
+
+            <div class="modal-list" style="width: 100%;">
+              <div class="modal-list-title">Month Metrics</div>
+              <div class="modal-list-item">
+                <span class="item-main">Average Daily Study Time</span>
+                <span class="item-meta" style="color: var(--text-primary); font-weight: 600;">${item.dailyAverage}</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Badges Earned</span>
+                <span class="item-meta" style="color: var(--primary-light); font-weight: 600;">${item.badges}</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Key Strengths</span>
+                <span class="item-meta" style="color: var(--success); font-weight: 600;">${item.strengths}</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Areas for Improvement</span>
+                <span class="item-meta" style="color: var(--warning); font-weight: 600;">${item.weaknesses}</span>
+              </div>
+            </div>
+
+            <div class="modal-insight-box" style="width: 100%; text-align: left;">
+              <div class="modal-insight-title"><i class="fa-solid fa-lightbulb"></i> Personalized Recommendation</div>
+              <div class="modal-insight-text">"${item.recommendation}"</div>
+            </div>
+          </div>
+        `;
+      } else {
+        const item = weeklyChartData[index];
+
+        document.getElementById('interactiveModalTitle').textContent = `${item.name} Details`;
+        document.getElementById('interactiveModalSubtitle').textContent = 'Weekly Performance Analysis';
+
+        const iconContainer = document.getElementById('interactiveModalIcon');
+        iconContainer.className = 'modal-header-icon';
+        iconContainer.style.background = 'linear-gradient(135deg, var(--accent), var(--primary))';
+        iconContainer.style.color = '#FFFFFF';
+        iconContainer.innerHTML = `<i class="fa-solid fa-calendar-week"></i>`;
+
+        document.getElementById('interactiveModalBody').innerHTML = `
+          <div style="display:flex; flex-direction:column; gap: var(--space-4); padding: var(--space-2) 0;">
+            <div class="modal-stats-grid" style="width: 100%;">
+              <div class="modal-stat-box">
+                <span class="box-label">Learning Hours</span>
+                <span class="box-value" style="color: var(--success)">${item.hours}h</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Score Gained</span>
+                <span class="box-value gradient-text">+${item.scoreGained} pts</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Courses Completed</span>
+                <span class="box-value" style="color: var(--warning)">${item.courses} done</span>
+              </div>
+              <div class="modal-stat-box">
+                <span class="box-label">Assessments Completed</span>
+                <span class="box-value" style="color: var(--primary-light)">${item.assessments}</span>
+              </div>
+            </div>
+
+            <div class="modal-list" style="width: 100%;">
+              <div class="modal-list-title">Weekly Metrics</div>
+              <div class="modal-list-item">
+                <span class="item-main">Average Daily Study Time</span>
+                <span class="item-meta" style="color: var(--text-primary); font-weight: 600;">${item.dailyAverage}</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Achievements Unlocked</span>
+                <span class="item-meta" style="color: var(--success); font-weight: 600;">${item.achievements}</span>
+              </div>
+              <div class="modal-list-item">
+                <span class="item-main">Learning Streak</span>
+                <span class="item-meta" style="color: #EF4444; font-weight: 600;"><i class="fa-solid fa-fire"></i> ${item.streak}</span>
+              </div>
+            </div>
+
+            <div class="modal-insight-box" style="width: 100%; text-align: left;">
+              <div class="modal-insight-title"><i class="fa-solid fa-robot"></i> Weekly Performance Advice</div>
+              <div class="modal-insight-text">Your study consistency for ${item.name} was ${item.hours >= 6 ? 'outstanding!' : 'average.'} Maintain your pace. Focus on coding challenges and interactive quizzes next week.</div>
+            </div>
+          </div>
+        `;
+      }
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    /* ── Compare Previous Month Modal ── */
+    function comparePreviousMonth() {
+      document.getElementById('interactiveModalTitle').textContent = 'Month-over-Month Comparison';
+      document.getElementById('interactiveModalSubtitle').textContent = 'July vs June (Current vs Previous)';
+
+      const iconContainer = document.getElementById('interactiveModalIcon');
+      iconContainer.className = 'modal-header-icon';
+      iconContainer.style.background = 'linear-gradient(135deg, var(--warning), var(--success))';
+      iconContainer.style.color = '#FFFFFF';
+      iconContainer.innerHTML = `<i class="fa-solid fa-arrow-up-right-dots"></i>`;
+
+      document.getElementById('interactiveModalBody').innerHTML = `
+        <div style="display:flex; flex-direction:column; gap: var(--space-4); padding: var(--space-2) 0;">
+          <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.8rem; color:var(--text-secondary);">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--text-primary); font-weight:600;">
+                <th style="padding:10px 5px;">Metric</th>
+                <th style="padding:10px 5px;">June</th>
+                <th style="padding:10px 5px;">July</th>
+                <th style="padding:10px 5px;">Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                <td style="padding:10px 5px; font-weight:500; color:var(--text-primary);">Learning Hours</td>
+                <td style="padding:10px 5px;">30h</td>
+                <td style="padding:10px 5px;">24h</td>
+                <td style="padding:10px 5px; color:#EF4444;"><i class="fa-solid fa-arrow-trend-down"></i> -6h (-20%)</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                <td style="padding:10px 5px; font-weight:500; color:var(--text-primary);">Skill Score</td>
+                <td style="padding:10px 5px;">71 pts</td>
+                <td style="padding:10px 5px;">74 pts</td>
+                <td style="padding:10px 5px; color:var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +3 pts (+4.2%)</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                <td style="padding:10px 5px; font-weight:500; color:var(--text-primary);">Courses Done</td>
+                <td style="padding:10px 5px;">1</td>
+                <td style="padding:10px 5px;">1</td>
+                <td style="padding:10px 5px; color:var(--text-muted);">Stable (0)</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                <td style="padding:10px 5px; font-weight:500; color:var(--text-primary);">Assessments</td>
+                <td style="padding:10px 5px;">3</td>
+                <td style="padding:10px 5px;">2</td>
+                <td style="padding:10px 5px; color:#EF4444;"><i class="fa-solid fa-caret-down"></i> -1 (-33%)</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                <td style="padding:10px 5px; font-weight:500; color:var(--text-primary);">Daily Average</td>
+                <td style="padding:10px 5px;">1.0h</td>
+                <td style="padding:10px 5px;">1.1h</td>
+                <td style="padding:10px 5px; color:var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +0.1h (+10%)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="modal-insight-box" style="width: 100%; text-align: left;">
+            <div class="modal-insight-title"><i class="fa-solid fa-chart-line"></i> MoM Comparison Summary</div>
+            <div class="modal-insight-text">Although you studied 6 hours less in July compared to June, your study efficiency rose! Your daily average study time increased from 1.0h to 1.1h, and you successfully raised your total Skill Score to 74 points. Good job!</div>
+          </div>
+        </div>
+      `;
+      document.getElementById('interactiveDetailModal').classList.add('active');
+    }
+
+    /* ── Progress Report PDF compiler ── */
+    function downloadPDFReport() {
+      const modal = document.getElementById('certificateModal');
+      const title = modal.querySelector('.modal-title');
+      const message = modal.querySelector('.modal-message');
+
+      title.textContent = 'Compiling Progress Report';
+      message.innerHTML = `
+        <div style="text-align:center; padding:10px 0;">
+          <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary); margin-bottom:15px"></i>
+          <p>Compiling comprehensive progress analytics for Arjun Kapoor...</p>
+        </div>
+      `;
+      modal.classList.add('active');
+
+      setTimeout(() => {
+        title.textContent = 'Report Generated Successfully';
+        message.innerHTML = `
+          <div style="text-align:center; padding:10px 0;">
+            <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:var(--success); margin-bottom:15px"></i>
+            <p style="margin-bottom: 12px;">Your Progress Report PDF has been compiled and downloaded successfully!</p>
+          </div>
+        `;
+
+        // Trigger simulated browser download of text format PDF content
+        const blob = new Blob([
+          `SkillBridge Progress Report\n============================\nStudent Name: Arjun Kapoor\nTotal Learning Hours: 147 hours\nSkill Score: 74 pts\nCourses Completed: 5\nLeaderboard Rank: #12\nActive Streak: 14 Days\nOverall Rating: Good\n\nMonthly Breakdown:\n- Jan: 12h, 46 pts\n- Feb: 16h, 52 pts\n- Mar: 22h, 58 pts\n- Apr: 18h, 60 pts\n- May: 25h, 65 pts\n- Jun: 30h, 71 pts\n- Jul: 24h, 74 pts`
+        ], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'SkillBridge_Progress_Report_Arjun.pdf';
+        link.click();
+      }, 1500);
+    }
+
+    /* ── CSV Exporter ── */
+    function exportCSVData() {
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      csvContent += 'Period,Learning Hours,Skill Score,Courses Completed,Assessments Completed,Avg Study Time\r\n';
+
+      monthlyChartData.forEach(item => {
+        csvContent += `${item.name},${item.hours},${item.score},${item.courses},${item.assessments},${item.dailyAverage}\r\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'SkillBridge_Progress_Data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Initialize leaderboard and progress chart on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initLeaderboard();
+      drawProgressChart('month');
+      updatePerformanceSummary('month');
+    });
+  </script>
 </body>
+
 </html>
