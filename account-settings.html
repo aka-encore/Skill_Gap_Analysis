@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Settings – SkillBridge</title>
+  <meta name="description" content="Manage your SkillBridge account settings." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body class="profile-page-content">
+<div class="dashboard-layout">
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon"><i class="fa-solid fa-brain"></i></div>
+      <span class="sidebar-brand-text">SkillBridge</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <a href="student-dashboard.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-gauge-high"></i></div>
+        <span>Dashboard</span>
+      </a>
+      <a href="profile.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
+        <span>My Profile</span>
+      </a>
+      <a href="assessment.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+        <span>Assessments</span>
+        <span class="nav-badge">3</span>
+      </a>
+
+      <div class="sidebar-section-label">Learning</div>
+      <a href="skill-gap.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-chart-radar"></i></div>
+        <span>Skill Gap</span>
+      </a>
+      <a href="courses.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <span>Courses</span>
+      </a>
+      <a href="roadmap.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-road"></i></div>
+        <span>Roadmap</span>
+      </a>
+      <a href="progress.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <span>Progress</span>
+      </a>
+
+      <div class="sidebar-section-label">Other</div>
+      <a href="reports.html" class="sidebar-nav-item">
+        <div class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></div>
+        <span>Reports</span>
+      </a>
+      <a href="account-settings.html" class="sidebar-nav-item active">
+        <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-sm avatar-placeholder" id="sidebarAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">AK</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarName">Arjun Kapoor</div>
+          <div class="sidebar-user-role">Student · <span id="sidebarBranch">Computer Science</span></div>
+        </div>
+        <a href="login.html" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="dashboard-main" id="dashMain">
+    <!-- Top Nav -->
+    <header class="topnav">
+      <div class="topnav-left">
+        <button class="mobile-menu-toggle" id="menuToggle" onclick="toggleSidebar()" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <div class="topnav-title">Account Settings</div>
+          <div class="topnav-breadcrumb">Manage your preferences and privacy settings</div>
+        </div>
+      </div>
+      <div class="search-bar" style="display:flex">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Search skills, courses, assessments..." />
+        <kbd style="font-size:0.65rem;color:var(--text-muted);border:1px solid var(--border);padding:2px 6px;border-radius:4px">⌘K</kbd>
+      </div>
+      <div class="topnav-right">
+        <div class="topnav-icon-btn icon-badge" title="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notif-dot"></span>
+        </div>
+        <div class="topnav-icon-btn" title="Messages"><i class="fa-solid fa-message"></i></div>
+        <div class="topnav-profile" id="topnavProfileBtn">
+          <div class="avatar avatar-sm avatar-placeholder" id="topnavAvatar" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">AK</div>
+          <div class="topnav-profile-info">
+            <div class="topnav-profile-name" id="topnavName">Arjun Kapoor</div>
+            <div class="topnav-profile-role">Student</div>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;color:var(--text-muted)"></i>
+          <!-- Premium Dropdown Menu -->
+          <div class="premium-dropdown" id="profileDropdown">
+            <a href="profile.html" class="dropdown-item"><i class="fa-solid fa-user"></i> My Profile</a>
+            <a href="help.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+            <div class="dropdown-divider"></div>
+            <a href="login.html" class="dropdown-item" style="color:#EF4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dash-content">
+      
+      <div class="profile-card animate-slideUp" style="max-width: 800px; margin: 0 auto;">
+        <h3 class="profile-section-title"><i class="fa-solid fa-sliders"></i> Account Settings</h3>
+        
+        <div class="settings-grid" style="grid-template-columns: 1fr;">
+          <div>
+            <div class="settings-option" style="margin-bottom: 16px;">
+              <div class="settings-info">
+                <h5>Dark Theme</h5>
+                <p>Toggle between Dark Navy and Light theme</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-option" style="margin-bottom: 16px;">
+              <div class="settings-info">
+                <h5>Email Notifications</h5>
+                <p>Receive weekly progress reports and updates</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="notifToggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="settings-option" style="margin-bottom: 16px;">
+              <div class="settings-info">
+                <h5>Public Leaderboard</h5>
+                <p>Display your profile and score publicly</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="leaderboardToggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--profile-border);">
+            <div class="settings-option" id="changePasswordSection" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+              <div class="settings-info">
+                <h5>Change Password</h5>
+                <p>Update your account password</p>
+              </div>
+              <div style="width:100%; display:flex; flex-direction:column; gap:12px; margin-top: 8px;">
+                <input type="password" id="currentPassword" placeholder="Current Password" class="form-control" style="margin:0;">
+                <div style="text-align: right; margin-top: -8px;">
+                  <a href="#" id="forgotPasswordLink" style="font-size: 0.8rem; color: var(--text-primary); text-decoration: underline;">Forgot Password?</a>
+                </div>
+                <input type="password" id="newPassword" placeholder="New Password" class="form-control" style="margin:0;">
+                <input type="password" id="confirmPassword" placeholder="Confirm New Password" class="form-control" style="margin:0;">
+                
+                <div id="passwordRequirements" style="font-size:0.75rem; color:var(--text-muted);">
+                  Password requirements: Minimum 8 characters, One uppercase letter, One lowercase letter, One number, One special character.
+                </div>
+                
+                <div id="passwordMessage" style="font-size:0.85rem; display:none; margin-top:4px;"></div>
+
+                <div style="display:flex; gap:12px;">
+                  <button id="btnSavePassword" class="btn-primary-gradient" style="padding: 10px 16px;">Save Password</button>
+                  <button id="btnCancelPassword" class="btn-outline" style="padding: 10px 16px;">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="forgotPasswordContainer" class="settings-option" style="flex-direction: column; align-items: flex-start; gap: 8px; display:none; border-color:var(--primary);">
+              <div class="settings-info">
+                <h5>Forgot Password</h5>
+                <p>Verify your identity via OTP to reset your password</p>
+              </div>
+              
+              <div id="otpStep1" style="width:100%; display:flex; flex-direction:column; gap:12px; margin-top: 8px;">
+                 <p style="font-size:0.85rem;">Click below to send a secure 6-digit OTP to your registered email.</p>
+                 <div style="display:flex; gap:12px;">
+                   <button id="btnSendOtp" class="btn-primary-gradient" style="padding: 10px 16px; width:fit-content;">Send OTP</button>
+                   <button id="btnCancelOtp" class="btn-outline" style="padding: 10px 16px; width:fit-content;">Cancel</button>
+                 </div>
+              </div>
+              
+              <div id="otpStep2" style="width:100%; display:none; flex-direction:column; gap:12px; margin-top: 8px;">
+                 <p style="font-size:0.85rem;">Enter the 6-digit OTP sent to your email.</p>
+                 <input type="text" id="otpInput" placeholder="Enter OTP" class="form-control" style="margin:0; letter-spacing:4px; font-weight:bold; text-align:center;">
+                 <div id="otpMessage" style="font-size:0.85rem; display:none; margin-top:4px;"></div>
+                 <div style="display:flex; gap:12px;">
+                   <button id="btnVerifyOtp" class="btn-primary-gradient" style="padding: 10px 16px;">Verify OTP</button>
+                   <button id="btnCancelOtp2" class="btn-outline" style="padding: 10px 16px;">Cancel</button>
+                 </div>
+              </div>
+              
+              <div id="otpStep3" style="width:100%; display:none; flex-direction:column; gap:12px; margin-top: 8px;">
+                 <p style="font-size:0.85rem; color:#10B981;"><i class="fa-solid fa-circle-check"></i> OTP Verified. Set a new password.</p>
+                 <input type="password" id="resetNewPassword" placeholder="New Password" class="form-control" style="margin:0;">
+                 <input type="password" id="resetConfirmPassword" placeholder="Confirm Password" class="form-control" style="margin:0;">
+                 <div id="resetMessage" style="font-size:0.85rem; display:none; margin-top:4px;"></div>
+                 <div style="display:flex; gap:12px;">
+                   <button id="btnSaveResetPassword" class="btn-primary-gradient" style="padding: 10px 16px;">Save Password</button>
+                 </div>
+              </div>
+            </div>
+            <div class="settings-option" style="justify-content: space-between;">
+              <div class="settings-info">
+                <h5>Account Privacy</h5>
+                <p>Manage who can see your skill gap profile</p>
+              </div>
+              <select class="form-control" id="privacySelect" style="width: auto; max-width: 140px; margin:0;">
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+                <option value="university">University Only</option>
+              </select>
+            </div>
+            <div class="settings-option" style="border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.02);">
+              <div class="settings-info">
+                <h5 style="color:#EF4444;">Delete Account</h5>
+                <p>Permanently delete all your skill progress and profile data</p>
+              </div>
+              <button id="btnDeleteAccount" class="btn-primary-gradient btn-danger-outline" style="box-shadow:none; padding:8px 14px;">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--profile-border);">
+          <a href="profile.html" class="btn btn-outline" style="text-decoration:none;">Back to Profile</a>
+        </div>
+      </div>
+      
+    </div><!-- /dash-content -->
+  </main>
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('active');
+  }
+
+  // Topnav dropdown trigger
+  const topnavProfileBtn = document.getElementById('topnavProfileBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  topnavProfileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+  });
+  document.addEventListener('click', () => {
+    profileDropdown.classList.remove('show');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // ─── Theme Loader ───
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('skillbridge_theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      if (themeToggle) themeToggle.checked = true;
+    } else {
+      document.body.classList.remove('light-theme');
+      if (themeToggle) themeToggle.checked = false;
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
+          document.body.classList.add('light-theme');
+          localStorage.setItem('skillbridge_theme', 'light');
+        } else {
+          document.body.classList.remove('light-theme');
+          localStorage.setItem('skillbridge_theme', 'dark');
+        }
+      });
+    }
+
+    // ─── Load sidebar/topnav from localStorage ───
+    const profileData = JSON.parse(localStorage.getItem('skillbridge_profile')) || {};
+    if (profileData.name) {
+      document.getElementById('sidebarName').textContent = profileData.name;
+      document.getElementById('topnavName').textContent = profileData.name;
+      const initials = profileData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      if (!profileData.avatar) {
+        document.getElementById('sidebarAvatar').textContent = initials;
+        document.getElementById('topnavAvatar').textContent = initials;
+      }
+    }
+    if (profileData.branch) {
+      document.getElementById('sidebarBranch').textContent = profileData.branch;
+    }
+    if (profileData.avatar) {
+      ['sidebarAvatar', 'topnavAvatar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.backgroundImage = `url(${profileData.avatar})`;
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.textContent = '';
+          el.style.color = 'transparent';
+        }
+      });
+    }
+
+    // ─── Other settings ───
+    const notifToggle = document.getElementById('notifToggle');
+    const leaderboardToggle = document.getElementById('leaderboardToggle');
+    const privacySelect = document.getElementById('privacySelect');
+
+    if (notifToggle) {
+      notifToggle.checked = localStorage.getItem('skillbridge_notif') !== 'false';
+      notifToggle.addEventListener('change', () => {
+        localStorage.setItem('skillbridge_notif', notifToggle.checked);
+      });
+    }
+    if (leaderboardToggle) {
+      leaderboardToggle.checked = localStorage.getItem('skillbridge_leaderboard') !== 'false';
+      leaderboardToggle.addEventListener('change', () => {
+        localStorage.setItem('skillbridge_leaderboard', leaderboardToggle.checked);
+      });
+    }
+    if (privacySelect) {
+      privacySelect.value = localStorage.getItem('skillbridge_privacy') || 'public';
+      privacySelect.addEventListener('change', () => {
+        localStorage.setItem('skillbridge_privacy', privacySelect.value);
+        alert(`Privacy setting updated to: ${privacySelect.value}`);
+      });
+    }
+
+    
+    // ─── Forgot Password Flow & Password Validation ───
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const changePasswordSection = document.getElementById('changePasswordSection');
+    const forgotPasswordContainer = document.getElementById('forgotPasswordContainer');
+    
+    const otpStep1 = document.getElementById('otpStep1');
+    const otpStep2 = document.getElementById('otpStep2');
+    const otpStep3 = document.getElementById('otpStep3');
+    
+    const btnSendOtp = document.getElementById('btnSendOtp');
+    const btnVerifyOtp = document.getElementById('btnVerifyOtp');
+    const btnCancelOtp = document.getElementById('btnCancelOtp');
+    const btnCancelOtp2 = document.getElementById('btnCancelOtp2');
+    
+    const currentPassword = document.getElementById('currentPassword');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const btnSavePassword = document.getElementById('btnSavePassword');
+    const btnCancelPassword = document.getElementById('btnCancelPassword');
+    const passwordMessage = document.getElementById('passwordMessage');
+    
+    const resetNewPassword = document.getElementById('resetNewPassword');
+    const resetConfirmPassword = document.getElementById('resetConfirmPassword');
+    const btnSaveResetPassword = document.getElementById('btnSaveResetPassword');
+    const resetMessage = document.getElementById('resetMessage');
+    
+    function validatePassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
+    }
+    
+    function showMessage(element, text, isError) {
+      element.style.display = 'block';
+      element.textContent = text;
+      element.style.color = isError ? '#EF4444' : '#10B981';
+    }
+    
+    // Toggle Forgot Password View
+    forgotPasswordLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      changePasswordSection.style.display = 'none';
+      forgotPasswordContainer.style.display = 'flex';
+      otpStep1.style.display = 'flex';
+      otpStep2.style.display = 'none';
+      otpStep3.style.display = 'none';
+    });
+    
+    // Send OTP
+    btnSendOtp.addEventListener('click', () => {
+      otpStep1.style.display = 'none';
+      otpStep2.style.display = 'flex';
+    });
+    
+    // Verify OTP
+    btnVerifyOtp.addEventListener('click', () => {
+      const otpInput = document.getElementById('otpInput').value;
+      const otpMessage = document.getElementById('otpMessage');
+      if (otpInput === '123456' || otpInput.length === 6) { // Mock OTP
+        otpStep2.style.display = 'none';
+        otpStep3.style.display = 'flex';
+      } else {
+        showMessage(otpMessage, 'Invalid or expired OTP', true);
+      }
+    });
+    
+    // Cancel Handlers
+    function resetPasswordView() {
+      forgotPasswordContainer.style.display = 'none';
+      changePasswordSection.style.display = 'flex';
+      
+      // Clear inputs
+      currentPassword.value = '';
+      newPassword.value = '';
+      confirmPassword.value = '';
+      passwordMessage.style.display = 'none';
+    }
+    btnCancelOtp.addEventListener('click', resetPasswordView);
+    btnCancelOtp2.addEventListener('click', resetPasswordView);
+    btnCancelPassword.addEventListener('click', resetPasswordView);
+    
+    // Save Password (Standard)
+    btnSavePassword.addEventListener('click', () => {
+      if (!currentPassword.value) {
+        showMessage(passwordMessage, 'Please enter current password.', true);
+        return;
+      }
+      if (newPassword.value !== confirmPassword.value) {
+        showMessage(passwordMessage, 'New password and confirm password do not match.', true);
+        return;
+      }
+      if (!validatePassword(newPassword.value)) {
+        showMessage(passwordMessage, 'Password does not meet requirements.', true);
+        return;
+      }
+      showMessage(passwordMessage, 'Password saved successfully!', false);
+    });
+    
+    // Save Password (Reset)
+    btnSaveResetPassword.addEventListener('click', () => {
+      if (resetNewPassword.value !== resetConfirmPassword.value) {
+        showMessage(resetMessage, 'Passwords do not match.', true);
+        return;
+      }
+      if (!validatePassword(resetNewPassword.value)) {
+        showMessage(resetMessage, 'Password does not meet requirements.', true);
+        return;
+      }
+      showMessage(resetMessage, 'Password changed successfully! You can now login with new password.', false);
+      setTimeout(resetPasswordView, 2000);
+    });
+
+    // ─── Delete Account ───
+    const btnDeleteAccount = document.getElementById('btnDeleteAccount');
+    btnDeleteAccount.addEventListener('click', () => {
+      if (confirm('Are you sure you want to permanently delete your account? This action cannot be undone.')) {
+        localStorage.clear();
+        alert('Account deleted. Redirecting to login...');
+        window.location.href = 'login.html';
+      }
+    });
+
+  });
+</script>
+</body>
+</html>
