@@ -15,12 +15,471 @@
   <style>
     /* Landing page extras */
     .mobile-menu-toggle { display: none; }
-    .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); }
-    .how-section { background: linear-gradient(180deg, transparent, rgba(99,102,241,0.04), transparent); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-6); }
+    .how-section { background: var(--bg-secondary) !important; }
     .cta-section {
       padding: var(--space-20) 0;
       text-align: center;
-      background: radial-gradient(ellipse at center, rgba(99,102,241,0.12) 0%, transparent 70%);
+      background: radial-gradient(ellipse at center, rgba(38, 101, 140, 0.06) 0%, transparent 70%) !important;
+      transition: background var(--transition-base) !important;
+    }
+    body.dark-mode .cta-section {
+      background: radial-gradient(ellipse at center, rgba(46, 108, 183, 0.08) 0%, transparent 70%) !important;
+    }
+
+    /* Redesigned Color Theme CSS Overrides - Default Light Mode (Blue + Teal) */
+    body {
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F4F9FF;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F4F9FF;
+      --primary: #26658C;
+      --primary-light: #5483B3;
+      --primary-dark: #021024;
+      --accent: #14B8A6;
+      --accent-light: #CCFBF1;
+      --success: #22C55E;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #14B8A6;
+      --text-primary: #021024;
+      --text-secondary: #1F2937;
+      --text-muted: #6B7280;
+      --border: #E5E7EB;
+      --border-hover: #14B8A6;
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-strong: rgba(255, 255, 255, 0.95);
+      --card-border: #DCE8F5;
+
+      background-color: var(--bg-primary) !important;
+      color: var(--text-secondary) !important;
+      transition: background-color var(--transition-base), color var(--transition-base) !important;
+    }
+
+    /* Redesigned Color Theme CSS Overrides - Premium Dark Mode */
+    body.dark-mode {
+      --bg-primary: #0D1117; /* Black Diamond */
+      --bg-secondary: #111827; /* Odyssey */
+      --bg-card: #111827; /* Odyssey */
+      --bg-card-hover: #1F2937;
+      --primary: #2E6CB7; /* Pewter Blue */
+      --primary-light: #5289D0;
+      --primary-dark: #021024;
+      --accent: #F2C14E; /* Electrum */
+      --accent-light: rgba(242, 193, 78, 0.15);
+      --success: #22C55E;
+      --warning: #F2C14E;
+      --danger: #EF4444;
+      --info: #2E6CB7;
+      --text-primary: #DDE2E8; /* Milky Quartz */
+      --text-secondary: #DDE2E8; /* Milky Quartz */
+      --text-muted: #9CA3AF;
+      --border: rgba(221, 226, 232, 0.1);
+      --border-hover: #F2C14E;
+      --glass: rgba(17, 24, 39, 0.7); /* Odyssey-based glass */
+      --glass-strong: rgba(17, 24, 39, 0.95);
+      --card-border: rgba(221, 226, 232, 0.1);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary) !important;
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--text-primary) !important;
+      transition: color var(--transition-base) !important;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--glass) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-bottom: 1px solid var(--border) !important;
+      transition: background var(--transition-base), border var(--transition-base) !important;
+    }
+    .navbar.scrolled {
+      background: var(--glass-strong) !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+    .nav-brand {
+      color: var(--text-primary) !important;
+    }
+    .nav-brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      color: #FFFFFF !important;
+    }
+    .nav-links .nav-link {
+      color: var(--text-secondary) !important;
+    }
+    .nav-links .nav-link:hover,
+    .nav-links .nav-link.active {
+      color: var(--primary) !important;
+    }
+    .nav-links .nav-link::after {
+      display: none !important;
+    }
+    .hamburger span {
+      background: var(--text-primary) !important;
+    }
+
+    /* Mobile Nav */
+    .mobile-nav {
+      background: var(--glass-strong) !important;
+      border-left: 1px solid var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+    .mobile-nav .nav-link {
+      color: var(--text-secondary) !important;
+    }
+    .mobile-nav .nav-link:hover,
+    .mobile-nav .nav-link.active {
+      color: var(--primary) !important;
+    }
+    .mobile-nav .close-btn {
+      color: var(--text-primary) !important;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: transparent !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text-secondary) !important;
+      cursor: pointer;
+      border-radius: 50% !important;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all var(--transition-fast) !important;
+    }
+    .theme-toggle-btn:hover {
+      color: var(--accent) !important;
+      border-color: var(--accent) !important;
+      background: var(--accent-light) !important;
+    }
+
+    /* Hero section centering & balance when right side is removed */
+    .hero-grid {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
+    }
+    .hero-subtitle {
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-cta {
+      justify-content: center;
+    }
+    .hero-social-proof {
+      justify-content: center;
+    }
+    .hero-section {
+      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%) !important;
+      transition: background var(--transition-base) !important;
+    }
+    .hero-bg {
+      background: radial-gradient(ellipse at 70% 50%, rgba(38, 101, 140, 0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(84, 131, 179, 0.04) 0%, transparent 60%) !important;
+      transition: background var(--transition-base) !important;
+    }
+    body.dark-mode .hero-bg {
+      background: radial-gradient(ellipse at 70% 50%, rgba(46, 108, 183, 0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(242, 193, 78, 0.06) 0%, transparent 60%) !important;
+    }
+    .bg-blob-1 { background: rgba(20, 184, 166, 0.05) !important; }
+    body.dark-mode .bg-blob-1 { background: rgba(242, 193, 78, 0.08) !important; }
+    .bg-blob-2 { background: rgba(38, 101, 140, 0.04) !important; }
+    body.dark-mode .bg-blob-2 { background: rgba(46, 108, 183, 0.06) !important; }
+    .bg-blob-3 { background: rgba(20, 184, 166, 0.03) !important; }
+    body.dark-mode .bg-blob-3 { background: rgba(242, 193, 78, 0.04) !important; }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 14px rgba(38, 101, 140, 0.2) !important;
+      border: none !important;
+    }
+    body.dark-mode .btn-primary {
+      background: #2E6CB7 !important;
+      box-shadow: 0 4px 14px rgba(46, 108, 183, 0.3) !important;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      box-shadow: 0 6px 20px rgba(20, 184, 166, 0.35) !important;
+    }
+    body.dark-mode .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(242, 193, 78, 0.3) !important;
+    }
+    .btn-secondary {
+      background: var(--bg-secondary) !important;
+      color: var(--primary) !important;
+      border: 1px solid var(--primary-light) !important;
+    }
+    .btn-secondary:hover {
+      background: var(--accent-light) !important;
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15) !important;
+    }
+    .btn-ghost {
+      background: transparent !important;
+      color: var(--text-secondary) !important;
+      border: 1px solid var(--border) !important;
+    }
+    .btn-ghost:hover {
+      color: var(--text-primary) !important;
+      border-color: var(--border-hover) !important;
+      background: var(--glass) !important;
+    }
+
+    /* Highlighted labels - text section-tags styling */
+    .hero-eyebrow,
+    .section-tag {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      color: var(--primary) !important;
+      font-weight: 700 !important;
+      font-size: var(--font-size-sm) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1.5px !important;
+      margin-bottom: var(--space-4) !important;
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+    .hero-eyebrow .dot {
+      display: none !important;
+    }
+    body.dark-mode .hero-eyebrow,
+    body.dark-mode .section-tag {
+      color: #F2C14E !important; /* Electrum accents */
+    }
+
+    /* Cards */
+    .card, .feature-card, .step-card, .review-card {
+      background: var(--bg-card) !important;
+      border: 1px solid var(--card-border) !important;
+      box-shadow: 0 4px 20px rgba(2, 16, 36, 0.04) !important;
+      transition: all var(--transition-base) !important;
+    }
+    body.dark-mode .card,
+    body.dark-mode .feature-card,
+    body.dark-mode .step-card,
+    body.dark-mode .review-card {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    }
+    .card:hover, .feature-card:hover, .step-card:hover, .review-card:hover {
+      border-color: var(--primary-light) !important;
+      box-shadow: 0 10px 30px rgba(38, 101, 140, 0.08) !important;
+      transform: translateY(-4px) !important;
+    }
+    body.dark-mode .card:hover,
+    body.dark-mode .feature-card:hover,
+    body.dark-mode .step-card:hover,
+    body.dark-mode .review-card:hover {
+      border-color: var(--accent) !important;
+      box-shadow: 0 10px 30px rgba(242, 193, 78, 0.12) !important;
+    }
+
+    /* Badges custom integrations for dark mode */
+    body.dark-mode .badge-accent,
+    body.dark-mode .badge-primary {
+      background: rgba(107, 62, 38, 0.2) !important; /* Criollo Cacao base */
+      color: #F2C14E !important; /* Electrum highlights */
+      border: 1px solid rgba(107, 62, 38, 0.4) !important;
+    }
+    body.dark-mode .step-num {
+      background: linear-gradient(135deg, var(--primary), #6B3E26) !important; /* Pewter Blue to Criollo Cacao gradient */
+    }
+
+    /* Feature icons - colorful, matching the Blue + Teal theme in Light Mode */
+    .features-grid .feature-card:nth-child(1) .feature-icon-wrap { background: rgba(38, 101, 140, 0.12) !important; }
+    .features-grid .feature-card:nth-child(1) i { color: #26658C !important; }
+
+    .features-grid .feature-card:nth-child(2) .feature-icon-wrap { background: rgba(20, 184, 166, 0.12) !important; }
+    .features-grid .feature-card:nth-child(2) i { color: #14B8A6 !important; }
+
+    .features-grid .feature-card:nth-child(3) .feature-icon-wrap { background: rgba(5, 38, 89, 0.12) !important; }
+    .features-grid .feature-card:nth-child(3) i { color: #052659 !important; }
+
+    .features-grid .feature-card:nth-child(4) .feature-icon-wrap { background: rgba(84, 131, 179, 0.12) !important; }
+    .features-grid .feature-card:nth-child(4) i { color: #5483B3 !important; }
+
+    .features-grid .feature-card:nth-child(5) .feature-icon-wrap { background: rgba(13, 148, 136, 0.12) !important; }
+    .features-grid .feature-card:nth-child(5) i { color: #0D9488 !important; }
+
+    .features-grid .feature-card:nth-child(6) .feature-icon-wrap { background: rgba(6, 182, 212, 0.12) !important; }
+    .features-grid .feature-card:nth-child(6) i { color: #06B6D4 !important; }
+
+    /* Feature icons - colorful, matching the Dark Mode accent theme */
+    body.dark-mode .features-grid .feature-card:nth-child(1) .feature-icon-wrap { background: rgba(56, 189, 248, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(1) i { color: #38BDF8 !important; }
+
+    body.dark-mode .features-grid .feature-card:nth-child(2) .feature-icon-wrap { background: rgba(45, 212, 191, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(2) i { color: #2DD4BF !important; }
+
+    body.dark-mode .features-grid .feature-card:nth-child(3) .feature-icon-wrap { background: rgba(242, 193, 78, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(3) i { color: #F2C14E !important; }
+
+    body.dark-mode .features-grid .feature-card:nth-child(4) .feature-icon-wrap { background: rgba(129, 140, 248, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(4) i { color: #818CF8 !important; }
+
+    body.dark-mode .features-grid .feature-card:nth-child(5) .feature-icon-wrap { background: rgba(52, 211, 153, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(5) i { color: #34D399 !important; }
+
+    body.dark-mode .features-grid .feature-card:nth-child(6) .feature-icon-wrap { background: rgba(244, 114, 182, 0.15) !important; }
+    body.dark-mode .features-grid .feature-card:nth-child(6) i { color: #F472B6 !important; }
+
+    /* Circular placeholder avatars background overrides (No images added) */
+    .reviews-grid .review-card:nth-child(1) .avatar-placeholder {
+      background: linear-gradient(135deg, #26658C, #14B8A6) !important;
+    }
+    .reviews-grid .review-card:nth-child(2) .avatar-placeholder {
+      background: linear-gradient(135deg, #5483B3, #0D9488) !important;
+    }
+    .reviews-grid .review-card:nth-child(3) .avatar-placeholder {
+      background: linear-gradient(135deg, #052659, #06B6D4) !important;
+    }
+    .avatar-placeholder {
+      color: #FFFFFF !important;
+    }
+
+    body.dark-mode .reviews-grid .review-card:nth-child(1) .avatar-placeholder {
+      background: linear-gradient(135deg, #2E6CB7, #F2C14E) !important; /* Pewter Blue to Electrum */
+    }
+    body.dark-mode .reviews-grid .review-card:nth-child(2) .avatar-placeholder {
+      background: linear-gradient(135deg, #6B3E26, #F2C14E) !important; /* Criollo Cacao to Electrum */
+    }
+    body.dark-mode .reviews-grid .review-card:nth-child(3) .avatar-placeholder {
+      background: linear-gradient(135deg, #2E6CB7, #6B3E26) !important; /* Pewter Blue to Criollo Cacao */
+    }
+
+    /* Hero section avatars color adjustments - keep initials, size, shape, position */
+    .hero-avatars .hero-avatar-ph:nth-child(1) { background: linear-gradient(135deg, #26658C, #14B8A6) !important; }
+    .hero-avatars .hero-avatar-ph:nth-child(2) { background: linear-gradient(135deg, #5483B3, #0D9488) !important; }
+    .hero-avatars .hero-avatar-ph:nth-child(3) { background: linear-gradient(135deg, #052659, #06B6D4) !important; }
+    .hero-avatars .hero-avatar-ph:nth-child(4) { background: linear-gradient(135deg, #26658C, #7DA0CA) !important; }
+
+    body.dark-mode .hero-avatars .hero-avatar-ph:nth-child(1) { background: linear-gradient(135deg, #2E6CB7, #F2C14E) !important; } /* Blue/Gold */
+    body.dark-mode .hero-avatars .hero-avatar-ph:nth-child(2) { background: linear-gradient(135deg, #F2C14E, #6B3E26) !important; } /* Gold/Cacao */
+    body.dark-mode .hero-avatars .hero-avatar-ph:nth-child(3) { background: linear-gradient(135deg, #7C3AED, #EC4899) !important; } /* Purple/Pink */
+    body.dark-mode .hero-avatars .hero-avatar-ph:nth-child(4) { background: linear-gradient(135deg, #F97316, #F59E0B) !important; } /* Orange/Gold */
+
+    /* Stars / reviews accent */
+    .stars {
+      color: var(--accent) !important;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      background: var(--bg-secondary) !important;
+      border-top: 1px solid var(--border) !important;
+      border-bottom: 1px solid var(--border) !important;
+      transition: background var(--transition-base), border var(--transition-base) !important;
+    }
+    .stat-big-num {
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+    }
+
+    /* Footer */
+    .footer {
+      background: #021024 !important;
+      color: #7DA0CA !important;
+      border-top: 1px solid rgba(20, 184, 166, 0.1) !important;
+      transition: background var(--transition-base), color var(--transition-base) !important;
+    }
+    body.dark-mode .footer {
+      background: #0D1117 !important; /* Black Diamond */
+      color: #9CA3AF !important; /* Milky Quartz muted */
+      border-top: 1px solid rgba(221, 226, 232, 0.1) !important;
+    }
+    .footer-brand .nav-brand {
+      color: #FFFFFF !important;
+      white-space: nowrap;
+    }
+    .footer-brand .nav-brand .gradient-text {
+      background: linear-gradient(135deg, var(--primary-light), var(--accent)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+    }
+    .footer h4 {
+      color: #FFFFFF !important;
+    }
+    body.dark-mode .footer h4 {
+      color: #DDE2E8 !important; /* Milky Quartz */
+    }
+    .footer p {
+      color: #5483B3 !important;
+    }
+    body.dark-mode .footer p {
+      color: #9CA3AF !important;
+    }
+    .footer-link {
+      color: #7DA0CA !important;
+      transition: color var(--transition-fast) !important;
+    }
+    body.dark-mode .footer-link {
+      color: #9CA3AF !important;
+    }
+    .footer-link:hover {
+      color: var(--accent) !important;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(20, 184, 166, 0.1) !important;
+      color: #5483B3 !important;
+    }
+    body.dark-mode .footer-bottom {
+      border-top: 1px solid rgba(221, 226, 232, 0.1) !important;
+      color: #6B7280 !important;
+    }
+    .social-btn {
+      background: rgba(20, 184, 166, 0.05) !important;
+      color: #14B8A6 !important;
+      border: 1px solid rgba(20, 184, 166, 0.1) !important;
+    }
+    body.dark-mode .social-btn {
+      background: rgba(221, 226, 232, 0.02) !important;
+      color: #9CA3AF !important;
+      border-color: rgba(221, 226, 232, 0.1) !important;
+    }
+    .social-btn:hover {
+      background: rgba(20, 184, 166, 0.15) !important;
+      color: #FFFFFF !important;
+      border-color: #14B8A6 !important;
+    }
+    body.dark-mode .social-btn:hover {
+      background: #F2C14E !important; /* Electrum hover background */
+      color: #0D1117 !important;
+      border-color: #F2C14E !important;
     }
   </style>
 </head>
@@ -38,9 +497,12 @@
         <li><a href="#features" class="nav-link active">Features</a></li>
         <li><a href="#how" class="nav-link">How It Works</a></li>
         <li><a href="#stats" class="nav-link">Stats</a></li>
-        <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+        <li><a href="#reviews" class="nav-link">Reviews</a></li>
       </ul>
       <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
         <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
         <a href="register.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-rocket"></i> Get Started</a>
       </div>
@@ -57,7 +519,7 @@
   <a href="#features" class="nav-link" onclick="closeMobileNav()">Features</a>
   <a href="#how" class="nav-link" onclick="closeMobileNav()">How It Works</a>
   <a href="#stats" class="nav-link" onclick="closeMobileNav()">Stats</a>
-  <a href="#testimonials" class="nav-link" onclick="closeMobileNav()">Testimonials</a>
+  <a href="#reviews" class="nav-link" onclick="closeMobileNav()">Reviews</a>
   <a href="login.html" class="btn btn-ghost">Sign In</a>
   <a href="register.html" class="btn btn-primary"><i class="fa-solid fa-rocket"></i> Get Started</a>
 </div>
@@ -71,10 +533,6 @@
     <div class="hero-grid">
       <!-- Left -->
       <div class="hero-content animate-slideUp">
-        <div class="hero-eyebrow">
-          <span class="dot"></span>
-          AI-Powered Career Intelligence Platform
-        </div>
         <h1 class="hero-title">
           Bridge Your <span class="gradient-text">Skill Gap</span><br />and Build Your Career
         </h1>
@@ -84,9 +542,6 @@
         <div class="hero-cta">
           <a href="register.html" class="btn btn-primary btn-lg">
             <i class="fa-solid fa-rocket"></i> Start Free Analysis
-          </a>
-          <a href="student-dashboard.html" class="btn btn-secondary btn-lg">
-            <i class="fa-solid fa-play-circle"></i> View Demo
           </a>
         </div>
         <div class="hero-social-proof">
@@ -99,59 +554,7 @@
           <p class="hero-proof-text">Joined by <strong>12,500+</strong> students & faculty</p>
         </div>
       </div>
-      <!-- Right Visual -->
-      <div class="hero-visual animate-scaleIn">
-        <div class="hero-card-stack">
-          <!-- Main dashboard card -->
-          <div class="floating-card animate-float" style="top:0;right:0;left:30px;background:rgba(30,41,59,0.9);padding:24px;">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-              <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:1rem;color:white"><i class="fa-solid fa-chart-radar"></i></div>
-              <div>
-                <div style="font-weight:700;font-size:0.9rem">Skill Gap Overview</div>
-                <div style="font-size:0.72rem;color:var(--text-muted)">Updated just now</div>
-              </div>
-              <div style="margin-left:auto"><span class="badge badge-success">Live</span></div>
-            </div>
-            <!-- Mini skill bars -->
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px"><span>Python</span><span>78%</span></div>
-                <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px"><span>Machine Learning</span><span>52%</span></div>
-                <div class="progress-track"><div class="progress-fill" style="width:52%"></div></div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px"><span>Deep Learning</span><span>34%</span></div>
-                <div class="progress-track"><div class="progress-fill warning" style="width:34%"></div></div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px"><span>Data Visualization</span><span>65%</span></div>
-                <div class="progress-track"><div class="progress-fill success" style="width:65%"></div></div>
-              </div>
-            </div>
-          </div>
-          <!-- Score card -->
-          <div class="floating-card" style="bottom:60px;left:0;width:180px;animation:float 5s ease-in-out infinite;animation-delay:-1s;">
-            <div style="text-align:center">
-              <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Skill Score</div>
-              <div style="font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--primary-light),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">74</div>
-              <div style="font-size:0.7rem;color:var(--success)"><i class="fa-solid fa-arrow-up"></i> +12 this week</div>
-            </div>
-          </div>
-          <!-- Achievement card -->
-          <div class="floating-card" style="bottom:20px;right:0;width:200px;animation:float 6s ease-in-out infinite;animation-delay:-2s;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--warning),#F97316);display:flex;align-items:center;justify-content:center;color:white;font-size:1rem">🏆</div>
-              <div>
-                <div style="font-size:0.75rem;font-weight:700">Fast Learner!</div>
-                <div style="font-size:0.65rem;color:var(--text-muted)">5 courses completed</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -256,42 +659,42 @@
   </div>
 </section>
 
-<!-- ══════════ TESTIMONIALS ══════════ -->
-<section class="section" id="testimonials">
+<!-- ══════════ REVIEWS ══════════ -->
+<section class="section" id="reviews">
   <div class="container">
     <div class="section-header animate-slideUp">
       <span class="section-tag">Success Stories</span>
       <h2 class="section-title">Loved by <span class="gradient-text">Students & Faculty</span></h2>
       <p class="section-sub">Hear from real users who transformed their careers using SkillBridge.</p>
     </div>
-    <div class="testimonials-grid stagger">
-      <div class="testimonial-card animate-slideUp">
-        <p class="testimonial-quote">SkillBridge identified I was missing Cloud Architecture skills — within 3 months, I landed a DevOps role with a 40% salary increase.</p>
-        <div class="testimonial-author">
+    <div class="reviews-grid stagger">
+      <div class="review-card animate-slideUp">
+        <p class="review-quote">SkillBridge identified I was missing Cloud Architecture skills — within 3 months, I landed a DevOps role with a 40% salary increase.</p>
+        <div class="review-author">
           <div class="avatar avatar-lg avatar-placeholder" style="background:linear-gradient(135deg,#6366F1,#8B5CF6)">AK</div>
-          <div class="testimonial-info">
+          <div class="review-info">
             <strong>Arjun Kapoor</strong>
             <span>Software Engineer → DevOps Lead</span>
             <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
           </div>
         </div>
       </div>
-      <div class="testimonial-card animate-slideUp">
-        <p class="testimonial-quote">As a faculty member, the dashboard is incredibly powerful. I can track every student's progress and identify who needs help instantly.</p>
-        <div class="testimonial-author">
+      <div class="review-card animate-slideUp">
+        <p class="review-quote">As a faculty member, the dashboard is incredibly powerful. I can track every student's progress and identify who needs help instantly.</p>
+        <div class="review-author">
           <div class="avatar avatar-lg avatar-placeholder" style="background:linear-gradient(135deg,#10B981,#3B82F6)">MS</div>
-          <div class="testimonial-info">
+          <div class="review-info">
             <strong>Dr. Meera Sharma</strong>
             <span>Professor of Computer Science</span>
             <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
           </div>
         </div>
       </div>
-      <div class="testimonial-card animate-slideUp">
-        <p class="testimonial-quote">The AI recommendations are spot-on. It suggested exactly the courses I needed and I went from junior to senior developer in 6 months!</p>
-        <div class="testimonial-author">
+      <div class="review-card animate-slideUp">
+        <p class="review-quote">The AI recommendations are spot-on. It suggested exactly the courses I needed and I went from junior to senior developer in 6 months!</p>
+        <div class="review-author">
           <div class="avatar avatar-lg avatar-placeholder" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">RJ</div>
-          <div class="testimonial-info">
+          <div class="review-info">
             <strong>Riya Joshi</strong>
             <span>Junior Dev → Senior Full Stack Engineer</span>
             <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
@@ -400,6 +803,26 @@
       const target = document.querySelector(a.getAttribute('href'));
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
+  });
+
+  // Light/Dark Theme logic
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('i');
+
+  // Load theme preference
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeIcon.className = 'fa-solid fa-sun';
+  } else {
+    themeIcon.className = 'fa-solid fa-moon';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    themeIcon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 </script>
 </body>
